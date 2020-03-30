@@ -35,8 +35,8 @@
 }
 
 .device-list-item {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 40% 40% 10% 10%;
 }
 
 .delete {

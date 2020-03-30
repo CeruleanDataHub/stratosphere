@@ -1,8 +1,10 @@
 import React from "react";
-import "./App.css";
 import axios from "axios";
 
-const baseApiUrl = process.env.REACT_APP_BASEAPIURL;
+import "./App.css";
+
+const apiUrl = process.env.API_URL;
+console.log("apiUrl", apiUrl)
 
 export default class App extends React.Component {
     constructor() {
@@ -17,7 +19,7 @@ export default class App extends React.Component {
 
     getIotDevices = () => {
         this.setState({loading: true});
-        axios.get(baseApiUrl + "/api/devices")
+        axios.get(apiUrl + "/api/devices")
             .then(res => {
                 console.log(res.data);
                 this.setState({iotDevices: res.data})
@@ -31,7 +33,7 @@ export default class App extends React.Component {
 
     getEdgeDevices = () => {
         this.setState({loading: true});
-        axios.get(baseApiUrl + "/api/edges")
+        axios.get(apiUrl + "/api/edges")
             .then(res => {
                 this.setState({iotEdgeDevices: res.data})
             })
@@ -43,7 +45,7 @@ export default class App extends React.Component {
     }
 
     addIotDevice = () => {
-        axios.post(baseApiUrl + "/api/devices", {
+        axios.post(apiUrl + "/api/devices", {
             data: this.state.iotDevice
         })
         .then(res => {
@@ -56,7 +58,7 @@ export default class App extends React.Component {
     }
 
     addIotEdgeDevice = () => {
-        axios.post(baseApiUrl + "/api/edges", {
+        axios.post(apiUrl + "/api/edges", {
             data: this.state.iotEdgeDevice
         })
         .then(res => {
@@ -69,7 +71,7 @@ export default class App extends React.Component {
     }
 
     removeIotDevice = (id) => {
-        axios.delete(baseApiUrl + "/api/devices", {
+        axios.delete(apiUrl + "/api/devices", {
             data: {id}
         })
         .then(res => {
@@ -81,7 +83,7 @@ export default class App extends React.Component {
     }
 
     removeIotEdgeDevice = (id) => {
-        axios.delete(baseApiUrl + "/api/edges", {
+        axios.delete(apiUrl + "/api/edges", {
             data: {id}
         })
         .then(res => {
@@ -93,7 +95,7 @@ export default class App extends React.Component {
     }
 
     clearParent = (id) => {
-        axios.put(baseApiUrl + "/api/devices", {
+        axios.put(apiUrl + "/api/devices", {
             id
         })
         .then(res => {
@@ -169,9 +171,7 @@ export default class App extends React.Component {
                             ))}
                         </div>
                     </div>
-                </div>
-
-                
+                </div>                
             </div>
         );
     }
