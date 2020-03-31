@@ -1,0 +1,53 @@
+.input-boxes {
+    display: flex;
+    justify-content: space-evenly;
+    margin: 50px 0;
+}
+
+
+.iot_device {
+    padding: 50px;
+    border: 1px solid black;
+    width: 500px;
+}
+
+.edge_device {
+    padding: 50px;
+    border: 1px solid black;
+    width: 500px;
+}
+
+.input-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.submit-btn {
+    margin: 20px 0;
+    width: 75px;
+}
+
+.title {
+    margin: 20px 0;
+}
+
+.device-list-item {
+    display: flex;
+    justify-content: space-between;
+}
+
+.delete {
+    cursor: pointer;
+    color: red;
+}
+
+.text-box {
+    height: 20px;
+    width: 250px;
+}
+
+.clear-parent {
+    cursor: pointer;
+    color: darkgoldenrod;
+}
