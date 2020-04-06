@@ -33,6 +33,7 @@ stages:
       versionNumber: $[ dependencies.getVersionNumber.outputs['getVersionNumber.version'] ]
     steps:
     - bash: |
+        npm install
         npm run build
       name: buildImage
     - task: Docker@2
