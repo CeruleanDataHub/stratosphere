@@ -1,8 +1,28 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import { Auth0Provider } from "./auth0-spa";
 import DenimAdmin from './DenimAdmin';
-//import * as serviceWorker from './serviceWorker';
+import config from './auth_config.json';
+import { createBrowserHistory } from "history";
 
-ReactDOM.render(<DenimAdmin />, document.getElementById('root'));
+import './index.css';
+
+const onRedirectCallback = appState => {
+    createBrowserHistory().push(
+      appState && appState.targetUrl
+        ? appState.targetUrl
+        : window.location.pathname
+    );
+};
+
+ReactDOM.render(
+    <Auth0Provider
+        domain={config.domain}
+        client_id={config.clientId}
+        redirect_uri={window.location.origin}
+        onRedirectCallback={onRedirectCallback}
+    >
+        <DenimAdmin />
+    </Auth0Provider>, 
+document.getElementById('root'));
 
