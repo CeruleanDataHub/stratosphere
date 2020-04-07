@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import styled from 'styled-components';
 import Axios from 'axios';
 import io from 'socket.io-client';
@@ -24,17 +26,16 @@ const Card = styled.div`
 `;
 
 const apiUrl = process.env.API_URL;
-// console.log("apiUrl", apiUrl)
-export default class Dashboard extends React.Component {
+class Dashboard extends React.Component {
   constructor() {
     super();
-    this.state = { iotDevices: [], status: [] };
+    this.state = {iotDevices: [], status: []};
   }
   componentDidMount() {
     this.getIotDevices();
     const socket = io('https://iot-platform-api-test.azurewebsites.net');
 
-    socket.on('data', (data) => {
+    socket.on('data', data => {
       console.log('HERE');
       if (data) {
         //this.setState({ sensorData: data.data });
@@ -47,17 +48,17 @@ export default class Dashboard extends React.Component {
       }
     });
     setTimeout(() => {
-      this.setState({ animate: true });
+      this.setState({animate: true});
     }, 100);
     // this.getEdgeDevices();
   }
 
   getIotDevices = () => {
     Axios.get(apiUrl + '/api/devices')
-      .then((res) => {
-        this.setState({ iotDevices: res.data });
+      .then(res => {
+        this.setState({iotDevices: res.data});
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
   };
@@ -72,7 +73,7 @@ export default class Dashboard extends React.Component {
   //         })
   //
   // }
-  showDeviceNotification = (deviceId) => {
+  showDeviceNotification = deviceId => {
     console.log('in the dashboard ', this.state.status);
     console.log('deviceId', deviceId);
     this.props.setNotificationStatus(this.state.status[deviceId]);
@@ -91,7 +92,7 @@ export default class Dashboard extends React.Component {
                     <span>Edge Device Id</span>
                   </div>
                   <div>
-                    {this.state.iotDevices.map((resource) => (
+                    {this.state.iotDevices.map(resource => (
                       <div
                         className="device-list-item"
                         key={resource.id}
@@ -114,3 +115,9 @@ export default class Dashboard extends React.Component {
     );
   }
 }
+
+Dashboard.propTypes = {
+  setNotificationStatus: PropTypes.func.isRequired,
+};
+
+export default Dashboard;

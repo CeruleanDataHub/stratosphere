@@ -6,7 +6,13 @@ const baseApiUrl = process.env.REACT_APP_BASEAPIURL;
 export default class DeviceManagement extends React.Component {
   constructor() {
     super();
-    this.state = { iotDevices: [], iotEdgeDevices: [], iotDevice: '', iotEdgeDevice: '', loading: false };
+    this.state = {
+      iotDevices: [],
+      iotEdgeDevices: [],
+      iotDevice: '',
+      iotEdgeDevice: '',
+      loading: false,
+    };
   }
 
   componentDidMount() {
@@ -15,33 +21,33 @@ export default class DeviceManagement extends React.Component {
   }
 
   getIotDevices = () => {
-    this.setState({ loading: true });
+    this.setState({loading: true});
     axios
       .get(baseApiUrl + '/api/devices')
-      .then((res) => {
+      .then(res => {
         console.log(res.data);
-        this.setState({ iotDevices: res.data });
+        this.setState({iotDevices: res.data});
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       })
       .finally(() => {
-        this.setState({ loading: false });
+        this.setState({loading: false});
       });
   };
 
   getEdgeDevices = () => {
-    this.setState({ loading: true });
+    this.setState({loading: true});
     axios
       .get(baseApiUrl + '/api/edges')
-      .then((res) => {
-        this.setState({ iotEdgeDevices: res.data });
+      .then(res => {
+        this.setState({iotEdgeDevices: res.data});
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       })
       .finally(() => {
-        this.setState({ loading: false });
+        this.setState({loading: false});
       });
   };
 
@@ -50,11 +56,14 @@ export default class DeviceManagement extends React.Component {
       .post(baseApiUrl + '/api/devices', {
         data: this.state.iotDevice,
       })
-      .then((res) => {
-        const obj = { id: this.state.iotDevice };
-        this.setState({ iotDevice: '', iotDevices: [...this.state.iotDevices, obj] });
+      .then(res => {
+        const obj = {id: this.state.iotDevice};
+        this.setState({
+          iotDevice: '',
+          iotDevices: [...this.state.iotDevices, obj],
+        });
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
   };
@@ -64,57 +73,66 @@ export default class DeviceManagement extends React.Component {
       .post(baseApiUrl + '/api/edges', {
         data: this.state.iotEdgeDevice,
       })
-      .then((res) => {
-        const obj = { id: this.state.iotEdgeDevice };
-        this.setState({ iotEdgeDevice: '', iotEdgeDevices: [...this.state.iotEdgeDevices, obj] });
+      .then(res => {
+        const obj = {id: this.state.iotEdgeDevice};
+        this.setState({
+          iotEdgeDevice: '',
+          iotEdgeDevices: [...this.state.iotEdgeDevices, obj],
+        });
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
   };
 
-  removeIotDevice = (id) => {
+  removeIotDevice = id => {
     axios
       .delete(baseApiUrl + '/api/devices', {
-        data: { id },
+        data: {id},
       })
-      .then((res) => {
-        this.setState({ iotDevices: this.state.iotDevices.filter((d) => d.id !== id) });
+      .then(res => {
+        this.setState({
+          iotDevices: this.state.iotDevices.filter(d => d.id !== id),
+        });
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
   };
 
-  removeIotEdgeDevice = (id) => {
+  removeIotEdgeDevice = id => {
     axios
       .delete(baseApiUrl + '/api/edges', {
-        data: { id },
+        data: {id},
       })
-      .then((res) => {
-        this.setState({ iotEdgeDevices: this.state.iotEdgeDevices.filter((d) => d.id !== id) });
+      .then(res => {
+        this.setState({
+          iotEdgeDevices: this.state.iotEdgeDevices.filter(d => d.id !== id),
+        });
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
   };
 
-  clearParent = (id) => {
+  clearParent = id => {
     axios
       .put(baseApiUrl + '/api/devices', {
         id,
       })
-      .then((res) => {
+      .then(res => {
         this.setState({
-          iotDevices: this.state.iotDevices.map((d) => (d.id === id ? { ...d, edge_device_id: null } : d)),
+          iotDevices: this.state.iotDevices.map(d =>
+            d.id === id ? {...d, edge_device_id: null} : d,
+          ),
         });
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
   };
 
-  inputChange = (ev) => {
+  inputChange = ev => {
     if (ev.key == 'Enter') {
       if (ev.target.name === 'iotDevice') {
         this.addIotDevice();
@@ -142,24 +160,38 @@ export default class DeviceManagement extends React.Component {
               onChange={this.inputChange}
               onKeyPress={this.inputChange}
             />
-            <button className="submit-btn" disabled={this.state.loading} onClick={() => this.addIotDevice()}>
+            <button
+              className="submit-btn"
+              disabled={this.state.loading}
+              onClick={() => this.addIotDevice()}
+            >
               submit
             </button>
-            <button className="submit-btn" disabled={this.state.loading} onClick={() => this.getIotDevices()}>
+            <button
+              className="submit-btn"
+              disabled={this.state.loading}
+              onClick={() => this.getIotDevices()}
+            >
               refresh
             </button>
           </div>
           <h3>List of IoT Devices</h3>
           <div className="device-list">
             {this.state.iotDevices &&
-              this.state.iotDevices.map((device) => (
+              this.state.iotDevices.map(device => (
                 <div className="device-list-item" key={device.id}>
                   <span>id: {device.id}</span>
                   <span>edge_device_id: {device.edge_device_id}</span>
-                  <span className="clear-parent" onClick={() => this.clearParent(device.id)}>
+                  <span
+                    className="clear-parent"
+                    onClick={() => this.clearParent(device.id)}
+                  >
                     C
                   </span>
-                  <span className="delete" onClick={() => this.removeIotDevice(device.id)}>
+                  <span
+                    className="delete"
+                    onClick={() => this.removeIotDevice(device.id)}
+                  >
                     X
                   </span>
                 </div>
@@ -178,20 +210,31 @@ export default class DeviceManagement extends React.Component {
               onChange={this.inputChange}
               onKeyPress={this.inputChange}
             />
-            <button className="submit-btn" disabled={this.state.loading} onClick={() => this.addIotEdgeDevice()}>
+            <button
+              className="submit-btn"
+              disabled={this.state.loading}
+              onClick={() => this.addIotEdgeDevice()}
+            >
               submit
             </button>
-            <button className="submit-btn" disabled={this.state.loading} onClick={() => this.getEdgeDevices()}>
+            <button
+              className="submit-btn"
+              disabled={this.state.loading}
+              onClick={() => this.getEdgeDevices()}
+            >
               refresh
             </button>
           </div>
           <h3>List of IoT Edge Devices</h3>
           <div className="device-list">
             {this.state.iotEdgeDevices &&
-              this.state.iotEdgeDevices.map((device) => (
+              this.state.iotEdgeDevices.map(device => (
                 <div className="device-list-item" key={device.id}>
                   <span>id: {device.id}</span>
-                  <span className="delete" onClick={() => this.removeIotEdgeDevice(device.id)}>
+                  <span
+                    className="delete"
+                    onClick={() => this.removeIotEdgeDevice(device.id)}
+                  >
                     X
                   </span>
                 </div>

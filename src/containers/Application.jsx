@@ -1,11 +1,12 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import denim_bg from '../assets/images/DenimFabric.png';
 
 const Main = styled.article`
   display: grid;
   min-height: 100vh;
-  background-image: url(${(props) => props.image});
+  background-image: url(${props => props.image});
   background-repeat: no-repeat;
   background-color: #ffffff;
   background-attachment: fixed;
@@ -13,7 +14,7 @@ const Main = styled.article`
   grid-template-rows: 20% auto;
 `;
 
-export default class Application extends React.Component {
+class Application extends React.Component {
   render() {
     return (
       <Main id="app" image={denim_bg}>
@@ -22,3 +23,12 @@ export default class Application extends React.Component {
     );
   }
 }
+
+Application.propTypes = {
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ]).isRequired,
+};
+
+export default Application;
