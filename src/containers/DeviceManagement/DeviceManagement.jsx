@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 
-const baseApiUrl = process.env.REACT_APP_BASEAPIURL;
+const baseApiUrl = process.env.API_URL;
 
 export default class DeviceManagement extends React.Component {
   constructor() {

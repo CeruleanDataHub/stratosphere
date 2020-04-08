@@ -8,6 +8,9 @@ import Header from "./containers/Header/Header.jsx";
 import Navigation from "./containers/Navigation/Navigation.jsx";
 import Dashboard from "./containers/Dashboard/Dashboard.jsx";
 import NotificationPanel from './containers/NotificationPanel/NotificationPanel.jsx';
+import Device from "./containers/Device/Device.jsx";
+import DeviceManagement from "./containers/DeviceManagement/DeviceManagement.jsx";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
 
 const DenimAdmin = () => {
     const {
@@ -33,11 +36,20 @@ const DenimAdmin = () => {
     console.log('notification text ', notificationStatus);
     return (
         <Application className="container">
-            <Header />
-            <Navigation />
-            <Dashboard setNotificationStatus={addNotificationStatus}/>
-            <NotificationPanel text={notificationStatus}/>
-
+            <Router>
+                <Header />
+                <Navigation />
+                <Switch>
+                    <Route path="/devices/:id" component={Device}></Route>
+                    <Route path="/devices">
+                        <DeviceManagement/>
+                    </Route>
+                    <Route path="/">
+                        <Dashboard setNotificationStatus={addNotificationStatus}/>
+                        <NotificationPanel text={notificationStatus}/>
+                    </Route>
+                </Switch>
+            </Router>
         </Application>
     );
 }

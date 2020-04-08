@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Axios from 'axios';
 import io from 'socket.io-client';
+import { Link } from 'react-router-dom';
 
 const DashboardContainer = styled.section`
   margin-left: 18em;
@@ -97,7 +98,7 @@ export default class Dashboard extends React.Component {
                         key={resource.id}
                         onClick={() => this.showDeviceNotification(resource.id)}
                       >
-                        <span>{resource.id}</span>
+                        <Link to={`/devices/${resource.id}`}><span>{resource.id}</span></Link>
                         <span>{resource.edge_device_id}</span>
                       </div>
                     ))}
