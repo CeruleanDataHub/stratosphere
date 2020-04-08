@@ -6,6 +6,7 @@ import Axios from 'axios';
 import io from 'socket.io-client';
 import {useRouteMatch, Link, Switch, Route} from 'react-router-dom';
 import Device from './Device.jsx';
+
 const DashboardContainer = styled.section`
   margin-left: 18em;
   display: grid;
@@ -79,7 +80,7 @@ const Dashboard = () => {
                         key={resource.id}
                         to={`${url}/${resource.id}`}
                       >
-                        <span>{resource.id}</span>
+                        <Link to={`/devices/${resource.id}`}><span>{resource.id}</span></Link>
                         <span>{resource.edge_device_id}</span>
                       </Link>
                       //</div>
