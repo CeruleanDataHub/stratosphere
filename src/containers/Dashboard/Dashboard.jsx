@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 
 import styled from 'styled-components';
 import Axios from 'axios';
 import io from 'socket.io-client';
-
+import {useRouteMatch, Link, Switch, Route} from 'react-router-dom';
+import Device from './Device.jsx';
 const DashboardContainer = styled.section`
   margin-left: 18em;
   display: grid;
@@ -26,81 +27,62 @@ const Card = styled.div`
 `;
 
 const apiUrl = process.env.API_URL;
-class Dashboard extends React.Component {
-  constructor() {
-    super();
-    this.state = {iotDevices: [], status: []};
-  }
-  componentDidMount() {
-    this.getIotDevices();
-    const socket = io('https://iot-platform-api-test.azurewebsites.net');
+let socket;
 
-    socket.on('data', data => {
-      console.log('HERE');
-      if (data) {
-        //this.setState({ sensorData: data.data });
-        this.setState({
-          status: {
-            [data.id]: data.level,
-          },
-        });
-        //console.log(data);
-      }
-    });
-    setTimeout(() => {
-      this.setState({animate: true});
-    }, 100);
-    // this.getEdgeDevices();
-  }
+const getIotDevices = () => {};
+const showStatus = deviceId => {
+  this.setState({
+    showNotification: true,
+  });
+};
+const Dashboard = () => {
+  const [iotDevices, setIotDevices] = useState([]);
+  const [status, setStatus] = useState([]);
+  const [showNotification, setShowNotification] = useState(false);
+  let {path, url} = useRouteMatch();
 
-  getIotDevices = () => {
-    Axios.get(apiUrl + '/api/devices')
-      .then(res => {
-        this.setState({iotDevices: res.data});
-      })
-      .catch(err => {
+  useEffect(() => {
+    const fetchDevices = async () => {
+      try {
+        const resp = await Axios.get(apiUrl + '/api/devices');
+        console.log('HERE');
+        setIotDevices(resp.data);
+      } catch (err) {
         console.log(err);
-      });
-  };
+      }
+    };
+    fetchDevices();
+  }, []);
 
-  // getEdgeDevices = () => {
-  //     Axios.get(apiUrl + "/api/edges")
-  //         .then(res => {
-  //             this.setState({edgeDevices: res.data})
-  //         })
-  //         .catch(err => {
-  //             console.log(err)
-  //         })
-  //
-  // }
-  showDeviceNotification = deviceId => {
-    console.log('in the dashboard ', this.state.status);
-    console.log('deviceId', deviceId);
-    this.props.setNotificationStatus(this.state.status[deviceId]);
-  };
-  render() {
-    console.log(this.state.status);
-    return (
+  return (
+    <div>
+      {showNotification && <Notification />}
       <DashboardContainer id="dashboard">
         <CardDash>
           <Card>
             <div>
-              {this.state.iotDevices && (
+              {iotDevices && (
                 <div>
                   <div className="device-list-columns">
                     <span> Device Id</span>
                     <span>Edge Device Id</span>
                   </div>
                   <div>
-                    {this.state.iotDevices.map(resource => (
-                      <div
+                    {iotDevices.map(resource => (
+                      /*<div
                         className="device-list-item"
                         key={resource.id}
-                        onClick={() => this.showDeviceNotification(resource.id)}
+                        onClick={() => showStatus(resource.id)}
+                      >*/
+                      <Link
+                        className="device-list-item"
+                        key={resource.id}
+                        to={`${url}/${resource.id}`}
                       >
                         <span>{resource.id}</span>
                         <span>{resource.edge_device_id}</span>
-                      </div>
+                      </Link>
+                      //</div>
                     ))}
                   </div>
                 </div>
@@ -112,12 +94,7 @@ class Dashboard extends React.Component {
           <Card>THIS IS A CARD</Card>
         </CardDash>
       </DashboardContainer>
-    );
-  }
-}
-
-Dashboard.propTypes = {
-  setNotificationStatus: PropTypes.func.isRequired,
+    </div>
+  );
 };
-
 export default Dashboard;

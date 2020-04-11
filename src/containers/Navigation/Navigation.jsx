@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 import styled from 'styled-components';
 
 const NavBar = styled.nav`
@@ -81,11 +82,15 @@ export default class Navigation extends React.Component {
         <MenuItems>
           <MenuItem>
             <Icon className="lnr lnr-home"></Icon>
-            <MenuItemText menuOpen={menuOpen}>Home</MenuItemText>
+            <MenuItemText menuOpen={menuOpen}>
+              <Link to="/">Home</Link>
+            </MenuItemText>
           </MenuItem>
           <MenuItem>
             <Icon className="lnr lnr-rocket"></Icon>
-            <MenuItemText menuOpen={menuOpen}>Devices</MenuItemText>
+            <MenuItemText menuOpen={menuOpen}>
+              <Link to="/devices">Devices</Link>
+            </MenuItemText>
           </MenuItem>
         </MenuItems>
       </NavBar>
