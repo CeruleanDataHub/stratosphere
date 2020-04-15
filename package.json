@@ -9,8 +9,8 @@
     "format": "npm run prettier -- --write",
     "check-format": "npm run prettier -- --list-different",
     "validate": "npm run check-format && npm run lint && npm run build",
-    "dev": "webpack-dev-server",
-    "build": "webpack --mode production"
+    "dev": "webpack-dev-server --config webpack/dev.config.js",
+    "build": "webpack --config webpack/prod.config.js"
   },
   "repository": {
     "type": "git",
@@ -62,6 +62,7 @@
     "url-loader": "^4.0.0",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.10.3"
+    "webpack-dev-server": "^3.10.3",
+    "webpack-merge": "^4.2.2"
   }
 }
