@@ -1,6 +1,6 @@
 {
   "name": "iot-platform-admin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "admin ui",
   "main": "index.js",
   "scripts": {
