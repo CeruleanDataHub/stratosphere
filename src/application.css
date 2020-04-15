@@ -1,3 +1,6 @@
+.app {
+    margin-left: 18em;
+}
 .input-boxes {
     display: flex;
     justify-content: space-evenly;

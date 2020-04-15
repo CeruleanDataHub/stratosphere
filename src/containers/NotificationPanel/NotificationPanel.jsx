@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const Notification = styled.div`
@@ -9,8 +10,14 @@ const Notification = styled.div`
   background-color: #ffffff;
 `;
 
-export default class NotificationPanel extends React.Component {
+class NotificationPanel extends React.Component {
   render() {
     return <Notification id="notification">{this.props.text}</Notification>;
   }
 }
+
+NotificationPanel.propTypes = {
+  text: PropTypes.string,
+};
+
+export default NotificationPanel;
