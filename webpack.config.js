@@ -67,6 +67,7 @@ module.exports = {
       filename: './index.html',
     }),
     new Dotenv({
+      path: path.resolve(__dirname, '.env'),
       systemvars: true,
     }),
   ],
