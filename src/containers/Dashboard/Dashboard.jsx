@@ -80,7 +80,7 @@ const Dashboard = () => {
                         key={resource.id}
                         to={`${url}/${resource.id}`}
                       >
-                        <Link to={`/devices/${resource.id}`}><span>{resource.id}</span></Link>
+                        <span>{resource.id}</span>
                         <span>{resource.edge_device_id}</span>
                       </Link>
                       //</div>

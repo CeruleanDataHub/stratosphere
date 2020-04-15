@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const baseApiUrl = process.env.API_URL;
 
@@ -180,7 +181,9 @@ export default class DeviceManagement extends React.Component {
             {this.state.iotDevices &&
               this.state.iotDevices.map(device => (
                 <div className="device-list-item" key={device.id}>
-                  <span>id: {device.id}</span>
+                  <Link to={"/devices/" + device.id}>
+                    <span>id: {device.id}</span>
+                  </Link>
                   <span>edge_device_id: {device.edge_device_id}</span>
                   <span
                     className="clear-parent"
