@@ -27,7 +27,7 @@ const Card = styled.div`
 `;
 
 const apiUrl = process.env.BASE_API_URL;
-
+console.log('API_URL ', apiUrl);
 const Dashboard = () => {
   const [iotDevices, setIotDevices] = useState([]);
   let {url} = useRouteMatch();
