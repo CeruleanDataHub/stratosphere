@@ -6,7 +6,7 @@ import { cloneDeep } from 'lodash';
 import NotificationPanel from '../NotificationPanel/NotificationPanel.jsx';
 import io from 'socket.io-client';
 
-const baseApiUrl = process.env.DB_API_URL;
+const baseApiUrl = process.env.BASE_DB_API_URL;
 
 const DeviceContainer = styled.section`
   margin-left: 18em;
@@ -35,10 +35,10 @@ const NewRuleForm = styled.form`
 `;
 
 const AddOrRemoveIcon = styled.div`
-    cursor: pointer;
-    font-size: 24px;
-    margin-left: 5px;
-    display: inline-block;
+  cursor: pointer;
+  font-size: 24px;
+  margin-left: 5px;
+  display: inline-block;
 `;
 
 const Message = styled.div`
@@ -70,20 +70,18 @@ const INITIAL_FIELD = "temperature";
 
 const Device = () => {
 
+  const [ device, setDevice ] = useState({});
+  const [ infoMessage, setInfoMessage ] = useState("");
+  const [ errorMessage, setErrorMessage ] = useState("");
+  const [ dirty, setDirty ] = useState(false);
+  const [ deviceData, setDeviceData ] = useState('');
+  const { deviceId } = useParams();
+
   let newRuleNameField = ""
   let newRuleLevelField = ""
   let newRuleFieldField = ""
   let newRuleOperatorField = ""
   let newRuleValueField = ""
-
-  const [ device, setDevice ] = useState({});
-  const [ infoMessage, setInfoMessage ] = useState("");
-  const [ errorMessage, setErrorMessage ] = useState("");
-  const [ dirty, setDirty ] = useState(false);
-
-  const [ deviceData, setDeviceData ] = useState('');
-
-  const { deviceId } = useParams();
 
   useEffect(() => {
     axios
@@ -102,7 +100,7 @@ const Device = () => {
   }, []);
 
   useEffect(() => {
-    const socket = io(process.env.API_URL);
+    const socket = io(process.env.BASE_API_URL);
     const data = {
       deviceId,
     };
@@ -233,8 +231,8 @@ const Device = () => {
     let alertRules;
     let warningRules;
     if (device.properties) {
-      alertRules = device.properties.desired.alerts;
-      warningRules = device.properties.desired.warnings;
+      alertRules = device.properties.desired.alerts || [];
+      warningRules = device.properties.desired.warnings || [];
     }
     return (
         <DeviceContainer>
@@ -247,7 +245,7 @@ const Device = () => {
                 <h1>{device.deviceId}</h1>
                 <button onClick={save} disabled={!dirty} style={{marginRight: "1em"}}>Save</button>
               </div>
-              {Object.keys(alertRules).some((k) => alertRules[k] !== null) &&
+              { Object.keys(alertRules).some((k) => alertRules[k] !== null) &&
               <>
                 <h2>Alert rules</h2>
                 <RulesContainer>
@@ -255,7 +253,7 @@ const Device = () => {
                 </RulesContainer>
               </>
               }
-              {Object.keys(warningRules).some((k) => warningRules[k] !== null) &&
+              { Object.keys(warningRules).some((k) => warningRules[k] !== null) &&
               <>
                 <h2>Warning rules</h2>
                 <RulesContainer>
@@ -307,7 +305,7 @@ const Device = () => {
 
   const renderSubRules = (rules, ruleKey, level) => {
     const rule = rules[ruleKey];
-    return Object.keys(rule).filter((subRuleKey) => { return rules[ruleKey][subRuleKey] !== null}).map((subRuleKey, index) => {
+    return Object.keys(rule).filter((subRuleKey) => { return rules[ruleKey][subRuleKey] !== null}).map((subRuleKey) => {
       const subRule = rules[ruleKey][subRuleKey];
       return <div key={subRuleKey} style={{ marginLeft: "1em", display: "grid", gridTemplateColumns: "repeat(5, min-content)", gridGap: "5px", marginBottom: "5px" }}>
         <select value={subRule.field} onChange={handleChange(ruleKey, subRuleKey, "field", level)}>
@@ -321,9 +319,7 @@ const Device = () => {
         </select>
         <input type="number" defaultValue={subRule.value} onChange={handleChange(ruleKey, subRuleKey, "value", level)} />
         <AddOrRemoveIcon onClick={deleteSubRule(ruleKey, subRuleKey, level)}>-</AddOrRemoveIcon>
-        {index === 0 &&
-          <AddOrRemoveIcon onClick={addSubRule(ruleKey, level)}>+</AddOrRemoveIcon>
-        }
+        <AddOrRemoveIcon onClick={addSubRule(ruleKey, level)}>+</AddOrRemoveIcon>
       </div>
     });
   }

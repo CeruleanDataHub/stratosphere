@@ -1,11 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import PropTypes from 'prop-types';
-
 import styled from 'styled-components';
 import Axios from 'axios';
-import io from 'socket.io-client';
-import {useRouteMatch, Link, Switch, Route} from 'react-router-dom';
-import Device from './Device.jsx';
+import {useRouteMatch, Link} from 'react-router-dom';
 
 const DashboardContainer = styled.section`
   margin-left: 18em;
