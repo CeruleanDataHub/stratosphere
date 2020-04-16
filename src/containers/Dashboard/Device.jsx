@@ -10,8 +10,7 @@ const Device = props => {
   let [deviceData, setDeviceData] = useState('');
 
   useEffect(() => {
-    console.log(process.env.API_URL);
-    const socket = io(process.env.API_URL);
+    const socket = io(process.env.BASE_API_URL);
     const data = {
       deviceId,
     };
@@ -29,10 +28,6 @@ const Device = props => {
       });
     };
   }, []);
-
-  useEffect(() => {
-    console.log(deviceData);
-  }, [deviceData]);
 
   return (
     <div>

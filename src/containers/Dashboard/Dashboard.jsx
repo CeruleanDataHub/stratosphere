@@ -26,26 +26,16 @@ const Card = styled.div`
   height: 20em;
 `;
 
-const apiUrl = process.env.API_URL;
-let socket;
-
-const getIotDevices = () => {};
-const showStatus = deviceId => {
-  this.setState({
-    showNotification: true,
-  });
-};
+const apiUrl = process.env.BASE_API_URL;
+console.log('API_URL ', apiUrl);
 const Dashboard = () => {
   const [iotDevices, setIotDevices] = useState([]);
-  const [status, setStatus] = useState([]);
-  const [showNotification, setShowNotification] = useState(false);
-  let {path, url} = useRouteMatch();
+  let {url} = useRouteMatch();
 
   useEffect(() => {
     const fetchDevices = async () => {
       try {
-        const resp = await Axios.get(apiUrl + '/api/devices');
-        console.log('HERE');
+        const resp = await Axios.get(`${apiUrl}/api/devices`);
         setIotDevices(resp.data);
       } catch (err) {
         console.log(err);
@@ -56,7 +46,6 @@ const Dashboard = () => {
 
   return (
     <div>
-      {showNotification && <Notification />}
       <DashboardContainer id="dashboard">
         <CardDash>
           <Card>
@@ -69,11 +58,6 @@ const Dashboard = () => {
                   </div>
                   <div>
                     {iotDevices.map(resource => (
-                      /*<div
-                        className="device-list-item"
-                        key={resource.id}
-                        onClick={() => showStatus(resource.id)}
-                      >*/
                       <Link
                         className="device-list-item"
                         key={resource.id}
@@ -82,7 +66,6 @@ const Dashboard = () => {
                         <span>{resource.id}</span>
                         <span>{resource.edge_device_id}</span>
                       </Link>
-                      //</div>
                     ))}
                   </div>
                 </div>
