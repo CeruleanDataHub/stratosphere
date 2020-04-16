@@ -6,7 +6,7 @@ const env = () => {
   } else {
     if (process.env.NODE_ENV === 'development') {
       try {
-        const env_var = require('../env.js');
+        const env_var = require('../.env');
         if (env_var) {
           allEnv = combineEnv(env_var);
         }
