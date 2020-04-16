@@ -1,24 +1,28 @@
-const getEnv = async () => {
-  if (process.env.NODE_ENV === 'development') {
-    let dotEnv;
+let allEnv;
 
-    try {
-      const env_var = await import('../.env.js');
-      if (env_var && env_var.default) {
-        dotEnv = {...env_var.default};
-      }
-      return createEnv(dotEnv);
-    } catch (err) {
-      console.log(
-        '.env.js file missing. Please follow the instruction in the README',
-      );
-    }
+const env = () => {
+  if (allEnv) {
+    return allEnv;
   } else {
-    return createEnv({});
+    if (process.env.NODE_ENV === 'development') {
+      try {
+        const env_var = require('../env.js');
+        if (env_var) {
+          allEnv = combineEnv(env_var);
+        }
+      } catch (err) {
+        console.log(
+          'env.js file missing. Please follow the instruction in the README',
+        );
+      }
+    } else {
+      allEnv = combineEnv();
+    }
   }
+  return allEnv;
 };
 
-const createEnv = dotEnv => {
+const combineEnv = (dotEnv = {}) => {
   const processEnv = typeof process !== 'undefined' ? process.env : {};
   const injectedEnv = window && window.injectedEnv ? window.injectedEnv : {};
   const env = {
@@ -26,7 +30,7 @@ const createEnv = dotEnv => {
     ...processEnv,
     ...injectedEnv,
   };
-  console.log('ENV ', env);
   return env;
 };
-export default getEnv;
+
+export default env;

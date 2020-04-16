@@ -38,7 +38,6 @@ const Dashboard = () => {
       try {
         const env = await getEnv();
         const apiUrl = env.BASE_API_URL;
-        console.log('API_URL ', apiUrl);
 
         const resp = await Axios.get(`${apiUrl}/api/devices`);
         setIotDevices(resp.data);
