@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import io from 'socket.io-client';
+import getEnv from '../../config';
 import NotificationPanel from '../NotificationPanel/NotificationPanel.jsx';
 
 import './Device.css';
@@ -9,8 +10,10 @@ const Device = props => {
   let {deviceId} = useParams();
   let [deviceData, setDeviceData] = useState('');
 
-  useEffect(() => {
-    const socket = io(process.env.BASE_API_URL);
+  useEffect(async () => {
+    const env = await getEnv();
+    console.log('env in device', env);
+    const socket = io(env.BASE_API_URL);
     const data = {
       deviceId,
     };

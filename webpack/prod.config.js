@@ -1,5 +1,6 @@
 const merge = require('webpack-merge');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 const common = require('./common.config');
 
 module.exports = merge(common, {
@@ -28,5 +29,6 @@ module.exports = merge(common, {
       filename: 'css/[name].css',
       chunkFilename: 'css/[id].css',
     }),
+    new CopyPlugin([{from: 'src/inject.template.js', to: ''}]),
   ],
 });
