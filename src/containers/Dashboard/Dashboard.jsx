@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import Axios from 'axios';
 import {useRouteMatch, Link} from 'react-router-dom';
 
+import env from '../../config';
+
 const DashboardContainer = styled.section`
   margin-left: 18em;
   display: grid;
@@ -23,8 +25,6 @@ const Card = styled.div`
   height: 20em;
 `;
 
-const apiUrl = process.env.BASE_API_URL;
-console.log('API_URL ', apiUrl);
 const Dashboard = () => {
   const [iotDevices, setIotDevices] = useState([]);
   let {url} = useRouteMatch();
@@ -32,6 +32,8 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchDevices = async () => {
       try {
+        const envVar = env();
+        const apiUrl = envVar.BASE_API_URL;
         const resp = await Axios.get(`${apiUrl}/api/devices`);
         setIotDevices(resp.data);
       } catch (err) {
