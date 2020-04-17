@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import io from 'socket.io-client';
+import env from '../../config';
 import NotificationPanel from '../NotificationPanel/NotificationPanel.jsx';
 
 import './Device.css';
@@ -10,22 +11,32 @@ const Device = props => {
   let [deviceData, setDeviceData] = useState('');
 
   useEffect(() => {
-    const socket = io(process.env.BASE_API_URL);
-    const data = {
-      deviceId,
-    };
-    socket.emit('UPDATE_DEVICE_SELECTION', {
-      ...data,
-      prop: 'ADD',
-    });
-    socket.on('DEVICE_DATA', deviceData => {
-      setDeviceData(deviceData);
-    });
-    return function () {
+    let socket;
+    let cancelled = false;
+    if (!cancelled) {
+      const envVar = env();
+
+      socket = io(envVar.BASE_API_URL);
+      const data = {
+        deviceId,
+      };
       socket.emit('UPDATE_DEVICE_SELECTION', {
         ...data,
-        prop: 'REMOVE',
+        prop: 'ADD',
       });
+      socket.on('DEVICE_DATA', deviceData => {
+        setDeviceData(deviceData);
+      });
+      return function () {
+        socket.emit('UPDATE_DEVICE_SELECTION', {
+          ...data,
+          prop: 'REMOVE',
+        });
+      };
+    }
+    return () => {
+      cancelled = true;
+      socket.close();
     };
   }, []);
 
