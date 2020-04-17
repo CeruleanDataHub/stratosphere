@@ -8,7 +8,7 @@ import Application from './application.jsx';
 import Header from './containers/Header/Header.jsx';
 import Navigation from './containers/Navigation/Navigation.jsx';
 import Dashboard from './containers/Dashboard/Dashboard.jsx';
-import Device from './containers/Dashboard/Device.jsx';
+import Device from './containers/Device/Device.jsx';
 
 import config from './auth_config.json';
 import './index.css';
@@ -36,9 +36,7 @@ ReactDOM.render(
         </div>
         <Switch>
           <Route exact path="/devices" component={Dashboard} />
-          <Route path={`/devices/:deviceId`}>
-            <Device />
-          </Route>
+          <Route path={`/devices/:deviceId`} component={Device} />
           <Route path="/" />
         </Switch>
       </Application>
