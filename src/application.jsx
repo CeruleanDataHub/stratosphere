@@ -20,17 +20,17 @@ const Main = styled.article`
 `;
 
 const Application = props => {
-  const {loading} = useAuth0();
+  const {loading, isAuthenticated, loginWithRedirect} = useAuth0();
   // const [notificationStatus, setNotificationStatus] = useState(null);
 
   if (loading) {
     return <div> Loading... </div>;
   }
 
-  /*if (!isAuthenticated) {
-        loginWithRedirect({ returnTo: window.location.href });
-        return <div>Redirecting to login...</div>;
-    }*/
+  if (!isAuthenticated) {
+    loginWithRedirect({returnTo: window.location.href});
+    return <div>Redirecting to login...</div>;
+  }
   return (
     <Main id="app" image={denim_bg}>
       {props.children}
