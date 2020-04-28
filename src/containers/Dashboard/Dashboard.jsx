@@ -51,14 +51,14 @@ const Dashboard = () => {
             <div>
               {iotDevices && (
                 <div>
-                  <div className="device-list-columns">
+                  <div className="list-columns">
                     <span> Device Id</span>
                     <span>Edge Device Id</span>
                   </div>
                   <div>
                     {iotDevices.map(resource => (
                       <Link
-                        className="device-list-item"
+                        className="list-item"
                         key={resource.id}
                         to={`${url}/${resource.id}`}
                       >
