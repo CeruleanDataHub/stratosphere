@@ -68,7 +68,6 @@ const FIELDS = [
 const INITIAL_FIELD = 'temperature';
 
 const envVar = env();
-const baseDbApiUrl = envVar.BASE_DB_API_URL;
 const baseApiUrl = envVar.BASE_API_URL;
 
 const Device = () => {
@@ -87,7 +86,7 @@ const Device = () => {
 
   useEffect(() => {
     axios
-      .get(baseDbApiUrl + '/api/twin/' + deviceId)
+      .get(baseApiUrl + '/api/twin/' + deviceId)
       .then(res => {
         if (res.data.status === 404) {
           setErrorMessage(
@@ -200,7 +199,7 @@ const Device = () => {
     };
 
     axios
-      .post(baseDbApiUrl + '/api/twin/update', data)
+      .post(baseApiUrl + '/api/twin/update', data)
       .then(res => {
         if (res.status !== 201) {
           showErrorMessage('Error saving rules: ' + res.data.message);
