@@ -1,79 +1,86 @@
 .app {
-    margin-left: 18em;
+  margin-left: 18em;
 }
 .input-boxes {
-    display: flex;
-    justify-content: space-evenly;
-    margin: 50px 0;
+  display: flex;
+  justify-content: space-evenly;
+  margin: 50px 0;
 }
 
 .iot_device {
-    padding: 50px;
-    border: 1px solid black;
-    width: 500px;
+  padding: 50px;
+  border: 1px solid black;
+  width: 500px;
 }
 
 .edge_device {
-    padding: 50px;
-    border: 1px solid black;
-    width: 500px;
+  padding: 50px;
+  border: 1px solid black;
+  width: 500px;
 }
 
 .input-box {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
 }
 
 .submit-btn {
-    margin: 20px 0;
-    width: 75px;
+  margin: 20px 0;
+  width: 75px;
 }
 
 .title {
-    margin: 20px 0;
+  margin: 20px 0;
 }
 
-.device-list-columns {
-    display: flex;     
-    font-weight: 700;
-    font-size: large;
-    font-family: sans-serif;
-    border-bottom: 3px solid grey;
+.list-columns {
+  display: flex;
+  font-weight: 700;
+  font-size: large;
+  font-family: sans-serif;
+  border-bottom: 3px solid grey;
+  border-top: 3px solid gray;
 }
 
-.device-list-columns > span {
-    padding: 10px 4px 0;
-    flex: 1;
+.list-columns > span {
+  padding: 10px 4px 0;
+  flex: 1;
+  border-right: 3px solid gray;
 }
 
-.device-list-columns >span:first-child {
-    border-right: 3px solid gray;
+.list-columns > span:first-child {
+  border-left: 3px solid gray;
 }
 
-.device-list-item {
-    display: grid;
-    justify-content: space-around;
-    grid-template-columns: 50% 50%;
-    cursor: pointer;
+.list-row {
+  display: grid;
+  justify-content: space-around;
+  grid-template-columns: 50% 50%;
+  cursor: pointer;
 }
 
-.device-list-item > span {
-    padding: 10px 4px 0;
-    border-bottom: 1px solid black;
-    border-right: 1px solid black;
+.list-item {
+  padding: 10px 4px 0;
+  border-bottom: 1px solid black;
+  border-right: 1px solid black;
+  border-left: 1px solid black;
+}
+
+a {
+  text-decoration: none;
 }
 .delete {
-    cursor: pointer;
-    color: red;
+  cursor: pointer;
+  color: red;
 }
 
 .text-box {
-    height: 20px;
-    width: 250px;
+  height: 20px;
+  width: 250px;
 }
 
 .clear-parent {
-    cursor: pointer;
-    color: darkgoldenrod;
+  cursor: pointer;
+  color: darkgoldenrod;
 }

@@ -92,6 +92,12 @@ export default class Navigation extends React.Component {
               <MenuItemText menuOpen={menuOpen}>Devices</MenuItemText>
             </Link>
           </MenuItem>
+          <MenuItem>
+            <Link to="/user-management">
+              <Icon className="lnr lnr-users"></Icon>
+              <MenuItemText menuOpen={menuOpen}>User Management</MenuItemText>
+            </Link>
+          </MenuItem>
         </MenuItems>
       </NavBar>
     );
