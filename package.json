@@ -1,35 +1,70 @@
 {
   "name": "iot-platform-admin",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.2",
+  "description": "admin ui",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint .",
+    "prettier": "prettier --ignore-path .gitignore \"**/*.(js|jsx)\"",
+    "format": "npm run prettier -- --write",
+    "check-format": "npm run prettier -- --list-different",
+    "validate": "npm run check-format && npm run lint && npm run build",
+    "dev": "NODE_ENV=development webpack-dev-server --config webpack/dev.config.js",
+    "build": "NODE_ENV=production webpack --config webpack/prod.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DenimDataHub/iot-platform-admin.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DenimDataHub/iot-platform-admin/issues"
+  },
+  "homepage": "https://github.com/DenimDataHub/iot-platform-admin#readme",
   "dependencies": {
+    "@auth0/auth0-spa-js": "^1.6.5",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "axios": "^0.19.2",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
-    "react-scripts": "3.4.0"
+    "dotenv-webpack": "^1.7.0",
+    "history": "^4.10.1",
+    "lodash": "^4.17.15",
+    "normalize.css": "^8.0.1",
+    "prettier": "^2.0.4",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "3.4.0",
+    "socket.io-client": "^2.3.0",
+    "styled-components": "^5.0.1"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-transform-runtime": "^7.9.0",
+    "@babel/preset-env": "^7.9.0",
+    "@babel/preset-react": "^7.9.4",
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.1.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "copy-webpack-plugin": "^5.1.1",
+    "css-loader": "^3.4.2",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.1",
+    "eslint-loader": "^4.0.0",
+    "html-loader": "^1.0.0",
+    "html-webpack-plugin": "^4.0.1",
+    "husky": "^4.2.3",
+    "lint-staged": "^10.1.2",
+    "mini-css-extract-plugin": "^0.9.0",
+    "prop-types": "^15.7.2",
+    "style-loader": "^1.1.3",
+    "url-loader": "^4.0.0",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3",
+    "webpack-merge": "^4.2.2"
   }
 }
