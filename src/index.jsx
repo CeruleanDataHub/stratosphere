@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+import {Provider} from 'react-redux';
 import {createBrowserHistory} from 'history';
 
 import {Auth0Provider} from './auth0-spa.jsx';
@@ -12,6 +13,7 @@ import Device from './containers/Device/Device.jsx';
 import UserManagement from './containers/UserManagement/UserManagement.jsx';
 import User from './containers/UserManagement/User.jsx';
 import env from './config';
+import {store} from './store.jsx';
 import './index.css';
 const envVar = env();
 
@@ -23,6 +25,7 @@ const onRedirectCallback = appState => {
   );
 };
 ReactDOM.render(
+  <Provider store={store}>
   <Auth0Provider
     domain={envVar.AUTH0_DOMAIN}
     client_id={envVar.AUTH0_CLIENT_ID}
@@ -45,6 +48,7 @@ ReactDOM.render(
         </Switch>
       </Application>
     </Router>
-  </Auth0Provider>,
+  </Auth0Provider>
+  </Provider>,
   document.getElementById('root'),
 );
