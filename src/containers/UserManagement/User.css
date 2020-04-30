@@ -1,0 +1,50 @@
+.delete-marker {
+  cursor: pointer;
+  color: red;
+  font-weight: bold;
+  margin-left: 5px;
+}
+
+.row {
+  display: flex;
+}
+
+.role {
+  margin: 0 5px;
+  padding: 2px;
+  display: flex;
+  background-color: lightgray;
+  border: 1px solid gray;
+}
+
+.role-title {
+  padding: 3px 0;
+}
+
+.new-roles-container {
+  background-color: lightblue;
+  width: auto;
+  height: auto;
+  margin: 50px 0;
+  padding: 10px;
+}
+
+.new-roles-container--selection {
+  display: flex;
+  padding: 20px 5px;
+}
+
+.new-roles-container--label {
+  margin-right: 10px;
+}
+
+.new-roles-comtainer--select {
+  display: flex;
+  flex-direction: column;
+}
+
+.new-roles--container-save-roles {
+  display: flex;
+  min-height: 20px;
+  margin-bottom: 20px;
+}
