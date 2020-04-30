@@ -4,7 +4,7 @@ import Axios from 'axios';
 import {useRouteMatch, Link} from 'react-router-dom';
 
 import env from '../../config';
-
+import './Dashboard.css';
 const DashboardContainer = styled.section`
   margin-left: 18em;
   display: grid;
@@ -51,14 +51,14 @@ const Dashboard = () => {
             <div>
               {iotDevices && (
                 <div>
-                  <div className="list-columns">
+                  <div className="device-list-columns">
                     <span> Device Id</span>
                     <span>Edge Device Id</span>
                   </div>
                   <div>
                     {iotDevices.map(resource => (
                       <Link
-                        className="list-item"
+                        className="device-list-item"
                         key={resource.id}
                         to={`${url}/${resource.id}`}
                       >

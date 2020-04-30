@@ -1,0 +1,29 @@
+.device-list-columns {
+  display: flex;
+  font-weight: 700;
+  font-size: large;
+  font-family: sans-serif;
+  border-bottom: 3px solid grey;
+}
+
+.device-list-columns > span {
+  padding: 10px 4px 0;
+  flex: 1;
+}
+
+.device-list-columns > span:first-child {
+  border-right: 3px solid gray;
+}
+
+.device-list-item {
+  display: grid;
+  justify-content: space-around;
+  grid-template-columns: 50% 50%;
+  cursor: pointer;
+}
+
+.device-list-item > span {
+  padding: 10px 4px 0;
+  border-bottom: 1px solid black;
+  border-right: 1px solid black;
+}

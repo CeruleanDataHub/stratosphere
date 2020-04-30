@@ -10,6 +10,7 @@ import Navigation from './containers/Navigation/Navigation.jsx';
 import Dashboard from './containers/Dashboard/Dashboard.jsx';
 import Device from './containers/Device/Device.jsx';
 import UserManagement from './containers/UserManagement/UserManagement.jsx';
+import User from './containers/UserManagement/User.jsx';
 
 import config from './auth_config.json';
 import './index.css';
@@ -37,8 +38,8 @@ ReactDOM.render(
         <Switch>
           <Route exact path="/devices" component={Dashboard} />
           <Route path={`/devices/:deviceId`} component={Device} />
-          <Route path="/user-management" component={UserManagement} />
-          <Route path="/user-management/:userId" component={UserManagement} />
+          <Route exact path="/user-management" component={UserManagement} />
+          <Route path={`/user-management/user/:userId`} component={User} />
           <Route path="/" />
         </Switch>
       </Application>
