@@ -177,11 +177,3 @@ const User = () => {
 };
 
 export default User;
-
-/*
-New Role
-<select>
-Submit button
-*LIST OF ADDED ROLES*
-Save button
-*/
