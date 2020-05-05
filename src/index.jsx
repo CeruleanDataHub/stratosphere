@@ -26,29 +26,29 @@ const onRedirectCallback = appState => {
 };
 ReactDOM.render(
   <Provider store={store}>
-  <Auth0Provider
-    domain={envVar.AUTH0_DOMAIN}
-    client_id={envVar.AUTH0_CLIENT_ID}
-    audience={envVar.AUTH0_AUDIENCE}
-    redirect_uri={window.location.origin}
-    onRedirectCallback={onRedirectCallback}
-  >
-    <Router>
-      <Application className="container">
-        <div>
-          <Header />
-          <Navigation />
-        </div>
-        <Switch>
-          <Route exact path="/devices" component={Dashboard} />
-          <Route path={`/devices/:deviceId`} component={Device} />
-          <Route exact path="/user-management" component={UserManagement} />
-          <Route path={`/user-management/user/:userId`} component={User} />
-          <Route path="/" />
-        </Switch>
-      </Application>
-    </Router>
-  </Auth0Provider>
+    <Auth0Provider
+      domain={envVar.AUTH0_DOMAIN}
+      client_id={envVar.AUTH0_CLIENT_ID}
+      audience={envVar.AUTH0_AUDIENCE}
+      redirect_uri={window.location.origin}
+      onRedirectCallback={onRedirectCallback}
+    >
+      <Router>
+        <Application className="container">
+          <div>
+            <Header />
+            <Navigation />
+          </div>
+          <Switch>
+            <Route exact path="/devices" component={Dashboard} />
+            <Route path={`/devices/:deviceId`} component={Device} />
+            <Route exact path="/user-management" component={UserManagement} />
+            <Route path={`/user-management/user/:userId`} component={User} />
+            <Route path="/" />
+          </Switch>
+        </Application>
+      </Router>
+    </Auth0Provider>
   </Provider>,
   document.getElementById('root'),
 );

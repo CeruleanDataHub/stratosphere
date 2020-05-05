@@ -1,5 +1,7 @@
 import {configureStore} from '@reduxjs/toolkit';
-import denimMiddleware, {devicesReducer} from 'iot-platform-middleware-redux';
+import denimMiddleware, {
+  devicesReducer,
+} from '@denim/iot-platform-middleware-redux';
 import env from './config';
 
 const envVar = env();

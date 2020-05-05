@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import {useRouteMatch, Link} from 'react-router-dom';
 import './Dashboard.css';
 import {useSelector, useDispatch} from 'react-redux';
-import {getAllDevices} from 'iot-platform-middleware-redux';
+import {getAllDevices} from '@denim/iot-platform-middleware-redux';
 
 const DashboardContainer = styled.section`
   margin-left: 18em;
@@ -42,14 +42,14 @@ const Dashboard = () => {
         <CardDash>
           <Card>
             <div>
-              {devices.devices.all && (
+              {devices.all && (
                 <div>
                   <div className="device-list-columns">
                     <span> Device Id</span>
                     <span>Edge Device Id</span>
                   </div>
                   <div>
-                    {devices.devices.all.map(resource => (
+                    {devices.all.map(resource => (
                       <Link
                         className="device-list-item"
                         key={resource.id}
