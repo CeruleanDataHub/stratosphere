@@ -29,7 +29,7 @@ module.exports = merge(common, {
     new HtmlWebPackPlugin({
       template: './public/index.html',
       filename: './index.html',
-      production: false,
+      production: true,
       injectTemplate: '/inject.js',
     }),
     new MiniCssExtractPlugin({
