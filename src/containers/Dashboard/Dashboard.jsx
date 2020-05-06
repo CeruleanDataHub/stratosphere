@@ -34,7 +34,7 @@ const Dashboard = () => {
       try {
         const envVar = env();
         const apiUrl = envVar.BASE_API_URL;
-        const resp = await Axios.get(`${apiUrl}/api/devices`);
+        const resp = await Axios.get(`${apiUrl}/api/iot-device/all`);
         setIotDevices(resp.data);
       } catch (err) {
         console.log(err);
@@ -63,7 +63,9 @@ const Dashboard = () => {
                         to={`${url}/${resource.id}`}
                       >
                         <span>{resource.id}</span>
-                        <span>{resource.edge_device_id}</span>
+                        <span>
+                          {resource.edgeDevice && resource.edgeDevice.id}
+                        </span>
                       </Link>
                     ))}
                   </div>
