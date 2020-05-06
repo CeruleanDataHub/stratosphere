@@ -11,9 +11,9 @@ import Dashboard from './containers/Dashboard/Dashboard.jsx';
 import Device from './containers/Device/Device.jsx';
 import UserManagement from './containers/UserManagement/UserManagement.jsx';
 import User from './containers/UserManagement/User.jsx';
-
-import config from './auth_config.json';
+import env from './config';
 import './index.css';
+const envVar = env();
 
 const onRedirectCallback = appState => {
   createBrowserHistory().push(
@@ -22,10 +22,12 @@ const onRedirectCallback = appState => {
       : window.location.pathname,
   );
 };
+console.log(envVar.AUTH0_DOMAIN);
 ReactDOM.render(
   <Auth0Provider
-    domain={config.domain}
-    client_id={config.clientId}
+    domain={envVar.AUTH0_DOMAIN}
+    client_id={envVar.AUTH0_CLIENT_ID}
+    audience={envVar.AUTH0_AUDIENCE}
     redirect_uri={window.location.origin}
     onRedirectCallback={onRedirectCallback}
   >
