@@ -4,7 +4,7 @@ import Axios from 'axios';
 import {useRouteMatch, Link} from 'react-router-dom';
 
 import env from '../../config';
-
+import './Dashboard.css';
 const DashboardContainer = styled.section`
   margin-left: 18em;
   display: grid;
@@ -34,7 +34,7 @@ const Dashboard = () => {
       try {
         const envVar = env();
         const apiUrl = envVar.BASE_API_URL;
-        const resp = await Axios.get(`${apiUrl}/api/iot-device/all`);
+        const resp = await Axios.get(`${apiUrl}/iot-device/all`);
         setIotDevices(resp.data);
       } catch (err) {
         console.log(err);
@@ -63,7 +63,9 @@ const Dashboard = () => {
                         to={`${url}/${resource.id}`}
                       >
                         <span>{resource.id}</span>
-                        <span>{resource.edgeDevice && resource.edgeDevice.id}</span>
+                        <span>
+                          {resource.edgeDevice && resource.edgeDevice.id}
+                        </span>
                       </Link>
                     ))}
                   </div>

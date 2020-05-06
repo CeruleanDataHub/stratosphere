@@ -26,11 +26,12 @@ const Application = props => {
   if (loading) {
     return <div> Loading... </div>;
   }
-
-  /*if (!isAuthenticated) {
-        loginWithRedirect({ returnTo: window.location.href });
-        return <div>Redirecting to login...</div>;
-    }*/
+  /*
+  if (!isAuthenticated) {
+    loginWithRedirect({returnTo: window.location.href});
+    return <div>Redirecting to login...</div>;
+  }
+  */
   return (
     <Main id="app" image={denim_bg}>
       {props.children}
