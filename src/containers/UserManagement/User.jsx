@@ -9,7 +9,7 @@ import env from '../../config';
 import './User.css';
 
 const envVar = env();
-const baseDbApiUrl = envVar.BASE_DB_API_URL;
+const baseApiUrl = envVar.BASE_API_URL;
 const UserContainer = styled.section`
   margin-left: 18em;
   background-color: #ffffff;
@@ -22,13 +22,13 @@ const User = () => {
   const [selectedRoles, setSelectedRoles] = useState([]);
 
   useEffect(() => {
-    Axios.get(`${baseDbApiUrl}/api/user-management/user/${userId}`).then(resp =>
+    Axios.get(`${baseApiUrl}/user-management/user/${userId}`).then(resp =>
       setUserData(resp.data),
     );
   }, []);
 
   useEffect(() => {
-    Axios.get(`${baseDbApiUrl}/api/user-management/roles`)
+    Axios.get(`${baseApiUrl}/user-management/roles`)
       .then(async res => {
         if (res.data.status === 404) {
           console.log('Error fetching roles');
@@ -46,7 +46,7 @@ const User = () => {
   };
   const handleRemoveRole = roleId => {
     Axios.delete(
-      `${baseDbApiUrl}/api/user-management/user/${userData.user_id}/roles`,
+      `${baseApiUrl}/user-management/user/${userData.user_id}/roles`,
       {
         data: [roleId],
       },
@@ -93,7 +93,7 @@ const User = () => {
 
   const saveNewRoles = () => {
     Axios.put(
-      `${baseDbApiUrl}/api/user-management/user/${userData.user_id}/roles`,
+      `${baseApiUrl}/user-management/user/${userData.user_id}/roles`,
       selectedRoles.map(role => role.id),
     ).then(
       () =>

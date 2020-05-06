@@ -14,7 +14,7 @@ const UserManagementContainer = styled.section`
 `;
 
 const envVar = env();
-const baseDbApiUrl = envVar.BASE_DB_API_URL;
+const baseApiUrl = envVar.BASE_API_URL;
 
 const UserManagement = () => {
   const [roles, setRoles] = useState([]);
@@ -29,7 +29,7 @@ const UserManagement = () => {
   }, []);
 
   const getRolesAndPopulateList = () => {
-    Axios.get(`${baseDbApiUrl}/api/user-management/roles`)
+    Axios.get(`${baseApiUrl}/user-management/roles`)
       .then(async res => {
         if (res.data.status === 404) {
           console.log('Error fetching roles');
@@ -49,7 +49,7 @@ const UserManagement = () => {
     if (!roles) return;
     const responsePromises = roles.map(role => {
       return Axios.get(
-        `${baseDbApiUrl}/api/user-management/roles/${role.id}/users`,
+        `${baseApiUrl}/user-management/roles/${role.id}/users`,
       ).then(resp => {
         if (resp.data.status === 404) {
           console.log('Error fetching users');
@@ -66,7 +66,7 @@ const UserManagement = () => {
   };
 
   const getUsers = () => {
-    return Axios.get(`${baseDbApiUrl}/api/user-management/users`)
+    return Axios.get(`${baseApiUrl}/user-management/users`)
       .then(res => {
         if (res.data.status === 404) {
           console.log('Error fetching users');
@@ -107,7 +107,7 @@ const UserManagement = () => {
     const randomPw = 'abcdef' + Math.floor(Math.random() * 10000).toString();
     const roles =
       inputRoles === 'placeholder' || inputRoles === '' ? '' : [inputRoles];
-    Axios.post(`${baseDbApiUrl}/api/user-management/users`, {
+    Axios.post(`${baseApiUrl}/user-management/users`, {
       email: inputEmail,
       password: randomPw,
       roles: roles,

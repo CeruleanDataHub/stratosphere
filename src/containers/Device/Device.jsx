@@ -86,7 +86,7 @@ const Device = () => {
 
   useEffect(() => {
     axios
-      .get(baseApiUrl + '/api/twin/' + deviceId)
+      .get(baseApiUrl + '/twin/' + deviceId)
       .then(res => {
         if (res.data.status === 404) {
           setErrorMessage(
@@ -199,7 +199,7 @@ const Device = () => {
     };
 
     axios
-      .post(baseApiUrl + '/api/twin/update', data)
+      .post(baseApiUrl + '/twin/update', data)
       .then(res => {
         if (res.status !== 201) {
           showErrorMessage('Error saving rules: ' + res.data.message);
