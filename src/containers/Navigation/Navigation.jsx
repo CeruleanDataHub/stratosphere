@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
 import styled from 'styled-components';
+import {useAuth0} from '../../auth0-spa.jsx';
 
 const NavBar = styled.nav`
   position: fixed;
@@ -50,56 +51,80 @@ const MenuItemText = styled.span`
   display: ${props => (props.menuOpen ? 'block' : 'none')};
 `;
 
-export default class Navigation extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      menuOpen: true,
-    };
+const Navigation = () => {
+  const [menuOpen, setMenuOpen] = useState(true);
+  const {logout, isAuthenticated, loginWithRedirect} = useAuth0();
 
-    this.toggleMenu = this.toggleMenu.bind(this);
-  }
-
-  toggleMenu() {
+  const toggleMenu = () => {
     console.log('toggling state');
-    this.setState({menuOpen: !this.state.menuOpen});
+    setMenuOpen(!menuOpen);
+  };
+
+  const handleLogoutClick = () => {
+    logout({returnTo: `${window.location.origin}`});
+  };
+
+  const handleLoginClick = () => {
+    loginWithRedirect({returnTo: window.location.origin});
+  };
+
+  let menuIconClasses = ['lnr'];
+  if (menuOpen) {
+    menuIconClasses.push('lnr-cross');
+  } else {
+    menuIconClasses.push('lnr-menu');
   }
 
-  render() {
-    const {menuOpen} = this.state;
-    let menuIconClasses = ['lnr'];
-    if (menuOpen) {
-      menuIconClasses.push('lnr-cross');
-    } else {
-      menuIconClasses.push('lnr-menu');
-    }
+  return (
+    <NavBar id="left-navigation" menuOpen={menuOpen}>
+      <MenuOpen onClick={toggleMenu}>
+        <MenuIcon className={menuIconClasses}></MenuIcon>
+      </MenuOpen>
+      <MenuItems>
+        {isAuthenticated ? (
+          <>
+            <MenuItem>
+              <Link to="/">
+                <Icon className="lnr lnr-home"></Icon>
+                <MenuItemText menuOpen={menuOpen}>Home</MenuItemText>
+              </Link>
+            </MenuItem>
+            <MenuItem>
+              <Link to="/devices">
+                <Icon className="lnr lnr-rocket"></Icon>
+                <MenuItemText menuOpen={menuOpen}>Devices</MenuItemText>
+              </Link>
+            </MenuItem>
+            <MenuItem>
+              <Link to="/user-management">
+                <Icon className="lnr lnr-users"></Icon>
+                <MenuItemText menuOpen={menuOpen}>User Management</MenuItemText>
+              </Link>
+            </MenuItem>
+            <MenuItem>
+              <div
+                className="logout-btn"
+                onClick={handleLogoutClick}
+                style={{cursor: 'pointer'}}
+              >
+                Logout
+              </div>
+            </MenuItem>
+          </>
+        ) : (
+          <MenuItem>
+            <div
+              className="logout-btn"
+              onClick={handleLoginClick}
+              style={{cursor: 'pointer'}}
+            >
+              Login
+            </div>
+          </MenuItem>
+        )}
+      </MenuItems>
+    </NavBar>
+  );
+};
 
-    return (
-      <NavBar id="left-navigation" menuOpen={menuOpen}>
-        <MenuOpen onClick={this.toggleMenu}>
-          <MenuIcon className={menuIconClasses}></MenuIcon>
-        </MenuOpen>
-        <MenuItems>
-          <MenuItem>
-            <Link to="/">
-              <Icon className="lnr lnr-home"></Icon>
-              <MenuItemText menuOpen={menuOpen}>Home</MenuItemText>
-            </Link>
-          </MenuItem>
-          <MenuItem>
-            <Link to="/devices">
-              <Icon className="lnr lnr-rocket"></Icon>
-              <MenuItemText menuOpen={menuOpen}>Devices</MenuItemText>
-            </Link>
-          </MenuItem>
-          <MenuItem>
-            <Link to="/user-management">
-              <Icon className="lnr lnr-users"></Icon>
-              <MenuItemText menuOpen={menuOpen}>User Management</MenuItemText>
-            </Link>
-          </MenuItem>
-        </MenuItems>
-      </NavBar>
-    );
-  }
-}
+export default Navigation;
