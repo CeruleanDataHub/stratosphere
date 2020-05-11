@@ -1,11 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import {useParams} from 'react-router-dom';
-import axios from 'axios';
 import styled from 'styled-components';
 import {cloneDeep} from 'lodash';
 import NotificationPanel from '../NotificationPanel/NotificationPanel.jsx';
 import io from 'socket.io-client';
 import env from '../../config';
+import {useDispatch} from 'react-redux';
+import {getTwin, updateTwin} from '@denim/iot-platform-middleware-redux';
+import NewRuleForm from './NewRuleForm.jsx';
 
 const DeviceContainer = styled.section`
   margin-left: 18em;
@@ -16,21 +18,6 @@ const RulesContainer = styled.section`
   display: grid;
   grid-template-columns: repeat(2, min-content);
   grid-gap: 20px;
-`;
-
-const NewRuleFormContainer = styled.section`
-  margin-top: 1em;
-  border: 1px solid #000000;
-  border-radius: 0.25em;
-  background-color: lightgrey;
-  padding: 0 1em 1em;
-`;
-
-const NewRuleForm = styled.form`
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-gap: 10px;
-  justify-items: start;
 `;
 
 const AddOrRemoveIcon = styled.div`
@@ -66,6 +53,8 @@ const FIELDS = [
 ];
 
 const INITIAL_FIELD = 'temperature';
+const INITIAL_LEVEL = 'alert';
+const INITIAL_OPERATOR = '>';
 
 const envVar = env();
 const baseApiUrl = envVar.BASE_API_URL;
@@ -78,28 +67,26 @@ const Device = () => {
   const [deviceData, setDeviceData] = useState('');
   const {deviceId} = useParams();
 
-  let newRuleNameField = '';
-  let newRuleLevelField = '';
-  let newRuleFieldField = '';
-  let newRuleOperatorField = '';
-  let newRuleValueField = '';
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    axios
-      .get(baseApiUrl + '/twin/' + deviceId)
-      .then(res => {
-        if (res.data.status === 404) {
-          setErrorMessage(
-            'Error fetching device twin for ' + deviceId + ': Not found',
-          );
-        } else {
-          setDevice(res.data);
-        }
-      })
-      .catch(err => {
-        console.log(err);
-        setErrorMessage('Error fetching device twin: ' + err.message);
-      });
+    dispatch(getTwin(deviceId)).then(response => {
+      if (response.payload.error) {
+        setErrorMessage(`Error fetching device twin for device ${deviceId}`);
+      } else {
+        setDevice({
+          id: response.payload.body.deviceId,
+          state: {
+            properties: {
+              desired: {
+                alerts: response.payload.body.properties.desired.alerts,
+                warnings: response.payload.body.properties.desired.warnings,
+              },
+            },
+          },
+        });
+      }
+    });
   }, []);
 
   useEffect(() => {
@@ -137,21 +124,25 @@ const Device = () => {
   const deleteSubRule = (ruleId, subRuleId, level) => {
     return () => {
       const newDevice = cloneDeep(device);
-      newDevice.properties.desired[level][ruleId][subRuleId] = null;
-      if (containsOnlyNullFields(newDevice.properties.desired[level][ruleId])) {
-        newDevice.properties.desired[level][ruleId] = null;
+      newDevice.state.properties.desired[level][ruleId][subRuleId] = null;
+      if (
+        containsOnlyNullFields(
+          newDevice.state.properties.desired[level][ruleId],
+        )
+      ) {
+        newDevice.state.properties.desired[level][ruleId] = null;
       }
       setDevice(newDevice);
       setDirty(true);
     };
   };
 
-  const addSubRule = (ruleId, level) => {
+  const addSubRule = (ruleId, levelKey) => {
     return () => {
       const newDevice = cloneDeep(device);
-      newDevice.properties.desired[level][ruleId][randomId()] = {
+      newDevice.state.properties.desired[levelKey][ruleId][randomId()] = {
         field: INITIAL_FIELD,
-        operator: '>',
+        operator: INITIAL_OPERATOR,
         value: '',
       };
       setDevice(newDevice);
@@ -159,59 +150,38 @@ const Device = () => {
     };
   };
 
-  const addRule = event => {
-    event.preventDefault();
-    const newRuleName = newRuleNameField.value;
-    const newRuleLevel = newRuleLevelField.value;
-    const newRuleField = newRuleFieldField.value;
-    const newRuleOperator = newRuleOperatorField.value;
-    const newRuleValue = newRuleValueField.value;
+  const addRule = values => {
+    const levelKey = values.level === 'alert' ? 'alerts' : 'warnings';
+
     const newDevice = cloneDeep(device);
-    if (!newDevice.properties.desired[newRuleLevel]) {
-      newDevice.properties.desired[newRuleLevel] = {};
+
+    if (!newDevice.state.properties.desired[levelKey]) {
+      newDevice.state.properties.desired[levelKey] = {};
     }
-    newDevice.properties.desired[newRuleLevel][newRuleName] = {};
-    newDevice.properties.desired[newRuleLevel][newRuleName][randomId()] = {
-      field: newRuleField,
-      operator: newRuleOperator,
-      value: newRuleValue,
+    newDevice.state.properties.desired[levelKey][values.name] = {};
+    newDevice.state.properties.desired[levelKey][values.name][randomId()] = {
+      field: values.field,
+      operator: values.operator,
+      value: values.value,
     };
     setDevice(newDevice);
     setDirty(true);
-    document.getElementById('newRuleForm').reset();
   };
 
   const randomId = () => {
     return Math.random().toString(36).substring(7);
   };
 
-  const save = () => {
-    const data = {
-      id: device.deviceId,
-      state: {
-        properties: {
-          desired: {
-            alerts: device.properties.desired.alerts,
-            warnings: device.properties.desired.warnings,
-          },
-        },
-      },
-    };
-
-    axios
-      .post(baseApiUrl + '/twin/update', data)
-      .then(res => {
-        if (res.status !== 201) {
-          showErrorMessage('Error saving rules: ' + res.data.message);
-        } else {
-          showInfoMessage('Rules saved');
-          setDirty(false);
-        }
-      })
-      .catch(err => {
-        console.log(err);
-        showErrorMessage('Error saving rules: ' + err.message);
-      });
+  const save = async () => {
+    dispatch(updateTwin(device)).then(response => {
+      if (response.payload.error) {
+        console.log(response.payload.error);
+        showErrorMessage('Error saving rules');
+      } else {
+        showInfoMessage('Rules saved');
+        setDirty(false);
+      }
+    });
   };
 
   const showInfoMessage = message => {
@@ -231,7 +201,7 @@ const Device = () => {
   const handleChange = (ruleId, subRuleId, field, level) => {
     return event => {
       const newDevice = cloneDeep(device);
-      newDevice.properties.desired[level][ruleId][subRuleId][field] =
+      newDevice.state.properties.desired[level][ruleId][subRuleId][field] =
         event.target.value;
       setDevice(newDevice);
       setDirty(true);
@@ -239,17 +209,19 @@ const Device = () => {
   };
 
   const render = () => {
-    let alertRules;
-    let warningRules;
-    if (device.properties) {
-      alertRules = device.properties.desired.alerts || [];
-      warningRules = device.properties.desired.warnings || [];
+    let alertRules = [];
+    let warningRules = [];
+
+    if (device.state && device.state.properties) {
+      alertRules = device.state.properties.desired.alerts;
+      warningRules = device.state.properties.desired.warnings;
     }
+
     return (
       <DeviceContainer>
         <InfoMessage>{infoMessage}</InfoMessage>
         <ErrorMessage>{errorMessage}</ErrorMessage>
-        {device.properties && (
+        {device.state && (
           <div style={{margin: '1em'}}>
             <NotificationPanel text={deviceData.level}> </NotificationPanel>
             <div
@@ -284,65 +256,41 @@ const Device = () => {
                 </RulesContainer>
               </>
             )}
-            <NewRuleFormContainer>
-              <h2>New rule</h2>
-              <NewRuleForm id="newRuleForm" onSubmit={addRule}>
-                <span>Name</span>
-                <input type="text" ref={input => (newRuleNameField = input)} />
-                <span>Level</span>
-                <select ref={select => (newRuleLevelField = select)}>
-                  <option value="alerts">Alert</option>
-                  <option value="warnings">Warning</option>
-                </select>
-                <span>Field</span>
-                <select ref={select => (newRuleFieldField = select)}>
-                  {FIELDS.map(f => (
-                    <option key={f} value={f}>
-                      {f}
-                    </option>
-                  ))}
-                </select>
-                <span>Operator</span>
-                <select ref={select => (newRuleOperatorField = select)}>
-                  <option value=">">&#62;</option>
-                  <option value="<">&#60;</option>
-                </select>
-                <span>Value</span>
-                <input
-                  type="number"
-                  ref={input => (newRuleValueField = input)}
-                />
-                <button type="submit">Submit</button>
-              </NewRuleForm>
-            </NewRuleFormContainer>
+            <NewRuleForm
+              onSubmit={addRule}
+              fields={FIELDS}
+              initialField={INITIAL_FIELD}
+              initialLevel={INITIAL_LEVEL}
+              initialOperator={INITIAL_OPERATOR}
+            />
           </div>
         )}
       </DeviceContainer>
     );
   };
 
-  const renderRules = (rules, level) => {
+  const renderRules = (rules, levelKey) => {
     return Object.keys(rules)
       .filter(ruleKey => {
         return rules[ruleKey] !== null;
       })
       .map(ruleKey => {
-        return renderRule(rules, ruleKey, level);
+        return renderRule(rules, ruleKey, levelKey);
       });
   };
 
-  const renderRule = (rules, ruleKey, level) => {
+  const renderRule = (rules, ruleKey, levelKey) => {
     return [
       <div style={{margin: '0.2em 0'}} key={ruleKey}>
         {ruleKey}
       </div>,
       <div key={ruleKey + '_subrules'}>
-        {renderSubRules(rules, ruleKey, level)}
+        {renderSubRules(rules, ruleKey, levelKey)}
       </div>,
     ];
   };
 
-  const renderSubRules = (rules, ruleKey, level) => {
+  const renderSubRules = (rules, ruleKey, levelKey) => {
     const rule = rules[ruleKey];
     return Object.keys(rule)
       .filter(subRuleKey => {
@@ -363,7 +311,7 @@ const Device = () => {
           >
             <select
               value={subRule.field}
-              onChange={handleChange(ruleKey, subRuleKey, 'field', level)}
+              onChange={handleChange(ruleKey, subRuleKey, 'field', levelKey)}
             >
               {FIELDS.map(field => {
                 return (
@@ -375,7 +323,7 @@ const Device = () => {
             </select>
             <select
               value={subRule.operator}
-              onChange={handleChange(ruleKey, subRuleKey, 'operator', level)}
+              onChange={handleChange(ruleKey, subRuleKey, 'operator', levelKey)}
             >
               <option key=">" value=">">
                 &#62;
@@ -387,14 +335,14 @@ const Device = () => {
             <input
               type="number"
               defaultValue={subRule.value}
-              onChange={handleChange(ruleKey, subRuleKey, 'value', level)}
+              onChange={handleChange(ruleKey, subRuleKey, 'value', levelKey)}
             />
             <AddOrRemoveIcon
-              onClick={deleteSubRule(ruleKey, subRuleKey, level)}
+              onClick={deleteSubRule(ruleKey, subRuleKey, levelKey)}
             >
               -
             </AddOrRemoveIcon>
-            <AddOrRemoveIcon onClick={addSubRule(ruleKey, level)}>
+            <AddOrRemoveIcon onClick={addSubRule(ruleKey, levelKey)}>
               +
             </AddOrRemoveIcon>
           </div>

@@ -1,10 +1,10 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import styled from 'styled-components';
-import Axios from 'axios';
 import {useRouteMatch, Link} from 'react-router-dom';
-
-import env from '../../config';
 import './Dashboard.css';
+import {useSelector, useDispatch} from 'react-redux';
+import {getAllDevices} from '@denim/iot-platform-middleware-redux';
+
 const DashboardContainer = styled.section`
   margin-left: 18em;
   display: grid;
@@ -26,21 +26,14 @@ const Card = styled.div`
 `;
 
 const Dashboard = () => {
-  const [iotDevices, setIotDevices] = useState([]);
   let {url} = useRouteMatch();
 
+  const devices = useSelector(state => state.devices);
+
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    const fetchDevices = async () => {
-      try {
-        const envVar = env();
-        const apiUrl = envVar.BASE_API_URL;
-        const resp = await Axios.get(`${apiUrl}/iot-device/all`);
-        setIotDevices(resp.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchDevices();
+    dispatch(getAllDevices());
   }, []);
 
   return (
@@ -49,14 +42,14 @@ const Dashboard = () => {
         <CardDash>
           <Card>
             <div>
-              {iotDevices && (
+              {devices.all && (
                 <div>
                   <div className="device-list-columns">
                     <span> Device Id</span>
                     <span>Edge Device Id</span>
                   </div>
                   <div>
-                    {iotDevices.map(resource => (
+                    {devices.all.map(resource => (
                       <Link
                         className="device-list-item"
                         key={resource.id}
