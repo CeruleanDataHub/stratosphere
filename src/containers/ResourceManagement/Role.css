@@ -1,0 +1,52 @@
+.row {
+  padding: 5px 0;
+}
+
+.row > :first-child {
+  min-width: 120px;
+}
+
+.role {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.roles {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.resources {
+  display: flex;
+  flex-direction: column;
+}
+
+.resource {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 10px;
+}
+
+.resource-name {
+  font-weight: 600;
+}
+
+.new-permission-container {
+  background-color: lightblue;
+  padding: 20px;
+}
+
+.new-permission-container--label {
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+.server-identifier-container--select {
+  margin-right: 10px;
+}
+
+.new-roles--container-save-roles {
+  margin-top: 20px;
+  height: 30px;
+}

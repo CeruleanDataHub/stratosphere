@@ -138,7 +138,7 @@ const UserManagement = () => {
     <UserManagementContainer>
       <div style={{width: '50%'}}>
         <Card height={'auto'} item={{title: 'User Management'}}>
-          {users && users.length ? (
+          {users && users.length !== 0 ? (
             <>
               <div className="list-columns">
                 <span>User Name</span>
