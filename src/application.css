@@ -1,5 +1,5 @@
-.app {
-  margin-left: 18em;
+#app {
+  background-size: cover;
 }
 .input-boxes {
   display: flex;

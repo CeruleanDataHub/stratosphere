@@ -12,6 +12,9 @@ import Dashboard from './containers/Dashboard/Dashboard.jsx';
 import Device from './containers/Device/Device.jsx';
 import UserManagement from './containers/UserManagement/UserManagement.jsx';
 import User from './containers/UserManagement/User.jsx';
+import ResourceManagement from './containers/ResourceManagement/ResourceManagement.jsx';
+import Role from './containers/ResourceManagement/Role.jsx';
+
 import env from './config';
 import {store} from './store.jsx';
 import './index.css';
@@ -44,11 +47,21 @@ ReactDOM.render(
             <Route path={`/devices/:deviceId`} component={Device} />
             <Route exact path="/user-management" component={UserManagement} />
             <Route path={`/user-management/user/:userId`} component={User} />
+            <Route
+              exact
+              path={`/resource-management`}
+              component={ResourceManagement}
+            />
+            <Route
+              path={`/resource-management/role/:roleId`}
+              component={Role}
+            />
             <Route path="/" />
           </Switch>
         </Application>
       </Router>
     </Auth0Provider>
   </Provider>,
+
   document.getElementById('root'),
 );

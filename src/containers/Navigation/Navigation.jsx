@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
 import styled from 'styled-components';
 import {useAuth0} from '../../auth0-spa.jsx';
+import './Navigation.css';
 
 const NavBar = styled.nav`
   position: fixed;
@@ -49,6 +50,7 @@ const MenuItem = styled.li`
 
 const MenuItemText = styled.span`
   display: ${props => (props.menuOpen ? 'block' : 'none')};
+  color: white;
 `;
 
 const Navigation = () => {
@@ -102,23 +104,25 @@ const Navigation = () => {
               </Link>
             </MenuItem>
             <MenuItem>
-              <div
-                className="logout-btn"
-                onClick={handleLogoutClick}
-                style={{cursor: 'pointer'}}
-              >
-                Logout
+              <Link to="/resource-management">
+                <Icon className="lnr lnr-layers"></Icon>
+                <MenuItemText menuOpen={menuOpen}>
+                  Resource Management
+                </MenuItemText>
+              </Link>
+            </MenuItem>
+            <MenuItem>
+              <div className="user-btn" onClick={handleLogoutClick}>
+                <Icon className="lnr lnr-exit"></Icon>
+                <MenuItemText menuOpen={menuOpen}>Logout</MenuItemText>
               </div>
             </MenuItem>
           </>
         ) : (
           <MenuItem>
-            <div
-              className="logout-btn"
-              onClick={handleLoginClick}
-              style={{cursor: 'pointer'}}
-            >
-              Login
+            <div className="user-btn" onClick={handleLoginClick}>
+              <Icon className="lnr lnr-enter"></Icon>
+              <MenuItemText menuOpen={menuOpen}>Login</MenuItemText>
             </div>
           </MenuItem>
         )}
