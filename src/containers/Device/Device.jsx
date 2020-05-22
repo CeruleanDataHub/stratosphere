@@ -57,7 +57,6 @@ const INITIAL_LEVEL = 'alert';
 const INITIAL_OPERATOR = '>';
 
 const envVar = env();
-const baseApiUrl = envVar.BASE_API_URL;
 
 const Device = () => {
   const [device, setDevice] = useState({});
@@ -66,7 +65,6 @@ const Device = () => {
   const [dirty, setDirty] = useState(false);
   const [deviceData, setDeviceData] = useState('');
   const {deviceId} = useParams();
-
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -93,7 +91,7 @@ const Device = () => {
     let socket;
     let cancelled = false;
     if (!cancelled) {
-      socket = io(baseApiUrl);
+      socket = io(envVar.TELEMETRY_WEBSOCKET_URL);
       const data = {
         deviceId,
       };
