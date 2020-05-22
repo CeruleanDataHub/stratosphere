@@ -1,6 +1,7 @@
 import {configureStore} from '@reduxjs/toolkit';
 import denimMiddleware, {
   devicesReducer,
+  Auth0SessionProvider,
 } from '@denim/iot-platform-middleware-redux';
 import env from './config';
 
@@ -12,11 +13,19 @@ const settingsProvider = {
 
 const cacheProvider = {};
 
+const sessionProvider = new Auth0SessionProvider();
+
+const setToken = token => {
+  sessionProvider.setToken(token);
+};
+
 const store = configureStore({
   reducer: {
     devices: devicesReducer,
   },
-  middleware: [...denimMiddleware(settingsProvider, cacheProvider)],
+  middleware: [
+    ...denimMiddleware(settingsProvider, cacheProvider, sessionProvider),
+  ],
 });
 
-export {store};
+export {store, setToken};
