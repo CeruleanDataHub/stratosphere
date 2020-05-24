@@ -112,6 +112,14 @@ const Navigation = () => {
               </Link>
             </MenuItem>
             <MenuItem>
+              <Link to="/hierarchy-management">
+                <Icon className="lnr lnr-layers"></Icon>
+                <MenuItemText menuOpen={menuOpen}>
+                  Hierarchy Management
+                </MenuItemText>
+              </Link>
+            </MenuItem>
+            <MenuItem>
               <div className="user-btn" onClick={handleLogoutClick}>
                 <Icon className="lnr lnr-exit"></Icon>
                 <MenuItemText menuOpen={menuOpen}>Logout</MenuItemText>
