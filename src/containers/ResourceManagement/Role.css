@@ -1,4 +1,5 @@
 .row {
+  display: flex;
   padding: 5px 0;
 }
 
@@ -6,13 +7,16 @@
   min-width: 120px;
 }
 
-.role {
+.permission {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 4px;
+  margin: 0 5px 4px;
+  padding: 2px;
+  background-color: lightgray;
+  border: 1px solid gray;
 }
 
-.roles {
+.permissions {
   display: flex;
   flex-wrap: wrap;
 }
@@ -46,7 +50,7 @@
   margin-right: 10px;
 }
 
-.new-roles--container-save-roles {
+.new-permission--container-save-permissions {
   margin-top: 20px;
   height: 30px;
 }

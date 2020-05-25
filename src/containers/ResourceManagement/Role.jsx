@@ -135,8 +135,8 @@ const Role = () => {
 
   const renderPermission = (permissionName, serverIdentifier, handle) => {
     return (
-      <div className="role" key={permissionName}>
-        <div className="role-name">{permissionName}</div>
+      <div className="permission" key={permissionName}>
+        <div className="permission-name">{permissionName}</div>
         <div>
           <span
             className="lnr lnr-cross delete-marker"
@@ -156,7 +156,7 @@ const Role = () => {
     return servers.map(server => (
       <div className="resource" key={server.id}>
         <div className="resource-name">{server.name}</div>
-        <div className="roles">
+        <div className="permissions">
           {server.permissions.map(permission =>
             renderPermission(
               permission.name,
@@ -224,7 +224,7 @@ const Role = () => {
         if (key === 'permissions') {
           return (
             <div className="row" key={key}>
-              <span className="role-title">Permissions:</span>{' '}
+              <span className="permission-title">Permissions:</span>{' '}
               <div className="resources">{renderResourceServers(value)}</div>
             </div>
           );
@@ -297,14 +297,16 @@ const Role = () => {
                 ))}
             </select>
           )}
-          <div className="new-roles--container-save-roles">
-            {selectedPermissions.map(permission => {
-              return renderPermission(
-                permission,
-                selectedResourceServer,
-                handleRemoveUnsavedPermission,
-              );
-            })}
+          <div className="new-permission--container-save-permissions">
+            <div className="permissions">
+              {selectedPermissions.map(permission => {
+                return renderPermission(
+                  permission,
+                  selectedResourceServer,
+                  handleRemoveUnsavedPermission,
+                );
+              })}
+            </div>
           </div>
           <button name="save" onClick={handleSavePermissions}>
             Save

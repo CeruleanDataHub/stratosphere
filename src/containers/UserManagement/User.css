@@ -5,46 +5,91 @@
   margin-left: 5px;
 }
 
-.row {
+.user-details--row {
+  display: flex;
+  padding: 5px 0;
+  margin: 5px 0;
+}
+
+.current-roles--row {
   display: flex;
 }
 
-.role {
+.current-permissions--row {
+  display: flex;
+  padding: 10px;
+  border: 1px dotted blue;
+  margin-top: 5px;
+}
+
+.current-permission--title {
+  width: 200px;
+  min-width: 200px;
+  text-align: left;
+}
+
+.current-permission--permissions {
+  max-width: 700px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.role-container {
+  width: 1000px;
+  padding: 5px 0;
+  margin: 5px 0;
+}
+
+.permission-container {
+  width: 1000px;
+  padding: 5px 0;
+  margin: 5px 0;
+}
+
+.current-role {
   margin: 0 5px;
   padding: 2px;
   display: flex;
   background-color: lightgray;
   border: 1px solid gray;
+  height: 20px;
 }
 
-.role-title {
-  padding: 3px 0;
+.current-permission {
+  margin: 5px;
+  padding: 2px;
+  display: flex;
+  background-color: lightgray;
+  border: 1px solid gray;
+  height: 20px;
 }
 
-.new-roles-container {
+.new-right-container {
   background-color: lightblue;
   width: auto;
   height: auto;
-  margin: 50px 0;
   padding: 10px;
+  margin: 10px 0;
 }
 
-.new-roles-container--selection {
+.new-right-container--selection {
   display: flex;
   padding: 20px 5px;
 }
 
-.new-roles-container--label {
+.new-right-container--label {
   margin-right: 10px;
 }
 
-.new-roles-comtainer--select {
+.new-right-container--select {
   display: flex;
   flex-direction: column;
+  margin-right: 10px;
 }
 
-.new-roles--container-save-roles {
+.new-right--container-rights {
   display: flex;
-  min-height: 20px;
+  min-height: 30px;
+  min-width: 300px;
   margin-bottom: 20px;
 }
