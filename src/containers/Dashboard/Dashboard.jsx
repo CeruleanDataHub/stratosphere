@@ -49,18 +49,20 @@ const Dashboard = () => {
                     <span>Edge Device Id</span>
                   </div>
                   <div>
-                    {devices.all.map(resource => (
-                      <Link
-                        className="device-list-item"
-                        key={resource.id}
-                        to={`${url}/${resource.id}`}
-                      >
-                        <span>{resource.id}</span>
-                        <span>
-                          {resource.edgeDevice && resource.edgeDevice.id}
-                        </span>
-                      </Link>
-                    ))}
+                    {devices.all
+                      .filter(d => d.type === 'node')
+                      .map(resource => (
+                        <Link
+                          className="device-list-item"
+                          key={resource.external_id}
+                          to={`${url}/${resource.external_id}`}
+                        >
+                          <span>{resource.external_id}</span>
+                          <span>
+                            {resource.parent && resource.parent.external_id}
+                          </span>
+                        </Link>
+                      ))}
                   </div>
                 </div>
               )}
