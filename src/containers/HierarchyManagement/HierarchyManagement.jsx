@@ -1,15 +1,21 @@
 import React, {useEffect, useState, useRef} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import styled from 'styled-components';
-import SortableTree, {
-  addNodeUnderParent,
-  removeNodeAtPath,
-} from 'react-sortable-tree';
+import SortableTree from 'react-sortable-tree';
 import Axios from 'axios';
+import {
+  getHierarchyTree,
+  addHierarchy,
+  deleteHierarchy,
+  setHierarchyTree,
+  editHierarchy,
+} from '@denim/iot-platform-middleware-redux';
 
 import env from '../../config';
 import {useAuth0} from '../../auth0-spa.jsx';
 
 import NotificationPanel from '../NotificationPanel/NotificationPanel.jsx';
+
 const HierarchyManagementContainer = styled.section`
   margin-left: 18em;
   background-color: #ffffff;
@@ -40,26 +46,23 @@ const Cover = styled.div`
 const envVar = env();
 
 const HierarchyManagement = () => {
-  const [hierarchy, setHierarchy] = useState([]);
   const [showNewHierarchyModal, setShowNewHierarchyModal] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
-
+  const [showEditHierarchyModal, setShowEditHierarchyModal] = useState(false);
   const [currentNode, setCurrentNode] = useState({});
-  const {getTokenSilently} = useAuth0();
+  const [users, setUsers] = useState([]);
+
   const hierarchyNameRef = useRef(null);
   const hierarchyTypeRef = useRef(null);
+  const newHierarchyNameRef = useRef(null);
+  const {getTokenSilently} = useAuth0();
+  const dispatch = useDispatch();
 
-  const getHierarchyTree = async () => {
-    const token = await getTokenSilently();
-    Axios.get(`${envVar.BASE_API_URL}/hierarchy/tree`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }).then(resp => {
-      setHierarchy(resp.data);
-    });
-  };
+  const hierarchies = useSelector(state => state.hierarchies.tree);
+  console.log('hierarchies', hierarchies);
 
+  /*    
+  // Move node code, could be used in the future
   const setNewNodePosition = async data => {
     const {node, nextParentNode} = data;
     const token = await getTokenSilently();
@@ -72,36 +75,45 @@ const HierarchyManagement = () => {
         Authorization: `Bearer ${token}`,
       },
     }).then(resp => console.log('Resp : ' + resp));
+  }; */
+
+  const getUsers = async () => {
+    const token = await getTokenSilently();
+    console.log(token);
+    await Axios({
+      method: 'GET',
+      url: `${envVar.AUTH0_PROXY_URL}/users?fields=user_id%2Cemail%2Cname&include_fields=true`,
+      headers: {authorization: 'Bearer ' + token},
+    })
+      .then(resp => {
+        setUsers(resp.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
   };
 
   useEffect(() => {
-    getHierarchyTree();
+    dispatch(getHierarchyTree());
+    getUsers();
   }, []);
 
   const addNodeToDb = async () => {
     const hierarchyName = hierarchyNameRef.current.value;
     const hierarchyType = hierarchyTypeRef.current.value;
-    const token = await getTokenSilently();
 
     const hierarchyToAdd = {
       type: hierarchyType,
       name: hierarchyName,
-      parent: currentNode.parentId,
+      parent: currentNode.d,
     };
 
-    const addedHierarchy = await Axios.post(
-      `${envVar.BASE_API_URL}/hierarchy/`,
-      hierarchyToAdd,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    ).then(resp => resp.data);
+    dispatch(addHierarchy(hierarchyToAdd)).then(() => {
+      dispatch(getHierarchyTree());
+    });
+    /*
     addedHierarchy.title = addedHierarchy.name;
     addedHierarchy.subtitle = addedHierarchy.description;
-
-    console.log(currentNode);
 
     const newHierarchy = addNodeUnderParent({
       treeData: hierarchy,
@@ -111,53 +123,79 @@ const HierarchyManagement = () => {
       newNode: addedHierarchy,
       addAsFirstChild: true,
     }).treeData;
-
-    setHierarchy(newHierarchy);
+    */
   };
 
-  const handleAddNodeClick = (ev, node, path) => {
+  const handleAddNodeClick = (ev, node) => {
     ev.preventDefault();
     setCurrentNode({
       parentId: node.id,
-      parentName: node.name,
-      parentKey: path[path.length - 1],
     });
     setShowNewHierarchyModal(true);
   };
 
-  const handleRemoveNodeClick = async (ev, node, path) => {
+  const handleRemoveNodeClick = async (ev, node) => {
     ev.preventDefault();
     setCurrentNode({
       name: node.name,
     });
-    const token = await getTokenSilently();
 
-    await Axios.delete(`${envVar.BASE_API_URL}/hierarchy/${node.id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then(() => {
-        const newHierarchy = removeNodeAtPath({
-          treeData: hierarchy,
-          path,
-          getNodeKey: ({treeIndex}) => treeIndex,
-        });
-        setHierarchy(newHierarchy);
-      })
-      .catch(err => {
-        if (
-          err.response.data.message &&
-          err.response.data.message.includes('contains children')
-        ) {
+    dispatch(deleteHierarchy(node.id)).then(resp => {
+      if (resp.error) {
+        {
           setShowNotification(true);
           setTimeout(() => {
             setShowNotification(false);
           }, 5000);
         }
-      });
+      }
+      dispatch(getHierarchyTree());
+    });
   };
 
+  const handleEditNodeClick = async (ev, node) => {
+    ev.preventDefault();
+    setCurrentNode(node);
+    setShowEditHierarchyModal(true);
+  };
+
+  const handleEditHierarchy = () => {
+    const hierarchyName = newHierarchyNameRef.current.value;
+    dispatch(editHierarchy({id: currentNode.id, name: hierarchyName})).then(
+      dispatch(getHierarchyTree()),
+    );
+  };
+  /*
+  const addPermissionToAUser = async userId => {
+    const token = await getTokenSilently();
+
+    const permissions = [
+      {
+        resource_server_identifier: envVar.AUTH0_APP_SERVER_ID,
+        permission_name: `uuid:${currentNode.uuid}:read`,
+      },
+      {
+        resource_server_identifier: envVar.AUTH0_APP_SERVER_ID,
+        permission_name: `uuid:${currentNode.uuid}:write`,
+      },
+      {
+        resource_server_identifier: envVar.AUTH0_APP_SERVER_ID,
+        permission_name: `uuid:${currentNode.uuid}:execute`,
+      },
+    ];
+    Axios.post(
+      `${auth0ProxyUrl}/users/${userId}/permissions`,
+      {
+        permissions: permissions,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    ).then(() => {});
+  };
+*/
   const handleGenerateNodeProps = ({node, path}) => ({
     buttons: [
       <button
@@ -176,6 +214,17 @@ const HierarchyManagement = () => {
         style={{
           border: '0px',
           cursor: 'pointer',
+          backgroundColor: 'orange',
+        }}
+        onClick={ev => handleEditNodeClick(ev, node, path)}
+      >
+        e
+      </button>,
+      <button
+        key={path}
+        style={{
+          border: '0px',
+          cursor: 'pointer',
           backgroundColor: 'lightcoral',
         }}
         onClick={ev => handleRemoveNodeClick(ev, node, path)}
@@ -184,6 +233,7 @@ const HierarchyManagement = () => {
       </button>,
     ],
   });
+  console.log('USERS : ', users);
   return (
     <HierarchyManagementContainer>
       <div>Hierarchy Management</div>
@@ -211,21 +261,52 @@ const HierarchyManagement = () => {
           </Modal>
         </Cover>
       )}
+      {showEditHierarchyModal && users && (
+        <Cover>
+          <Modal>
+            <div>
+              New Hierarchy Name:
+              <input
+                type="text"
+                ref={newHierarchyNameRef}
+                defaultValue={currentNode.name}
+              />
+            </div>
+            <select name="users">
+              {users.map(user => {
+                <option value={user.user_id}>{user.name}</option>;
+              })}
+            </select>
+            <button
+              onClick={() => {
+                handleEditHierarchy();
+                setShowEditHierarchyModal(false);
+              }}
+            >
+              Save
+            </button>
+            <button onClick={() => setShowEditHierarchyModal(false)}>
+              Cancel
+            </button>
+          </Modal>
+        </Cover>
+      )}
       {showNotification ? (
-        <NotificationPanel
-          text={`Cannot delete ${currentNode.name} because it contains children`}
-        />
+        <NotificationPanel text={`Cannot delete ${currentNode.name}`} />
       ) : (
         <div style={{height: '55px'}}></div>
       )}
-      <SortableTree
-        treeData={hierarchy}
-        onChange={treeData => {
-          setHierarchy(treeData);
-        }}
-        onMoveNode={setNewNodePosition}
-        generateNodeProps={handleGenerateNodeProps}
-      />
+      {hierarchies && (
+        <SortableTree
+          treeData={hierarchies}
+          onChange={treeData => {
+            dispatch(setHierarchyTree(treeData));
+          }}
+          // onMoveNode={setNewNodePosition}
+          canDrag={false}
+          generateNodeProps={handleGenerateNodeProps}
+        />
+      )}
     </HierarchyManagementContainer>
   );
 };
