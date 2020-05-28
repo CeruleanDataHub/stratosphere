@@ -13,8 +13,10 @@ import {
 
 import env from '../../config';
 import {useAuth0} from '../../auth0-spa.jsx';
-
 import NotificationPanel from '../NotificationPanel/NotificationPanel.jsx';
+
+import './HierarchyManagement.css';
+
 const HierarchyManagementContainer = styled.section`
   margin-left: 18em;
   background-color: #ffffff;
@@ -26,11 +28,15 @@ const Modal = styled.div`
   left: 50%;
   margin-top: -150px;
   margin-left: -250px;
+  padding: 20px 30px;
   width: 500px;
   height: 300px;
   z-index: 100;
   background-color: white;
   border: 1px black solid;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `;
 const Cover = styled.div`
   position: fixed;
@@ -50,6 +56,9 @@ const HierarchyManagement = () => {
   const [showEditHierarchyModal, setShowEditHierarchyModal] = useState(false);
   const [currentNode, setCurrentNode] = useState({});
   const [users, setUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [showPermissionAdded, setShowPermissionAdded] = useState(false);
+  const [permissionAddedMsg, setPermissionAddedMsg] = useState(false);
 
   const hierarchyNameRef = useRef(null);
   const hierarchyTypeRef = useRef(null);
@@ -58,7 +67,6 @@ const HierarchyManagement = () => {
   const dispatch = useDispatch();
 
   const hierarchies = useSelector(state => state.hierarchies.tree);
-  console.log('hierarchies', hierarchies);
 
   // Move node code, could be used in the future
   /*const setNewNodePosition = async data => {
@@ -76,12 +84,10 @@ const HierarchyManagement = () => {
   }*/
 
   const getUsers = async () => {
-    const token = await getTokenSilently();
-    console.log(token);
     await Axios({
       method: 'GET',
       url: `${envVar.AUTH0_PROXY_URL}/users?fields=user_id%2Cemail%2Cname&include_fields=true`,
-      headers: {authorization: 'Bearer ' + token},
+      headers: {authorization: 'Bearer ' + (await getTokenSilently())},
     })
       .then(resp => {
         setUsers(resp.data);
@@ -146,26 +152,26 @@ const HierarchyManagement = () => {
       dispatch(getHierarchyTree()),
     );
   };
-  /*
-  const addPermissionToAUser = async userId => {
+
+  const handleAddPermissionToAUser = async () => {
     const token = await getTokenSilently();
 
     const permissions = [
       {
-        resource_server_identifier: envVar.AUTH0_APP_SERVER_ID,
+        resource_server_identifier: envVar.AUTH0_AUDIENCE,
         permission_name: `uuid:${currentNode.uuid}:read`,
       },
       {
-        resource_server_identifier: envVar.AUTH0_APP_SERVER_ID,
+        resource_server_identifier: envVar.AUTH0_AUDIENCE,
         permission_name: `uuid:${currentNode.uuid}:write`,
       },
       {
-        resource_server_identifier: envVar.AUTH0_APP_SERVER_ID,
+        resource_server_identifier: envVar.AUTH0_AUDIENCE,
         permission_name: `uuid:${currentNode.uuid}:execute`,
       },
     ];
     Axios.post(
-      `${auth0ProxyUrl}/users/${userId}/permissions`,
+      `${envVar.AUTH0_PROXY_URL}/users/${selectedUser}/permissions`,
       {
         permissions: permissions,
       },
@@ -174,9 +180,21 @@ const HierarchyManagement = () => {
           Authorization: `Bearer ${token}`,
         },
       },
-    ).then(() => {});
+    )
+      .then(() => {
+        setPermissionAddedMsg('Added permission');
+      })
+      .catch(() => {
+        setPermissionAddedMsg('Error adding permission');
+      })
+      .finally(() => {
+        setShowPermissionAdded(true);
+        setTimeout(() => {
+          setShowPermissionAdded(false);
+        }, 5000);
+      });
   };
-*/
+
   const handleGenerateNodeProps = ({node, path}) => ({
     buttons: [
       <button
@@ -244,30 +262,56 @@ const HierarchyManagement = () => {
       {showEditHierarchyModal && users && (
         <Cover>
           <Modal>
-            <div>
-              New Hierarchy Name:
-              <input
-                type="text"
-                ref={newHierarchyNameRef}
-                defaultValue={currentNode.name}
-              />
+            <div className="new-hierarchy-dialog">
+              <div>
+                New Hierarchy Name:
+                <input
+                  type="text"
+                  ref={newHierarchyNameRef}
+                  defaultValue={currentNode.name}
+                />
+              </div>
+              <button
+                onClick={() => {
+                  handleEditHierarchy();
+                  setShowEditHierarchyModal(false);
+                }}
+              >
+                Save
+              </button>
             </div>
-            <select name="users">
-              {users.map(user => {
-                <option value={user.user_id}>{user.name}</option>;
-              })}
-            </select>
-            <button
-              onClick={() => {
-                handleEditHierarchy();
-                setShowEditHierarchyModal(false);
-              }}
-            >
-              Save
-            </button>
-            <button onClick={() => setShowEditHierarchyModal(false)}>
-              Cancel
-            </button>
+            <div className="user-permission-dialog">
+              <select
+                name="users"
+                onChange={e => {
+                  setSelectedUser(e.target.value);
+                }}
+              >
+                <option value={null}>Select user</option>
+                {users.map(user => (
+                  <option key={user.user_id} value={user.user_id}>
+                    {user.name}
+                  </option>
+                ))}
+              </select>
+              <button
+                disabled={!selectedUser}
+                onClick={handleAddPermissionToAUser}
+              >
+                Add permission
+              </button>
+            </div>
+            {showPermissionAdded ? (
+              <div>{permissionAddedMsg}</div>
+            ) : (
+              <div style={{height: '20px'}}></div>
+            )}
+
+            <div className="cancel-btn">
+              <button onClick={() => setShowEditHierarchyModal(false)}>
+                Cancel
+              </button>
+            </div>
           </Modal>
         </Cover>
       )}

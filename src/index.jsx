@@ -30,6 +30,7 @@ const onRedirectCallback = appState => {
       : window.location.pathname,
   );
 };
+
 ReactDOM.render(
   <Provider store={store}>
     <Auth0Provider
