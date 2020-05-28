@@ -15,7 +15,6 @@ import env from '../../config';
 import {useAuth0} from '../../auth0-spa.jsx';
 
 import NotificationPanel from '../NotificationPanel/NotificationPanel.jsx';
-
 const HierarchyManagementContainer = styled.section`
   margin-left: 18em;
   background-color: #ffffff;
@@ -61,9 +60,8 @@ const HierarchyManagement = () => {
   const hierarchies = useSelector(state => state.hierarchies.tree);
   console.log('hierarchies', hierarchies);
 
-  /*    
   // Move node code, could be used in the future
-  const setNewNodePosition = async data => {
+  /*const setNewNodePosition = async data => {
     const {node, nextParentNode} = data;
     const token = await getTokenSilently();
 
@@ -75,7 +73,7 @@ const HierarchyManagement = () => {
         Authorization: `Bearer ${token}`,
       },
     }).then(resp => console.log('Resp : ' + resp));
-  }; */
+  }*/
 
   const getUsers = async () => {
     const token = await getTokenSilently();
@@ -105,40 +103,23 @@ const HierarchyManagement = () => {
     const hierarchyToAdd = {
       type: hierarchyType,
       name: hierarchyName,
-      parent: currentNode.d,
+      parent: currentNode.id,
     };
 
     dispatch(addHierarchy(hierarchyToAdd)).then(() => {
       dispatch(getHierarchyTree());
     });
-    /*
-    addedHierarchy.title = addedHierarchy.name;
-    addedHierarchy.subtitle = addedHierarchy.description;
-
-    const newHierarchy = addNodeUnderParent({
-      treeData: hierarchy,
-      parentKey: currentNode.parentKey,
-      expandParent: true,
-      getNodeKey: ({treeIndex}) => treeIndex,
-      newNode: addedHierarchy,
-      addAsFirstChild: true,
-    }).treeData;
-    */
   };
 
   const handleAddNodeClick = (ev, node) => {
     ev.preventDefault();
-    setCurrentNode({
-      parentId: node.id,
-    });
+    setCurrentNode(node);
     setShowNewHierarchyModal(true);
   };
 
   const handleRemoveNodeClick = async (ev, node) => {
     ev.preventDefault();
-    setCurrentNode({
-      name: node.name,
-    });
+    setCurrentNode(node);
 
     dispatch(deleteHierarchy(node.id)).then(resp => {
       if (resp.error) {
@@ -233,7 +214,6 @@ const HierarchyManagement = () => {
       </button>,
     ],
   });
-  console.log('USERS : ', users);
   return (
     <HierarchyManagementContainer>
       <div>Hierarchy Management</div>
