@@ -235,7 +235,13 @@ const HierarchyManagement = () => {
   return (
     <HierarchyManagementContainer>
       <div>Hierarchy Management</div>
-
+      <button
+        onClick={() => {
+          dispatch(getHierarchyTree());
+        }}
+      >
+        Refresh hierarchy
+      </button>
       {showNewHierarchyModal && (
         <Cover>
           <Modal>

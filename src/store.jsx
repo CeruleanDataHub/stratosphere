@@ -15,6 +15,7 @@ const settingsProvider = {
 const cacheProvider = {};
 
 const sessionProvider = new Auth0SessionProvider();
+sessionProvider.setTenant(envVar.AUTH0_TENANT);
 
 const setToken = token => {
   sessionProvider.setToken(token);
