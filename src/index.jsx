@@ -14,10 +14,13 @@ import UserManagement from './containers/UserManagement/UserManagement.jsx';
 import User from './containers/UserManagement/User.jsx';
 import ResourceManagement from './containers/ResourceManagement/ResourceManagement.jsx';
 import Role from './containers/ResourceManagement/Role.jsx';
+import HierarchyManagement from './containers/HierarchyManagement/HierarchyManagement.jsx';
 
 import env from './config';
 import {store} from './store.jsx';
 import './index.css';
+import 'react-sortable-tree/style.css';
+
 const envVar = env();
 
 const onRedirectCallback = appState => {
@@ -27,6 +30,7 @@ const onRedirectCallback = appState => {
       : window.location.pathname,
   );
 };
+
 ReactDOM.render(
   <Provider store={store}>
     <Auth0Provider
@@ -55,6 +59,11 @@ ReactDOM.render(
             <Route
               path={`/resource-management/role/:roleId`}
               component={Role}
+            />
+            <Route
+              exact
+              path={'/hierarchy-management'}
+              component={HierarchyManagement}
             />
             <Route path="/" />
           </Switch>

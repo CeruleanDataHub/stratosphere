@@ -1,0 +1,17 @@
+.new-hierarchy-dialog {
+  display: flex;
+  justify-content: space-between;
+}
+
+.new-hierarchy-dialog > div > input {
+  margin-left: 10px;
+}
+
+.user-permission-dialog {
+  display: flex;
+  justify-content: space-between;
+}
+
+.cancel-btn {
+  text-align: right;
+}
