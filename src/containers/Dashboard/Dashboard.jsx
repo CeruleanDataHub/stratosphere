@@ -38,7 +38,7 @@ const Dashboard = () => {
 
   return (
     <div>
-      <DashboardContainer id="dashboard">
+      <DashboardContainer id="dashboard" device-container-e2e-test>
         <CardDash>
           <Card>
             <div>
