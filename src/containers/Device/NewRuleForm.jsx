@@ -44,14 +44,27 @@ const NewRuleForm = props => {
             }}
           >
             <label htmlFor="name">Name</label>
-            <Field name="name" component="input" type="text" />
+            <Field
+              name="name"
+              data-cy="rule-name-input-e2e-test"
+              component="input"
+              type="text"
+            />
             <label htmlFor="level">Level</label>
-            <Field name="level" component="select">
+            <Field
+              name="level"
+              data-cy="rule-level-select-e2e-test"
+              component="select"
+            >
               <option value="alert">Alert</option>
               <option value="warning">Warning</option>
             </Field>
             <label htmlFor="field">Field</label>
-            <Field name="field" component="select">
+            <Field
+              name="field"
+              data-cy="rule-field-select-e2e-test"
+              component="select"
+            >
               {fields.map(f => (
                 <option key={f} value={f}>
                   {f}
@@ -59,13 +72,24 @@ const NewRuleForm = props => {
               ))}
             </Field>
             <label htmlFor="operator">Operator</label>
-            <Field name="operator" component="select">
+            <Field
+              name="operator"
+              data-cy="rule-operator-select-e2e-test"
+              component="select"
+            >
               <option value=">">&#62;</option>
               <option value="<">&#60;</option>
             </Field>
             <label>Value</label>
-            <Field name="value" component="input" type="number" />
-            <button type="submit">Submit</button>
+            <Field
+              name="value"
+              data-cy="rule-value-select-e2e-test"
+              component="input"
+              type="number"
+            />
+            <button data-cy="new-rule-submit-button-e2e-test" type="submit">
+              Submit
+            </button>
           </RuleForm>
         )}
       </Form>

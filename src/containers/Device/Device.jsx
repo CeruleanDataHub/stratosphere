@@ -77,8 +77,9 @@ const Device = () => {
           state: {
             properties: {
               desired: {
-                alerts: response.payload.body.properties.desired.alerts,
-                warnings: response.payload.body.properties.desired.warnings,
+                alerts: response.payload.body.properties.desired.alerts || {},
+                warnings:
+                  response.payload.body.properties.desired.warnings || {},
               },
             },
           },
@@ -220,7 +221,7 @@ const Device = () => {
         <InfoMessage>{infoMessage}</InfoMessage>
         <ErrorMessage>{errorMessage}</ErrorMessage>
         {device.state && (
-          <div style={{margin: '1em'}}>
+          <div data-cy="device-container-e2e-test" style={{margin: '1em'}}>
             <NotificationPanel text={deviceData.level}> </NotificationPanel>
             <div
               style={{
