@@ -77,8 +77,9 @@ const Device = () => {
           state: {
             properties: {
               desired: {
-                alerts: response.payload.body.properties.desired.alerts,
-                warnings: response.payload.body.properties.desired.warnings,
+                alerts: response.payload.body.properties.desired.alerts || {},
+                warnings:
+                  response.payload.body.properties.desired.warnings || {},
               },
             },
           },
