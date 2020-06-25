@@ -242,7 +242,7 @@ const Device = () => {
             {Object.keys(alertRules).some(k => alertRules[k] !== null) && (
               <>
                 <h2>Alert rules</h2>
-                <RulesContainer>
+                <RulesContainer data-cy="alert-rule-container-e2e-test">
                   {renderRules(alertRules, 'alerts')}
                 </RulesContainer>
               </>
@@ -250,7 +250,7 @@ const Device = () => {
             {Object.keys(warningRules).some(k => warningRules[k] !== null) && (
               <>
                 <h2>Warning rules</h2>
-                <RulesContainer>
+                <RulesContainer data-cy="warning-rule-container-e2e-test">
                   {renderRules(warningRules, 'warnings')}
                 </RulesContainer>
               </>
@@ -338,10 +338,14 @@ const Device = () => {
             />
             <AddOrRemoveIcon
               onClick={deleteSubRule(ruleKey, subRuleKey, levelKey)}
+              data-cy="delete-rule-e2e-test"
             >
               -
             </AddOrRemoveIcon>
-            <AddOrRemoveIcon onClick={addSubRule(ruleKey, levelKey)}>
+            <AddOrRemoveIcon
+              onClick={addSubRule(ruleKey, levelKey)}
+              data-cy="add-rule-e2e-test"
+            >
               +
             </AddOrRemoveIcon>
           </div>
