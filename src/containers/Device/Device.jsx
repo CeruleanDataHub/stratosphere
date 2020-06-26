@@ -283,7 +283,7 @@ const Device = () => {
       <div style={{margin: '0.2em 0'}} key={ruleKey}>
         {ruleKey}
       </div>,
-      <div key={ruleKey + '_subrules'}>
+      <div data-cy="rule-e2e-test" key={ruleKey + '_subrules'}>
         {renderSubRules(rules, ruleKey, levelKey)}
       </div>,
     ];
@@ -299,6 +299,7 @@ const Device = () => {
         const subRule = rules[ruleKey][subRuleKey];
         return (
           <div
+            data-cy="sub-rule-e2e-test"
             key={subRuleKey}
             style={{
               marginLeft: '1em',
@@ -338,13 +339,13 @@ const Device = () => {
             />
             <AddOrRemoveIcon
               onClick={deleteSubRule(ruleKey, subRuleKey, levelKey)}
-              data-cy="delete-rule-e2e-test"
+              data-cy={`delete-rule-e2e-test=${subRuleKey}`}
             >
               -
             </AddOrRemoveIcon>
             <AddOrRemoveIcon
               onClick={addSubRule(ruleKey, levelKey)}
-              data-cy="add-rule-e2e-test"
+              data-cy={`add-rule-e2e-test=${subRuleKey}`}
             >
               +
             </AddOrRemoveIcon>

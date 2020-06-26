@@ -8,6 +8,7 @@ import {Card} from '@denim/react-components';
 import './UserManagement.css';
 
 import env from '../../config';
+
 const UserManagementContainer = styled.section`
   margin-left: 18em;
   background-color: #ffffff;
@@ -136,7 +137,7 @@ const UserManagement = () => {
 
   return (
     <UserManagementContainer>
-      <div style={{width: '50%'}}>
+      <div data-cy="user-management-container-e2e-test" style={{width: '50%'}}>
         <Card height={'auto'} item={{title: 'User Management'}}>
           {users && users.length !== 0 ? (
             <>
@@ -148,6 +149,7 @@ const UserManagement = () => {
                 return (
                   <span className="list-row" key={user.user_id}>
                     <Link
+                      data-cy="user-link-e2e-test"
                       className="list-item"
                       to={`${url}/user/${user.user_id}`}
                     >
