@@ -1,9 +1,10 @@
 import React, {useEffect} from 'react';
-import './Dashboard.css';
 import {useRouteMatch} from 'react-router-dom';
 import DeviceDashboard from './DeviceDashboard.jsx';
 import {useSelector, useDispatch} from 'react-redux';
 import {getAllDevices} from '@denim/iot-platform-middleware-redux';
+
+import './Dashboard.css';
 
 const Dashboard = () => {
   const devices = useSelector(state => state.devices);

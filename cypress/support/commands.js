@@ -24,7 +24,7 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
-/*Cypress.Commands.add('login', (overrides = {}) => {
+Cypress.Commands.add('login', () => {
   Cypress.log({
     name: 'loginViaAuth0',
   });
@@ -43,4 +43,4 @@
     },
   };
   cy.request(options);
-});*/
+});

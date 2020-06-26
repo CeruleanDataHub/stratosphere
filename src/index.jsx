@@ -18,6 +18,7 @@ import HierarchyManagement from './containers/HierarchyManagement/HierarchyManag
 
 import env from './config';
 import {store} from './store.jsx';
+
 import './index.css';
 import 'react-sortable-tree/style.css';
 
