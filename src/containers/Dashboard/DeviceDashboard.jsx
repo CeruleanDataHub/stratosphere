@@ -57,7 +57,7 @@ const toDevices = (allDevices, url) => {
         className="device-list-item"
         key={deviceId}
         to={`${url}/${deviceId}`}
-        data-cy={`device-button-e2e-test-${deviceId}`}
+        data-cy={`device-link-e2e-test`}
       >
         <span>{deviceId}</span>
         <span>{parent && parentId}</span>

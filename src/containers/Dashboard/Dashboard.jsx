@@ -15,7 +15,6 @@ const Dashboard = () => {
   useEffect(() => {
     dispatch(getAllDevices());
   }, []);
-
   return <>{devices.all && <DeviceDashboard devices={devices} url={url} />}</>;
 };
 

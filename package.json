@@ -8,6 +8,7 @@
     "prettier": "prettier --ignore-path .gitignore \"**/*.(js|jsx)\"",
     "format": "npm run prettier -- --write",
     "test": "jest --watch --coverage",
+    "e2e": "npx cypress open",
     "check-format": "npm run prettier -- --list-different",
     "validate": "npm run check-format && npm run lint && npm run build",
     "dev": "NODE_ENV=development webpack-dev-server --config webpack/dev.config.js",
