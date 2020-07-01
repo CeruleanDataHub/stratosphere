@@ -7,6 +7,7 @@ const env = () => {
     if (process.env.NODE_ENV === 'development') {
       try {
         const env_var = require('../.env');
+
         if (env_var) {
           allEnv = combineEnv(env_var);
         }
@@ -30,6 +31,7 @@ const combineEnv = (dotEnv = {}) => {
     ...processEnv,
     ...injectedEnv,
   };
+
   return env;
 };
 

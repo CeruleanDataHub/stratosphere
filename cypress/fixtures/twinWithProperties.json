@@ -1,0 +1,30 @@
+{
+  "deviceId": "12345654321",
+  "etag": "AAAAAAAAAAM=",
+  "status": "enabled",
+  "properties": {
+    "desired": {
+      "edgeDeviceId": "INITIAL",
+      "update": 1000,
+      "alerts": {
+        "lowTemp": {
+          "f4twwg": {
+            "field": "temperature",
+            "operator": "<",
+            "value": "20"
+          }
+        },
+        "highTemp": {
+          "f5twwg": {
+            "field": "temperature",
+            "operator": ">",
+            "value": "30"
+          }
+        }
+      },
+      "warnings": {}
+    }
+  },
+  "capabilities": {"iotEdge": false},
+  "tags": {}
+}

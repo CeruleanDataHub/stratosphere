@@ -128,7 +128,11 @@ const Navigation = () => {
           </>
         ) : (
           <MenuItem>
-            <div className="user-btn" onClick={handleLoginClick}>
+            <div
+              className="user-btn"
+              data-cy="navigation-login-button-e2e-test"
+              onClick={handleLoginClick}
+            >
               <Icon className="lnr lnr-enter"></Icon>
               <MenuItemText menuOpen={menuOpen}>Login</MenuItemText>
             </div>

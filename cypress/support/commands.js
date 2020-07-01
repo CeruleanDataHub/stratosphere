@@ -23,11 +23,16 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+import jwt_decode from 'jwt-decode';
 
 Cypress.Commands.add('login', () => {
   Cypress.log({
     name: 'loginViaAuth0',
   });
+
+  const client_id = Cypress.env('auth_client_id');
+  const audience = Cypress.env('auth_audience');
+  const scope = 'openid profile email';
 
   const options = {
     method: 'POST',
@@ -36,11 +41,28 @@ Cypress.Commands.add('login', () => {
       grant_type: 'password',
       username: Cypress.env('auth_username'),
       password: Cypress.env('auth_password'),
-      audience: Cypress.env('auth_audience'),
-      scope: 'openid profile email',
-      client_id: Cypress.env('auth_client_id'),
+      audience,
+      scope,
+      client_id,
       client_secret: Cypress.env('auth_client_secret'),
     },
   };
-  cy.request(options);
+  cy.request(options).then(({body}) => {
+    const {access_token, expires_in, id_token} = body;
+    const auth0Key = `@@auth0spajs@@::${client_id}::${audience}::${scope}`;
+    const auth0Cache = {
+      body: {
+        client_id,
+        access_token,
+        id_token,
+        scope,
+        expires_in,
+        decodedToken: {
+          user: jwt_decode(id_token),
+        },
+      },
+      expiresAt: Math.floor(Date.now() / 1000) + expires_in,
+    };
+    window.localStorage.setItem(auth0Key, JSON.stringify(auth0Cache));
+  });
 });

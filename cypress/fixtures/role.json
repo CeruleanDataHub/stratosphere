@@ -1,0 +1,42 @@
+[
+  {
+    "user_id": "auth0|5ef08d3e8ac1e80015d8ef22",
+    "email": "e2e-testing@cdh.management",
+    "name": "e2e-testing@cdh.management"
+  },
+  {
+    "user_id": "google-oauth2|104267129317395466367",
+    "email": "lasse.linna@houston-inc.com",
+    "name": "Lasse Linna"
+  },
+  {
+    "user_id": "google-oauth2|108258877769120568693",
+    "email": "tommi.tarkki@houston-inc.com",
+    "name": "Tommi Tarkki"
+  },
+  {
+    "user_id": "google-oauth2|109729315046581090243",
+    "email": "miikka.alatalo@houston-inc.com",
+    "name": "Miikka Alatalo"
+  },
+  {
+    "user_id": "google-oauth2|112491529722733956843",
+    "email": "muhammad.salman@houston-inc.com",
+    "name": "Muhammad Salman"
+  },
+  {
+    "user_id": "google-oauth2|114308788323562046475",
+    "email": "tommi.salonen@houston-inc.com",
+    "name": "Tommi Salonen"
+  },
+  {
+    "user_id": "google-oauth2|116333490230771262506",
+    "email": "antti.rintala@houston-inc.com",
+    "name": "Antti Rintala"
+  },
+  {
+    "user_id": "google-oauth2|116514719543277148854",
+    "email": "pasi.honkanen@houston-inc.com",
+    "name": "Pasi Honkanen"
+  }
+]

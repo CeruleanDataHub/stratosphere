@@ -21,7 +21,10 @@ export const Auth0Provider = ({
 
   useEffect(() => {
     const initAuth0 = async () => {
-      const auth0FromHook = await createAuth0Client(initOptions);
+      const auth0FromHook = await createAuth0Client({
+        ...initOptions,
+        cacheLocation: 'localstorage',
+      });
       setAuth0(auth0FromHook);
 
       if (
@@ -33,12 +36,12 @@ export const Auth0Provider = ({
       }
 
       const isAuthenticated = await auth0FromHook.isAuthenticated();
-
       setIsAuthenticated(isAuthenticated);
 
       if (isAuthenticated) {
         const user = await auth0FromHook.getUser();
         setUser(user);
+
         const token = await auth0FromHook.getTokenSilently();
         setToken(token);
       }

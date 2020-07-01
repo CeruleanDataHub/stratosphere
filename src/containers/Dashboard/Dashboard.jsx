@@ -12,6 +12,7 @@ const Dashboard = () => {
   const dispatch = useDispatch();
 
   let {url} = useRouteMatch();
+  url = url.replace(/\/+$/, ''); // remove trailing slashes (/) if any
 
   useEffect(() => {
     dispatch(getAllDevices());

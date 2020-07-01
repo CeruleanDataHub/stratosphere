@@ -1,0 +1,48 @@
+[
+  {
+    "id": "24",
+    "uuid": "cade184b-747a-4977-9c23-92f5787eb3bb",
+    "external_id": "12345654321",
+    "name": "12345654321",
+    "description": null,
+    "deviceEnrollmentGroupId": "1",
+    "type": "node",
+    "location": null,
+    "created": "2020-06-17T11:17:14.104Z",
+    "modified": "2020-06-17T11:17:14.104Z",
+    "status": "active",
+    "path": "/9494bd17-bc33-4ff8-99b1-25f6d33b16b5/",
+    "hierarchy_id": null,
+    "parent": {
+      "id": "12321",
+      "uuid": "9494bd17-bc33-4ff8-99b1-25f6d33b16b5",
+      "external_id": "cerulean-gateway-alpha",
+      "name": "cerulean-gateway-alpha",
+      "description": null,
+      "deviceEnrollmentGroupId": "1",
+      "type": "edge",
+      "location": null,
+      "created": "2020-06-17T06:26:22.757Z",
+      "modified": null,
+      "status": "created",
+      "path": "/",
+      "hierarchy_id": null
+    }
+  },
+  {
+    "id": "12321",
+    "uuid": "9494bd17-bc33-4ff8-99b1-25f6d33b16b5",
+    "external_id": "cerulean-gateway-alpha",
+    "name": "cerulean-gateway-alpha",
+    "description": null,
+    "deviceEnrollmentGroupId": "1",
+    "type": "edge",
+    "location": null,
+    "created": "2020-06-17T06:26:22.757Z",
+    "modified": null,
+    "status": "created",
+    "path": "/",
+    "hierarchy_id": null,
+    "parent": null
+  }
+]

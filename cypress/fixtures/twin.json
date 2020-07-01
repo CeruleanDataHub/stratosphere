@@ -1,0 +1,15 @@
+{
+  "deviceId": "12345654321",
+  "etag": "AAAAAAAAAAM=",
+  "status": "enabled",
+  "properties": {
+    "desired": {
+      "edgeDeviceId": "INITIAL",
+      "update": 1000,
+      "alerts": {},
+      "warnings": {}
+    }
+  },
+  "capabilities": {"iotEdge": false},
+  "tags": {}
+}

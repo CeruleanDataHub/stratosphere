@@ -295,7 +295,7 @@ const Device = () => {
       .filter(subRuleKey => {
         return rules[ruleKey][subRuleKey] !== null;
       })
-      .map(subRuleKey => {
+      .map((subRuleKey, index) => {
         const subRule = rules[ruleKey][subRuleKey];
         return (
           <div
@@ -339,13 +339,13 @@ const Device = () => {
             />
             <AddOrRemoveIcon
               onClick={deleteSubRule(ruleKey, subRuleKey, levelKey)}
-              data-cy={`delete-rule-e2e-test=${subRuleKey}`}
+              data-cy={`delete-rule-e2e-test-${index}`}
             >
               -
             </AddOrRemoveIcon>
             <AddOrRemoveIcon
               onClick={addSubRule(ruleKey, levelKey)}
-              data-cy={`add-rule-e2e-test=${subRuleKey}`}
+              data-cy={`add-rule-e2e-test-${index}`}
             >
               +
             </AddOrRemoveIcon>
