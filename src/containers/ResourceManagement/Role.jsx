@@ -253,7 +253,7 @@ const Role = () => {
               resourceServers.map(resourceServer => {
                 if (
                   resourceServer.identifier ===
-                  'https://denim-data-hub.eu.auth0.com/api/v2/'
+                  'https://cerulean-data-hub.eu.auth0.com/api/v2/'
                 )
                   return;
                 return (
