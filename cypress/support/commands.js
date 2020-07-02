@@ -26,6 +26,9 @@
 import jwt_decode from 'jwt-decode';
 
 let auth0Key;
+let LOCAL_STORAGE_MEMORY = {};
+let testRoleId;
+
 Cypress.Commands.add('login', () => {
   Cypress.log({
     name: 'loginViaAuth0',
@@ -89,5 +92,80 @@ Cypress.Commands.add('deleteE2eFakeUser', () => {
     cy.request(deleteUserOption).then(res => {
       console.log('Response ', res);
     });
+  });
+});
+
+Cypress.Commands.add('addTestRole', () => {
+  const token = JSON.parse(window.localStorage.getItem(auth0Key)).body
+    .access_token;
+
+  const postNewRoleOption = {
+    method: 'POST',
+    url: `${Cypress.env('auth_audience')}/auth0/roles`,
+    headers: {Authorization: 'Bearer ' + token},
+    body: {
+      name: 'e2e-test-role',
+      description: 'Role for e2e testing',
+    },
+  };
+  cy.request(postNewRoleOption).then(resp => {
+    testRoleId = resp.body.id;
+    console.log('addTestRole', resp);
+  });
+});
+
+Cypress.Commands.add('deleteTestRole', () => {
+  const token = JSON.parse(window.localStorage.getItem(auth0Key)).body
+    .access_token;
+
+  const getRolesOption = {
+    method: 'GET',
+    url: `${Cypress.env('auth_audience')}/auth0/roles`,
+    headers: {Authorization: 'Bearer ' + token},
+  };
+  cy.request(getRolesOption).then(({body: roles}) => {
+    const testRole = roles.find(r => r.name === 'e2e-test-role');
+    if (!testRole) return;
+    const deleteRoleOption = {
+      method: 'DELETE',
+      url: `${Cypress.env('auth_audience')}/auth0/roles/${testRole.id}`,
+      headers: {Authorization: 'Bearer ' + token},
+    };
+
+    cy.request(deleteRoleOption);
+  });
+});
+
+Cypress.Commands.add('deleteTestPermissions', () => {
+  const token = JSON.parse(window.localStorage.getItem(auth0Key)).body
+    .access_token;
+
+  const postNewRoleOption = {
+    method: 'DELETE',
+    url: `${Cypress.env(
+      'auth_audience',
+    )}/auth0/roles/${testRoleId}/permissions`,
+    headers: {Authorization: 'Bearer ' + token},
+    body: {
+      permissions: [
+        {
+          resource_server_identifier: 'https://ddh-api.azure-api.net',
+          permission_name: 'e2e:test',
+        },
+      ],
+    },
+  };
+  cy.request(postNewRoleOption);
+});
+
+Cypress.Commands.add('saveLocalStorageCache', () => {
+  Object.keys(localStorage).forEach(key => {
+    LOCAL_STORAGE_MEMORY[key] = localStorage[key];
+  });
+});
+
+Cypress.Commands.add('restoreLocalStorageCache', () => {
+  Object.keys(LOCAL_STORAGE_MEMORY).forEach(key => {
+    localStorage.setItem(key, LOCAL_STORAGE_MEMORY[key]);
   });
 });

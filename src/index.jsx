@@ -12,7 +12,7 @@ import Dashboard from './containers/Dashboard/Dashboard.jsx';
 import Device from './containers/Device/Device.jsx';
 import UserManagement from './containers/UserManagement/UserManagement.jsx';
 import User from './containers/UserManagement/User.jsx';
-import ResourceManagement from './containers/ResourceManagement/ResourceManagement.jsx';
+import RoleManagement from './containers/ResourceManagement/RoleManagement.jsx';
 import Role from './containers/ResourceManagement/Role.jsx';
 import HierarchyManagement from './containers/HierarchyManagement/HierarchyManagement.jsx';
 
@@ -55,7 +55,7 @@ ReactDOM.render(
             <Route
               exact
               path={`/resource-management`}
-              component={ResourceManagement}
+              component={RoleManagement}
             />
             <Route
               path={`/resource-management/role/:roleId`}

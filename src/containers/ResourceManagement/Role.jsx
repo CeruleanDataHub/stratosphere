@@ -135,10 +135,11 @@ const Role = () => {
 
   const renderPermission = (permissionName, serverIdentifier, handle) => {
     return (
-      <div className="permission" key={permissionName}>
+      <div className="role-permission" key={permissionName}>
         <div className="permission-name">{permissionName}</div>
         <div>
           <span
+            data-selected-permission-delete-marker
             className="lnr lnr-cross delete-marker"
             onClick={() =>
               handle({
@@ -156,7 +157,7 @@ const Role = () => {
     return servers.map(server => (
       <div className="resource" key={server.id}>
         <div className="resource-name">{server.name}</div>
-        <div className="permissions">
+        <div data-cy-role-permissions className="role-permissions">
           {server.permissions.map(permission =>
             renderPermission(
               permission.name,
@@ -199,6 +200,19 @@ const Role = () => {
         },
       },
     ).then(() => {
+      const currentResourceServer = role.permissions.find(
+        serverPermission => serverPermission.id === selectedResourceServer,
+      );
+      if (!currentResourceServer) {
+        role.permissions.push({
+          id: selectedResourceServer,
+          name: resourceServers.find(
+            resourceServer =>
+              resourceServer.identifier === selectedResourceServer,
+          ).name,
+          permissions: [],
+        });
+      }
       const newPermissions = role.permissions.map(serverPermission => {
         if (serverPermission.id === selectedResourceServer) {
           selectedPermissions.map(perm => {
@@ -231,18 +245,23 @@ const Role = () => {
         } else {
           return (
             <div className="row" key={key}>
-              <div>{key}:</div> <div>{role[key]}</div>
+              <div>{key}:</div>{' '}
+              <div data-role-property-e2e-test={role[key]}>{role[key]}</div>
             </div>
           );
         }
       })}
-      <div className="new-permission-container">
+      <div
+        data-new-permission-container-e2e-test
+        className="new-permission-container"
+      >
         <div className="new-permission-container--selection">
           <div className="new-permission-container--label">
             Add new permission
           </div>
           <select
             className="server-identifier-container--select"
+            data-select-resource-e2e-test
             onChange={handleResourceServerChange}
             value={selectedResourceServer}
           >
@@ -268,6 +287,7 @@ const Role = () => {
           </select>
           {resourceServers && selectedResourceServer !== 'placeholder' && (
             <select
+              data-select-permission-e2e-test
               className="scope-container--select"
               onChange={handlePermissionSelectionChange}
               value="placeholer"
@@ -278,6 +298,7 @@ const Role = () => {
               {resourceServers
                 .find(server => server.identifier === selectedResourceServer)
                 .scopes.filter(scope => {
+                  if (role.permissions.length === 0) return true;
                   return !(
                     role.permissions
                       .find(
@@ -298,7 +319,10 @@ const Role = () => {
             </select>
           )}
           <div className="new-permission--container-save-permissions">
-            <div className="permissions">
+            <div
+              data-selected-permissions-e2e-test
+              className="selected-permissions"
+            >
               {selectedPermissions.map(permission => {
                 return renderPermission(
                   permission,
@@ -308,7 +332,11 @@ const Role = () => {
               })}
             </div>
           </div>
-          <button name="save" onClick={handleSavePermissions}>
+          <button
+            data-save-button-e2e-test
+            name="save"
+            onClick={handleSavePermissions}
+          >
             Save
           </button>
         </div>

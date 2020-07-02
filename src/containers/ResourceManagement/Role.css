@@ -7,7 +7,7 @@
   min-width: 120px;
 }
 
-.permission {
+.role-permission {
   display: flex;
   justify-content: space-between;
   margin: 0 5px 4px;
@@ -16,7 +16,12 @@
   border: 1px solid gray;
 }
 
-.permissions {
+.role-permissions {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.selected-permissions {
   display: flex;
   flex-wrap: wrap;
 }
