@@ -25,6 +25,7 @@
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 import jwt_decode from 'jwt-decode';
 
+let auth0Key;
 Cypress.Commands.add('login', () => {
   Cypress.log({
     name: 'loginViaAuth0',
@@ -49,7 +50,7 @@ Cypress.Commands.add('login', () => {
   };
   cy.request(options).then(({body}) => {
     const {access_token, expires_in, id_token} = body;
-    const auth0Key = `@@auth0spajs@@::${client_id}::${audience}::${scope}`;
+    auth0Key = `@@auth0spajs@@::${client_id}::${audience}::${scope}`;
     const auth0Cache = {
       body: {
         client_id,
@@ -64,5 +65,29 @@ Cypress.Commands.add('login', () => {
       expiresAt: Math.floor(Date.now() / 1000) + expires_in,
     };
     window.localStorage.setItem(auth0Key, JSON.stringify(auth0Cache));
+  });
+});
+
+Cypress.Commands.add('deleteE2eFakeUser', () => {
+  const token = JSON.parse(window.localStorage.getItem(auth0Key)).body
+    .access_token;
+
+  const getUsersOption = {
+    method: 'GET',
+    url: `${Cypress.env('auth_audience')}/auth0/users`,
+    headers: {Authorization: 'Bearer ' + token},
+  };
+  cy.request(getUsersOption).then(({body: users}) => {
+    const fakeUser = users.find(u => u.email === 'e2e-fake-user@example.com');
+    if (!fakeUser) return;
+    const deleteUserOption = {
+      method: 'DELETE',
+      url: `${Cypress.env('auth_audience')}/auth0/users/${fakeUser.user_id}`,
+      headers: {Authorization: 'Bearer ' + token},
+    };
+
+    cy.request(deleteUserOption).then(res => {
+      console.log('Response ', res);
+    });
   });
 });

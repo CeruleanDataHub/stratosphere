@@ -115,7 +115,7 @@ const UserManagement = () => {
   const handleSubmit = async e => {
     e.preventDefault();
     const token = await getTokenSilently();
-    const randomPw = 'abcdef' + Math.floor(Math.random() * 10000).toString();
+    const randomPw = 'xp&T/.p"z4Ksa2E_';
 
     Axios.post(
       `${auth0ProxyUrl}/users`,
@@ -129,15 +129,14 @@ const UserManagement = () => {
           Authorization: `Bearer ${token}`,
         },
       },
-    ).then(res => {
-      console.log(res);
+    ).then(() => {
       getRolesAndPopulateList();
     });
   };
 
   return (
     <UserManagementContainer>
-      <div data-cy="user-management-container-e2e-test" style={{width: '50%'}}>
+      <div data-cy-user-management-container-e2e-test style={{width: '50%'}}>
         <Card height={'auto'} item={{title: 'User Management'}}>
           {users && users.length !== 0 ? (
             <>
@@ -147,9 +146,13 @@ const UserManagement = () => {
               </div>
               {users.map(user => {
                 return (
-                  <span className="list-row" key={user.user_id}>
+                  <span
+                    data-cy-user-name-e2e-test
+                    className="list-row"
+                    key={user.user_id}
+                  >
                     <Link
-                      data-cy="user-link-e2e-test"
+                      data-cy-user-link-e2e-test={user.name}
                       className="list-item"
                       to={`${url}/user/${user.user_id}`}
                     >
@@ -182,10 +185,11 @@ const UserManagement = () => {
             className="email"
             id="username"
             name="email"
+            data-cy-user-creation-input-e2e-test
             value={inputEmail}
             onChange={onInputChange}
           />
-          <button>Submit</button>
+          <button data-cy-user-creation-submit-e2e-test>Submit</button>
         </form>
       </div>
     </UserManagementContainer>

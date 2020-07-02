@@ -72,7 +72,6 @@ ReactDOM.render(
       </Router>
     </Auth0Provider>
   </Provider>,
-
   document.getElementById('root'),
 );
 
