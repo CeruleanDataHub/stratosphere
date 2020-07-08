@@ -3,7 +3,7 @@ import {Link} from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
-const DashboardContainer = styled.section`
+const StyledDevices = styled.section`
   margin-left: 18em;
   display: grid;
   grid-template-columns: auto auto auto;
@@ -23,10 +23,10 @@ const Card = styled.div`
   height: 20em;
 `;
 
-const DeviceDashboard = ({devices: {all: allDevices}, url}) => {
+const Devices = ({devices: {all: allDevices}, url}) => {
   return (
     <div>
-      <DashboardContainer id="dashboard" data-cy="dashboard-container-e2e-test">
+      <StyledDevices id="dashboard" data-cy="dashboard-container-e2e-test">
         <CardDash>
           <Card>
             <div>
@@ -44,7 +44,7 @@ const DeviceDashboard = ({devices: {all: allDevices}, url}) => {
         <CardDash>
           <Card>THIS IS A CARD</Card>
         </CardDash>
-      </DashboardContainer>
+      </StyledDevices>
     </div>
   );
 };
@@ -65,11 +65,11 @@ const toDevices = (allDevices, url) => {
     ));
 };
 
-DeviceDashboard.propTypes = {
+Devices.propTypes = {
   devices: PropTypes.shape({
     all: PropTypes.array,
   }),
   url: PropTypes.string,
 };
 
-export default DeviceDashboard;
+export default Devices;

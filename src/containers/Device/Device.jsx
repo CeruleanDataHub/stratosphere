@@ -2,12 +2,14 @@ import React, {useState, useEffect} from 'react';
 import {useParams} from 'react-router-dom';
 import styled from 'styled-components';
 import {cloneDeep} from 'lodash';
-import NotificationPanel from '../NotificationPanel/NotificationPanel.jsx';
 import io from 'socket.io-client';
-import env from '../../config';
 import {useDispatch} from 'react-redux';
+
 import {getTwin, updateTwin} from '@denim/iot-platform-middleware-redux';
 import NewRuleForm from './NewRuleForm.jsx';
+import NotificationPanel from '../NotificationPanel/NotificationPanel.jsx';
+
+import env from '../../config';
 
 const DeviceContainer = styled.section`
   margin-left: 18em;

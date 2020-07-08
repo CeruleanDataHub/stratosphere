@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
 import styled from 'styled-components';
+import {Icon} from '@ceruleandatahub/react-components';
+
 import {useAuth0} from '../../auth0-spa.jsx';
 import './Navigation.css';
 
@@ -14,6 +16,7 @@ const NavBar = styled.nav`
   width: ${props => (props.menuOpen ? 20 : 4.5)}em;
   background-color: rgba(0, 0, 0, 0.75);
   color: #ffffff;
+  z-index: 1;
 `;
 
 const MenuOpen = styled.div`
@@ -23,16 +26,6 @@ const MenuOpen = styled.div`
   width: 4em;
   height: 3.5em;
   cursor: pointer;
-`;
-const MenuIcon = styled.span`
-  font-size: 2em;
-  margin: 0.5em;
-`;
-
-const Icon = styled.span`
-  font-size: 1.5em;
-  margin-right: 1.75rem;
-  float: left;
 `;
 
 const MenuItems = styled.ul`
@@ -54,7 +47,7 @@ const MenuItemText = styled.span`
 `;
 
 const Navigation = () => {
-  const [menuOpen, setMenuOpen] = useState(true);
+  const [menuOpen, setMenuOpen] = useState(false);
   const {logout, isAuthenticated, loginWithRedirect} = useAuth0();
 
   const toggleMenu = () => {
@@ -70,42 +63,35 @@ const Navigation = () => {
     loginWithRedirect({returnTo: window.location.origin});
   };
 
-  let menuIconClasses = ['lnr'];
-  if (menuOpen) {
-    menuIconClasses.push('lnr-cross');
-  } else {
-    menuIconClasses.push('lnr-menu');
-  }
-
   return (
     <NavBar id="left-navigation" menuOpen={menuOpen}>
       <MenuOpen onClick={toggleMenu}>
-        <MenuIcon className={menuIconClasses}></MenuIcon>
+        <Icon name={menuOpen ? 'close' : 'menu'}></Icon>
       </MenuOpen>
       <MenuItems>
         {isAuthenticated ? (
           <>
             <MenuItem>
               <Link to="/">
-                <Icon className="lnr lnr-home"></Icon>
+                <Icon name="home"></Icon>
                 <MenuItemText menuOpen={menuOpen}>Home</MenuItemText>
               </Link>
             </MenuItem>
             <MenuItem>
               <Link to="/devices">
-                <Icon className="lnr lnr-rocket"></Icon>
+                <Icon name="rocket"></Icon>
                 <MenuItemText menuOpen={menuOpen}>Devices</MenuItemText>
               </Link>
             </MenuItem>
             <MenuItem>
               <Link to="/user-management">
-                <Icon className="lnr lnr-users"></Icon>
+                <Icon name="users"></Icon>
                 <MenuItemText menuOpen={menuOpen}>User Management</MenuItemText>
               </Link>
             </MenuItem>
             <MenuItem>
               <Link to="/resource-management">
-                <Icon className="lnr lnr-layers"></Icon>
+                <Icon name="layers"></Icon>
                 <MenuItemText menuOpen={menuOpen}>
                   Resource Management
                 </MenuItemText>
@@ -113,15 +99,23 @@ const Navigation = () => {
             </MenuItem>
             <MenuItem>
               <Link to="/hierarchy-management">
-                <Icon className="lnr lnr-layers"></Icon>
+                <Icon name="layers"></Icon>
                 <MenuItemText menuOpen={menuOpen}>
                   Hierarchy Management
                 </MenuItemText>
               </Link>
             </MenuItem>
             <MenuItem>
+              <Link to="/reporting-dashboard">
+                <Icon name="dashboard"></Icon>
+                <MenuItemText menuOpen={menuOpen}>
+                  Reporting Dashboard
+                </MenuItemText>
+              </Link>
+            </MenuItem>
+            <MenuItem>
               <div className="user-btn" onClick={handleLogoutClick}>
-                <Icon className="lnr lnr-exit"></Icon>
+                <Icon name="exit"></Icon>
                 <MenuItemText menuOpen={menuOpen}>Logout</MenuItemText>
               </div>
             </MenuItem>
@@ -133,7 +127,7 @@ const Navigation = () => {
               data-cy="navigation-login-button-e2e-test"
               onClick={handleLoginClick}
             >
-              <Icon className="lnr lnr-enter"></Icon>
+              <Icon className="enter"></Icon>
               <MenuItemText menuOpen={menuOpen}>Login</MenuItemText>
             </div>
           </MenuItem>

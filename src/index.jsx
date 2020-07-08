@@ -8,13 +8,14 @@ import {Auth0Provider} from './auth0-spa.jsx';
 import Application from './application.jsx';
 import Header from './containers/Header/Header.jsx';
 import Navigation from './containers/Navigation/Navigation.jsx';
-import Dashboard from './containers/Dashboard/Dashboard.jsx';
+import DeviceContainer from './containers/Device/DeviceContainer.jsx';
 import Device from './containers/Device/Device.jsx';
 import UserManagement from './containers/UserManagement/UserManagement.jsx';
 import User from './containers/UserManagement/User.jsx';
 import RoleManagement from './containers/ResourceManagement/RoleManagement.jsx';
 import Role from './containers/ResourceManagement/Role.jsx';
 import HierarchyManagement from './containers/HierarchyManagement/HierarchyManagement.jsx';
+import ReportingDashboard from './containers/ReportingDashboard/ReportingDashboard.jsx';
 
 import env from './config';
 import {store} from './store.jsx';
@@ -48,7 +49,7 @@ ReactDOM.render(
             <Navigation />
           </div>
           <Switch>
-            <Route exact path="/devices" component={Dashboard} />
+            <Route exact path="/devices" component={DeviceContainer} />
             <Route path={`/devices/:deviceId`} component={Device} />
             <Route exact path="/user-management" component={UserManagement} />
             <Route path={`/user-management/user/:userId`} component={User} />
@@ -65,6 +66,11 @@ ReactDOM.render(
               exact
               path={'/hierarchy-management'}
               component={HierarchyManagement}
+            />
+            <Route
+              exact
+              path={'/reporting-dashboard'}
+              component={ReportingDashboard}
             />
             <Route path="/" />
           </Switch>

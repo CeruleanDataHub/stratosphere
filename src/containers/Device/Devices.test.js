@@ -2,14 +2,14 @@ import {mount} from 'enzyme';
 import React from 'react';
 import {StaticRouter} from 'react-router';
 
-import DeviceDashboard from './DeviceDashboard';
+import Devices from './Devices';
 
-describe('DeviceDashboard', () => {
+describe('Devices', () => {
   it('renders', () => {
     const context = {};
     const component = mount(
       <StaticRouter location="someLocation" context={context}>
-        <DeviceDashboard
+        <Devices
           devices={{
             all: [
               {

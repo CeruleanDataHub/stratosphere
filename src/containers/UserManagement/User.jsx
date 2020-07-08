@@ -2,6 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import styled from 'styled-components';
 import Axios from 'axios';
+import {Icon} from '@ceruleandatahub/react-components';
+
 import {Card} from '@denim/react-components';
 import {useAuth0} from '../../auth0-spa.jsx';
 
@@ -166,10 +168,8 @@ const User = () => {
       <div className="current-role" key={role.id}>
         <div className="current-role--name">{role.name}</div>
         <div>
-          <span
-            className="lnr lnr-cross delete-marker"
-            onClick={() => handle(role.id)}
-          />
+          <Icon name="close" />
+          <span onClick={() => handle(role.id)} />
         </div>
       </div>
     );
@@ -270,8 +270,8 @@ const User = () => {
       <div className="current-permission" key={permission.id}>
         <div className="current-permission--name">{permission.name}</div>
         <div>
+          <Icon name="close" />
           <span
-            className="lnr lnr-cross delete-marker"
             onClick={() =>
               handle({
                 resource_server_identifier: serverIdentifier,

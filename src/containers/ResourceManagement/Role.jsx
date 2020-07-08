@@ -1,10 +1,12 @@
 import React from 'react';
 import {useParams} from 'react-router-dom';
 import {useEffect, useState} from 'react';
-import env from '../../config';
-import {useAuth0} from '../../auth0-spa.jsx';
+import {Icon} from '@ceruleandatahub/react-components';
 import Axios from 'axios';
 import styled from 'styled-components';
+
+import env from '../../config';
+import {useAuth0} from '../../auth0-spa.jsx';
 
 import './Role.css';
 const envVar = env();
@@ -138,9 +140,9 @@ const Role = () => {
       <div className="role-permission" key={permissionName}>
         <div className="permission-name">{permissionName}</div>
         <div>
+          <Icon name="close" />
           <span
             data-selected-permission-delete-marker
-            className="lnr lnr-cross delete-marker"
             onClick={() =>
               handle({
                 resource_server_identifier: serverIdentifier,
