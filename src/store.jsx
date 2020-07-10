@@ -2,6 +2,7 @@ import {configureStore} from '@reduxjs/toolkit';
 import denimMiddleware, {
   devicesReducer,
   hierarchyReducer,
+  activityReducer,
   Auth0SessionProvider,
 } from '@denim/iot-platform-middleware-redux';
 import env from './config';
@@ -25,6 +26,7 @@ const store = configureStore({
   reducer: {
     devices: devicesReducer,
     hierarchies: hierarchyReducer,
+    userActivity: activityReducer,
   },
   middleware: [
     ...denimMiddleware(settingsProvider, cacheProvider, sessionProvider),

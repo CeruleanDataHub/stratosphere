@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {Link, useRouteMatch} from 'react-router-dom';
 import styled from 'styled-components';
 import Axios from 'axios';
-import {Card} from '@denim/react-components';
+import {Card} from '@ceruleandatahub/react-components';
 
 import {useAuth0} from '../../auth0-spa.jsx';
 import env from '../../config';

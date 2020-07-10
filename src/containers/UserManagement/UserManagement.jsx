@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Axios from 'axios';
 import {useRouteMatch, Link} from 'react-router-dom';
 import {useAuth0} from '../../auth0-spa.jsx';
-import {Card} from '@denim/react-components';
+import {Card} from '@ceruleandatahub/react-components';
 
 import './UserManagement.css';
 

@@ -2,9 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {useParams} from 'react-router-dom';
 import styled from 'styled-components';
 import Axios from 'axios';
-import {Icon} from '@ceruleandatahub/react-components';
+import {Card, Icon} from '@ceruleandatahub/react-components';
 
-import {Card} from '@denim/react-components';
 import {useAuth0} from '../../auth0-spa.jsx';
 
 import env from '../../config';
