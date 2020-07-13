@@ -9,7 +9,7 @@ import {
   deleteHierarchy,
   setHierarchyTree,
   editHierarchy,
-} from '@denim/iot-platform-middleware-redux';
+} from '@ceruleandatahub/middleware-redux';
 
 import env from '../../config';
 import {useAuth0} from '../../auth0-spa.jsx';

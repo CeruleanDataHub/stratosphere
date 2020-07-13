@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import {useRouteMatch} from 'react-router-dom';
 import Devices from './Devices.jsx';
 import {useSelector, useDispatch} from 'react-redux';
-import {getAllDevices} from '@denim/iot-platform-middleware-redux';
+import {getAllDevices} from '@ceruleandatahub/middleware-redux';
 
 import './DeviceContainer.css';
 

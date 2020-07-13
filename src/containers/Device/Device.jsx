@@ -5,7 +5,7 @@ import {cloneDeep} from 'lodash';
 import io from 'socket.io-client';
 import {useDispatch} from 'react-redux';
 
-import {getTwin, updateTwin} from '@denim/iot-platform-middleware-redux';
+import {getTwin, updateTwin} from '@ceruleandatahub/middleware-redux';
 import NewRuleForm from './NewRuleForm.jsx';
 import NotificationPanel from '../NotificationPanel/NotificationPanel.jsx';
 

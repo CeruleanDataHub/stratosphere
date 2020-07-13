@@ -4,7 +4,7 @@ import denimMiddleware, {
   hierarchyReducer,
   activityReducer,
   Auth0SessionProvider,
-} from '@denim/iot-platform-middleware-redux';
+} from '@ceruleandatahub/middleware-redux';
 import env from './config';
 
 const envVar = env();

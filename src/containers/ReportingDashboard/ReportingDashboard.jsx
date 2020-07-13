@@ -4,9 +4,11 @@ import {useDispatch, useSelector} from 'react-redux';
 import moment from 'moment-timezone';
 
 import {
-  getLastMonthKPIData,
-  getCurrentMonthKPIData,
-} from '@denim/iot-platform-middleware-redux';
+  getLastMonthUsersKPIData,
+  getCurrentMonthUsersKPIData,
+  getLastMonthDevicesKPIData,
+  getCurrentMonthDevicesKPIData,
+} from '@ceruleandatahub/middleware-redux';
 
 import {Grid, Cell, Line, KPICard} from '@ceruleandatahub/react-components';
 
@@ -19,28 +21,6 @@ const KPICardContainer = styled.section`
   border: 1px solid;
 `;
 
-const activeDevicesUsersCosts = [
-  {
-    id: 1,
-    title: 'Active Device Costs',
-    value: 14850,
-  },
-  {
-    id: 2,
-    title: 'Active Users Costs',
-    value: 14850,
-  },
-  {
-    id: 3,
-    title: 'Active Devices Costs',
-    value: 14850,
-  },
-  {
-    id: 4,
-    title: 'Active Users Costs',
-    value: 14850,
-  },
-];
 const ReportingDashboard = () => {
   const numberOfDaysInLastMonth = moment().subtract(1, 'month').daysInMonth();
   const numberOfDaysInCurrentMonth = moment().daysInMonth();
@@ -56,7 +36,6 @@ const ReportingDashboard = () => {
   ];
 
   const renderKPIRow = kpis => {
-    //console.log('kois', kpis)
     return (
       <div style={{marginBottom: '8px'}}>
         <Grid>
@@ -93,14 +72,28 @@ const ReportingDashboard = () => {
     const endOfLastMonth = last.endOf('month').format('MM/DD/YYYY');
 
     dispatch(
-      getLastMonthKPIData({
+      getLastMonthUsersKPIData({
         type: 'DAILY',
         startDate: startOfLastMonth,
         endDate: endOfLastMonth,
       }),
     );
     dispatch(
-      getCurrentMonthKPIData({
+      getCurrentMonthUsersKPIData({
+        type: 'DAILY',
+        startDate: startOfCurrentMonth,
+        endDate: endOfCurrentMonth,
+      }),
+    );
+    dispatch(
+      getLastMonthDevicesKPIData({
+        type: 'DAILY',
+        startDate: startOfLastMonth,
+        endDate: endOfLastMonth,
+      }),
+    );
+    dispatch(
+      getCurrentMonthDevicesKPIData({
         type: 'DAILY',
         startDate: startOfCurrentMonth,
         endDate: endOfCurrentMonth,
@@ -114,12 +107,18 @@ const ReportingDashboard = () => {
   const currentMonthActiveUsers = useSelector(
     state => state.userActivity.currentMonthKPIData,
   );
+  const lastMonthActiveDevices = useSelector(
+    state => state.devices.lastMonthKPIData,
+  );
+  const currentMonthActiveDevices = useSelector(
+    state => state.devices.currentMonthKPIData,
+  );
 
   const activeDevicesUsersGrowth = () => [
     {
       id: 1,
       title: 'Active devices',
-      value: 1485,
+      value: (lastMonthActiveDevices && lastMonthActiveDevices.total) || 0,
       growth: 0.15,
       color: '',
     },
@@ -133,7 +132,8 @@ const ReportingDashboard = () => {
     {
       id: 3,
       title: 'Active devices',
-      value: 1485,
+      value:
+        (currentMonthActiveDevices && currentMonthActiveDevices.total) || 0,
       growth: 0.15,
       color: '',
     },
@@ -146,21 +146,57 @@ const ReportingDashboard = () => {
     },
   ];
 
-  const prepareKPIData = (monthActiveUsers, numberOfDays) => {
-    if (monthActiveUsers && monthActiveUsers.days) {
-      const activeUsersPerDay = new Array(numberOfDays).fill(0);
-      monthActiveUsers.days.map(day => {
+  const activeDevicesUsersCosts = [
+    {
+      id: 1,
+      title: 'Active Device Costs',
+      value: (lastMonthActiveDevices && lastMonthActiveDevices.total * 10) || 0,
+    },
+    {
+      id: 2,
+      title: 'Active Users Costs',
+      value: (lastMonthActiveUsers && lastMonthActiveUsers.total * 20) || 0,
+    },
+    {
+      id: 3,
+      title: 'Active Devices Costs',
+      value:
+        (currentMonthActiveDevices && currentMonthActiveDevices.total * 10) ||
+        0,
+    },
+    {
+      id: 4,
+      title: 'Active Users Costs',
+      value:
+        (currentMonthActiveUsers && currentMonthActiveUsers.total * 20) || 0,
+    },
+  ];
+
+  const prepareKPIData = (monthActiveData, numberOfDays) => {
+    if (monthActiveData && monthActiveData.days) {
+      const activityDay = new Array(numberOfDays).fill(0);
+      monthActiveData.days.map(day => {
         const arrayDay = new Date(day.time).getDate() - 1;
-        activeUsersPerDay[arrayDay] = day.activeusercount;
+        activityDay[arrayDay] = day.activecount || day.activecount;
       });
-      return activeUsersPerDay;
+      return activityDay;
     }
     return [];
   };
 
+  previousMonthSeries[0].data = prepareKPIData(
+    lastMonthActiveDevices,
+    numberOfDaysInLastMonth,
+  );
+
   previousMonthSeries[1].data = prepareKPIData(
     lastMonthActiveUsers,
     numberOfDaysInLastMonth,
+  );
+
+  currentMonthSeries[0].data = prepareKPIData(
+    currentMonthActiveDevices,
+    numberOfDaysInCurrentMonth,
   );
 
   currentMonthSeries[1].data = prepareKPIData(
