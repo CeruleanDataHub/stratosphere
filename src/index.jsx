@@ -12,6 +12,7 @@ import DeviceContainer from './containers/Device/DeviceContainer.jsx';
 import Device from './containers/Device/Device.jsx';
 import UserManagement from './containers/UserManagement/UserManagement.jsx';
 import User from './containers/UserManagement/User.jsx';
+import UsersAndRoles from './containers/UserAndRoleManagement/UsersAndRoles.jsx';
 import RoleManagement from './containers/ResourceManagement/RoleManagement.jsx';
 import Role from './containers/ResourceManagement/Role.jsx';
 import HierarchyManagement from './containers/HierarchyManagement/HierarchyManagement.jsx';
@@ -44,10 +45,9 @@ ReactDOM.render(
     >
       <Router>
         <Application className="container">
-          <div>
-            <Header />
-            <Navigation />
-          </div>
+          <Header />
+          <Navigation />
+
           <Switch>
             <Route exact path="/devices" component={DeviceContainer} />
             <Route path={`/devices/:deviceId`} component={Device} />
@@ -72,6 +72,7 @@ ReactDOM.render(
               path={'/reporting-dashboard'}
               component={ReportingDashboard}
             />
+            <Route exact path={'/users-and-roles'} component={UsersAndRoles} />
             <Route path="/" />
           </Switch>
         </Application>

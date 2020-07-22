@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import {useAuth0} from './auth0-spa.jsx';
 
-import denim_bg from './assets/images/DenimFabric.png';
-
 import 'normalize.css';
 import './application.css';
 
@@ -16,7 +14,7 @@ const Main = styled.article`
   background-color: #ffffff;
   background-attachment: fixed;
   background-position: left -15em;
-  grid-template-rows: 20% auto;
+  grid-template-rows: 10% auto;
 `;
 
 const Application = props => {
@@ -27,11 +25,7 @@ const Application = props => {
     return <div> Loading... </div>;
   }
 
-  return (
-    <Main id="app" image={denim_bg}>
-      {props.children}
-    </Main>
-  );
+  return <Main id="app">{props.children}</Main>;
 };
 
 Application.propTypes = {

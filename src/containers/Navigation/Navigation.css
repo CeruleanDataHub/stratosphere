@@ -1,5 +1,6 @@
 .user-btn {
   cursor: pointer;
+  display: flex;
 }
 .lnr {
   color: white;

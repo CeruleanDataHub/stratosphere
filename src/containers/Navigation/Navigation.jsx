@@ -26,6 +26,9 @@ const MenuOpen = styled.div`
   width: 4em;
   height: 3.5em;
   cursor: pointer;
+  & .lni {
+    zoom: 2;
+  }
 `;
 
 const MenuItems = styled.ul`
@@ -39,6 +42,15 @@ const MenuItem = styled.li`
   padding: 1em;
   line-height: 1.5em;
   height: 1.5em;
+  & .lni {
+    zoom: 2;
+  }
+  & .text {
+    margin-left: 24px;
+  }
+  & > a {
+    display: flex;
+  }
 `;
 
 const MenuItemText = styled.span`
@@ -46,12 +58,15 @@ const MenuItemText = styled.span`
   color: white;
 `;
 
+const CustomIcon = styled.span`
+  color: cornflowerblue;
+`;
+
 const Navigation = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const {logout, isAuthenticated, loginWithRedirect} = useAuth0();
 
   const toggleMenu = () => {
-    console.log('toggling state');
     setMenuOpen(!menuOpen);
   };
 
@@ -66,57 +81,65 @@ const Navigation = () => {
   return (
     <NavBar id="left-navigation" menuOpen={menuOpen}>
       <MenuOpen onClick={toggleMenu}>
-        <Icon name={menuOpen ? 'close' : 'menu'}></Icon>
+        <Icon name={menuOpen ? 'close' : 'menu'} as={CustomIcon}></Icon>
       </MenuOpen>
       <MenuItems>
         {isAuthenticated ? (
           <>
             <MenuItem>
               <Link to="/">
-                <Icon name="home"></Icon>
-                <MenuItemText menuOpen={menuOpen}>Home</MenuItemText>
+                <Icon name="home" as={CustomIcon}></Icon>
+                <MenuItemText className="text" menuOpen={menuOpen}>
+                  Home
+                </MenuItemText>
               </Link>
             </MenuItem>
             <MenuItem>
               <Link to="/devices">
-                <Icon name="rocket"></Icon>
-                <MenuItemText menuOpen={menuOpen}>Devices</MenuItemText>
+                <Icon name="rocket" as={CustomIcon}></Icon>
+                <MenuItemText className="text" menuOpen={menuOpen}>
+                  Devices
+                </MenuItemText>
               </Link>
             </MenuItem>
             <MenuItem>
               <Link to="/user-management">
-                <Icon name="users"></Icon>
-                <MenuItemText menuOpen={menuOpen}>User Management</MenuItemText>
+                <Icon name="users" as={CustomIcon}></Icon>
+                <MenuItemText className="text" menuOpen={menuOpen}>
+                  User Management
+                </MenuItemText>
               </Link>
             </MenuItem>
             <MenuItem>
               <Link to="/resource-management">
-                <Icon name="layers"></Icon>
-                <MenuItemText menuOpen={menuOpen}>
+                <Icon name="layers" as={CustomIcon}></Icon>
+                <MenuItemText className="text" menuOpen={menuOpen}>
                   Resource Management
                 </MenuItemText>
               </Link>
             </MenuItem>
             <MenuItem>
               <Link to="/hierarchy-management">
-                <Icon name="layers"></Icon>
-                <MenuItemText menuOpen={menuOpen}>
+                <Icon name="layers" as={CustomIcon}></Icon>
+                <MenuItemText className="text" menuOpen={menuOpen}>
                   Hierarchy Management
                 </MenuItemText>
               </Link>
             </MenuItem>
             <MenuItem>
               <Link to="/reporting-dashboard">
-                <Icon name="dashboard"></Icon>
-                <MenuItemText menuOpen={menuOpen}>
+                <Icon name="dashboard" as={CustomIcon}></Icon>
+                <MenuItemText className="text" menuOpen={menuOpen}>
                   Reporting Dashboard
                 </MenuItemText>
               </Link>
             </MenuItem>
             <MenuItem>
               <div className="user-btn" onClick={handleLogoutClick}>
-                <Icon name="exit"></Icon>
-                <MenuItemText menuOpen={menuOpen}>Logout</MenuItemText>
+                <Icon name="exit" as={CustomIcon}></Icon>
+                <MenuItemText className="text" menuOpen={menuOpen}>
+                  Logout
+                </MenuItemText>
               </div>
             </MenuItem>
           </>

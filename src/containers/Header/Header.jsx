@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import logo from '../../assets/images/Denim_Logo_Color.png';
 
 const TopHeader = styled.header`
-  height: 0;
   color: #ffffff;
   z-index: 1;
 `;
