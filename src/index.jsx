@@ -13,6 +13,8 @@ import Device from './containers/Device/Device.jsx';
 import UserManagement from './containers/UserManagement/UserManagement.jsx';
 import User from './containers/UserManagement/User.jsx';
 import UsersAndRoles from './containers/UserAndRoleManagement/UsersAndRoles.jsx';
+import ManageUsers from './containers/UserAndRoleManagement/ManageUsers.jsx';
+
 import RoleManagement from './containers/ResourceManagement/RoleManagement.jsx';
 import Role from './containers/ResourceManagement/Role.jsx';
 import HierarchyManagement from './containers/HierarchyManagement/HierarchyManagement.jsx';
@@ -73,6 +75,8 @@ ReactDOM.render(
               component={ReportingDashboard}
             />
             <Route exact path={'/users-and-roles'} component={UsersAndRoles} />
+            <Route path={'/manage-users'} component={ManageUsers} />
+
             <Route path="/" />
           </Switch>
         </Application>

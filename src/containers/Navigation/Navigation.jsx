@@ -102,11 +102,21 @@ const Navigation = () => {
                 </MenuItemText>
               </Link>
             </MenuItem>
+            {/*
             <MenuItem>
               <Link to="/user-management">
                 <Icon name="users" as={CustomIcon}></Icon>
                 <MenuItemText className="text" menuOpen={menuOpen}>
                   User Management
+                </MenuItemText>
+              </Link>
+            </MenuItem>
+            */}
+            <MenuItem>
+              <Link to="/users-and-roles">
+                <Icon name="users" as={CustomIcon}></Icon>
+                <MenuItemText className="text" menuOpen={menuOpen}>
+                  User and Roles
                 </MenuItemText>
               </Link>
             </MenuItem>

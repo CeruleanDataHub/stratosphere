@@ -14,7 +14,7 @@ const Main = styled.article`
   background-color: #ffffff;
   background-attachment: fixed;
   background-position: left -15em;
-  grid-template-rows: 10% auto;
+  grid-template-rows: 20% auto;
 `;
 
 const Application = props => {
