@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import {createBrowserHistory} from 'history';
+import {ThemeProvider} from 'styled-components';
+import {ModalProvider} from 'styled-react-modal';
 
 import {Auth0Provider} from './auth0-spa.jsx';
 import Application from './application.jsx';
@@ -28,6 +30,9 @@ import 'react-sortable-tree/style.css';
 
 const envVar = env();
 
+const theme = {
+  background: 'white',
+};
 const onRedirectCallback = appState => {
   createBrowserHistory().push(
     appState && appState.targetUrl
@@ -45,42 +50,57 @@ ReactDOM.render(
       redirect_uri={window.location.origin}
       onRedirectCallback={onRedirectCallback}
     >
-      <Router>
-        <Application className="container">
-          <Header />
-          <Navigation />
+      <ThemeProvider theme={theme}>
+        <ModalProvider>
+          <Router>
+            <Application className="container">
+              <Header />
+              <Navigation />
 
-          <Switch>
-            <Route exact path="/devices" component={DeviceContainer} />
-            <Route path={`/devices/:deviceId`} component={Device} />
-            <Route exact path="/user-management" component={UserManagement} />
-            <Route path={`/user-management/user/:userId`} component={User} />
-            <Route
-              exact
-              path={`/resource-management`}
-              component={RoleManagement}
-            />
-            <Route
-              path={`/resource-management/role/:roleId`}
-              component={Role}
-            />
-            <Route
-              exact
-              path={'/hierarchy-management'}
-              component={HierarchyManagement}
-            />
-            <Route
-              exact
-              path={'/reporting-dashboard'}
-              component={ReportingDashboard}
-            />
-            <Route exact path={'/users-and-roles'} component={UsersAndRoles} />
-            <Route path={'/manage-users'} component={ManageUsers} />
+              <Switch>
+                <Route exact path="/devices" component={DeviceContainer} />
+                <Route path={`/devices/:deviceId`} component={Device} />
+                <Route
+                  exact
+                  path="/user-management"
+                  component={UserManagement}
+                />
+                <Route
+                  path={`/user-management/user/:userId`}
+                  component={User}
+                />
+                <Route
+                  exact
+                  path={`/resource-management`}
+                  component={RoleManagement}
+                />
+                <Route
+                  path={`/resource-management/role/:roleId`}
+                  component={Role}
+                />
+                <Route
+                  exact
+                  path={'/hierarchy-management'}
+                  component={HierarchyManagement}
+                />
+                <Route
+                  exact
+                  path={'/reporting-dashboard'}
+                  component={ReportingDashboard}
+                />
+                <Route
+                  exact
+                  path={'/users-and-roles'}
+                  component={UsersAndRoles}
+                />
+                <Route path={'/manage-users'} component={ManageUsers} />
 
-            <Route path="/" />
-          </Switch>
-        </Application>
-      </Router>
+                <Route path="/" />
+              </Switch>
+            </Application>
+          </Router>
+        </ModalProvider>
+      </ThemeProvider>
     </Auth0Provider>
   </Provider>,
   document.getElementById('root'),

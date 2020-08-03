@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import styled from 'styled-components';
 import Axios from 'axios';
 import {useAuth0} from '../../auth0-spa.jsx';
@@ -11,9 +11,15 @@ import {
   Button,
   Typography,
   Input,
-  Dropdown,
+  Select,
   DataTable,
+  useOutsideClick,
+  Popover,
 } from '@ceruleandatahub/react-components';
+
+import {ProfileModal} from './ProfileModal.jsx';
+
+import './ManageUsers.css';
 
 const ManageUsersContainer = styled.section`
   margin: 0 8em 2em 18em;
@@ -43,35 +49,103 @@ const SearchButton = styled(ButtonWithIcon)`
   width: 100%;
 `;
 
-const defaultUserData = {
-  data: [],
-  columns: [
-    {id: 1, name: 'Name', selector: 'name'},
-    {id: 2, name: 'Logins', selector: 'logins'},
-    {id: 3, name: 'Last login', selector: 'lastLogin'},
-  ],
-};
+const BorderLessButton = styled.span`
+  border: 0px;
+  transform: rotate(90deg);
+`;
+
+const PopoverOption = styled.div`
+  display: flex;
+  padding: 0.2em;
+  min-width: 150px;
+  cursor: pointer;
+`;
+
+const PopoverText = styled.div`
+  text-align: left;
+  margin-left: 10px;
+`;
+
 const ManageUsers = () => {
+  const defaultUserData = {
+    data: [],
+    columns: [
+      {id: 1, name: 'Name', selector: 'name'},
+      {id: 2, name: 'Logins', selector: 'logins'},
+      {
+        id: 3,
+        name: 'Last login',
+        selector: 'lastLogin',
+      },
+      {
+        id: 4,
+        name: '',
+        selector: 'actions',
+        // eslint-disable-next-line react/prop-types
+        cell: ({id}) => <UserDataCell id={id} />,
+      },
+    ],
+  };
+
   const {getTokenSilently} = useAuth0();
-  const [searchDropdownOpen, setSearchDropdownOpen] = useState(false);
+  const [profileModalOpenTab, setProfileModalOpenTab] = useState('');
+
   const [userData, setUserData] = useState(defaultUserData);
+  const [filterText, setFilterText] = useState('');
 
   const envVar = env();
   const auth0ProxyUrl = envVar.AUTH0_PROXY_URL;
 
+  const UserDataCell = ({id}) => {
+    const moreRef = useRef(null);
+    const popoverRef = useRef(null);
+    const [popoverOpen, setPopoverOpen] = useState(false);
+
+    useOutsideClick(popoverRef, () => setPopoverOpen(false));
+
+    return (
+      <>
+        <Button
+          onClick={() => setPopoverOpen(!popoverOpen)}
+          ref={moreRef}
+          as={BorderLessButton}
+        >
+          <Icon name="more-alt" />
+        </Button>
+        <Popover
+          isOpen={popoverOpen}
+          containerRef={moreRef}
+          popoverRef={popoverRef}
+        >
+          <PopoverOption onClick={() => setProfileModalOpenTab('roles')}>
+            <Icon name="chef-hat"></Icon>
+            <PopoverText>Assign Roles</PopoverText>
+          </PopoverOption>
+          <PopoverOption onClick={() => setProfileModalOpenTab('groups')}>
+            <Icon name="network"></Icon>
+            <PopoverText>Assign Groups</PopoverText>
+          </PopoverOption>
+          <PopoverOption onClick={() => setProfileModalOpenTab('hierarchies')}>
+            <Icon name="vector"></Icon>
+            <PopoverText>Assign Hierarchies</PopoverText>
+          </PopoverOption>
+        </Popover>
+      </>
+    );
+  };
+
   useEffect(() => {
     async function fetchData() {
       const users = await getUsers();
-      console.log('USERS', users);
       const usersInfo = users.map((user, idx) => {
         return {
           id: idx,
           name: user.name,
+          email: user.email || '',
           logins: user.logins_count,
           lastLogin: user.last_login,
         };
       });
-      console.log('USERS Info', usersInfo);
       setUserData({
         ...userData,
         data: usersInfo,
@@ -102,7 +176,11 @@ const ManageUsers = () => {
         console.log(err);
       });
   };
-  console.log('user data', userData);
+
+  const handleSearchTextChange = ev => {
+    setFilterText(ev.target.value);
+  };
+
   return (
     <ManageUsersContainer>
       <Typography fontFamily="openSans">
@@ -124,28 +202,22 @@ const ManageUsers = () => {
           <form
             onSubmit={event => {
               event.preventDefault();
-
               console.log('submit');
             }}
+            className="searchUser"
           >
-            <Grid columns="3fr 1fr 1fr">
+            <Grid columns="4fr 1fr">
               <Cell>
-                <Input type="search" placeholder="Search" />
+                <Input
+                  type="search"
+                  placeholder="Search"
+                  value={filterText}
+                  onChange={ev => {
+                    handleSearchTextChange(ev);
+                  }}
+                />
               </Cell>
-              <Cell>
-                <Dropdown
-                  label="Customer name"
-                  onClick={() => setSearchDropdownOpen(!searchDropdownOpen)}
-                  isOpen={searchDropdownOpen}
-                >
-                  <ul>
-                    <li>first</li>
-                    <li>second</li>
-                    <li>third</li>
-                    <li>fourth</li>
-                  </ul>
-                </Dropdown>
-              </Cell>
+
               <Cell>
                 <Button type="submit" as={SearchButton}>
                   <Icon name="search" />
@@ -154,9 +226,19 @@ const ManageUsers = () => {
               </Cell>
             </Grid>
           </form>
-          <DataTable columns={userData.columns} data={userData.data} />
+          <DataTable
+            columns={userData.columns}
+            data={userData.data.filter(
+              user =>
+                user.name.toLowerCase().includes(filterText.toLowerCase()) ||
+                user.email.toLowerCase().includes(filterText.toLowerCase()),
+            )}
+          />
         </Cell>
       </Typography>
+      {profileModalOpenTab !== '' && (
+        <ProfileModal isOpen tab={profileModalOpenTab} />
+      )}
     </ManageUsersContainer>
   );
 };

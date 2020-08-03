@@ -17,6 +17,8 @@ const NavBar = styled.nav`
   background-color: rgba(0, 0, 0, 0.75);
   color: #ffffff;
   z-index: 1;
+  overflow-x: hidden;
+  white-space: nowrap;
 `;
 
 const MenuOpen = styled.div`
