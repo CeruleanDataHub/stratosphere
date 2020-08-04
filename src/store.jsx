@@ -11,6 +11,8 @@ const envVar = env();
 
 const settingsProvider = {
   API_URL: envVar.BASE_API_URL,
+  API_PREFIX: '/api/v1',
+  AUTH0_PREFIX: '/auth0',
 };
 
 const cacheProvider = {};

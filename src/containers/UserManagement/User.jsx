@@ -11,7 +11,7 @@ import env from '../../config';
 import './User.css';
 
 const envVar = env();
-const auth0ProxyUrl = envVar.AUTH0_PROXY_URL;
+const auth0ProxyUrl = `${envVar.BASE_API_URL}/auth0`;
 
 const UserContainer = styled.section`
   margin-left: 18em;

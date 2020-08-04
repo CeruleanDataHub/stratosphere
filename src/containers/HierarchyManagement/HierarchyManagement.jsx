@@ -86,7 +86,7 @@ const HierarchyManagement = () => {
   const getUsers = async () => {
     await Axios({
       method: 'GET',
-      url: `${envVar.AUTH0_PROXY_URL}/users?fields=user_id%2Cemail%2Cname&include_fields=true`,
+      url: `${envVar.BASE_API_URL}/auth0/users?fields=user_id%2Cemail%2Cname&include_fields=true`,
       headers: {authorization: 'Bearer ' + (await getTokenSilently())},
     })
       .then(resp => {
@@ -171,7 +171,7 @@ const HierarchyManagement = () => {
       },
     ];
     Axios.post(
-      `${envVar.AUTH0_PROXY_URL}/users/${selectedUser}/permissions`,
+      `${envVar.BASE_API_URL}/auth0/users/${selectedUser}/permissions`,
       {
         permissions: permissions,
       },

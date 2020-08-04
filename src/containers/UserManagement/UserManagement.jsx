@@ -15,7 +15,7 @@ const UserManagementContainer = styled.section`
 `;
 
 const envVar = env();
-const auth0ProxyUrl = envVar.AUTH0_PROXY_URL;
+const auth0ProxyUrl = `${envVar.BASE_API_URL}/auth0`;
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);

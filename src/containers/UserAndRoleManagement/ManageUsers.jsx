@@ -93,7 +93,7 @@ const ManageUsers = () => {
   const [filterText, setFilterText] = useState('');
 
   const envVar = env();
-  const auth0ProxyUrl = envVar.AUTH0_PROXY_URL;
+  const auth0ProxyUrl = `${envVar.BASE_API_URL}/auth0`;
 
   const UserDataCell = () => {
     const moreRef = useRef(null);
@@ -235,7 +235,11 @@ const ManageUsers = () => {
           />
         </Cell>
       </Typography>
-      <ProfileModal isOpen={profileModalOpenTab !== ''} profileModalOpenTab={profileModalOpenTab} setProfileModalOpenTab={setProfileModalOpenTab} />
+      <ProfileModal
+        isOpen={profileModalOpenTab !== ''}
+        profileModalOpenTab={profileModalOpenTab}
+        setProfileModalOpenTab={setProfileModalOpenTab}
+      />
     </ManageUsersContainer>
   );
 };

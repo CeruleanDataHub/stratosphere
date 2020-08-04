@@ -10,7 +10,7 @@ import {useAuth0} from '../../auth0-spa.jsx';
 
 import './Role.css';
 const envVar = env();
-const auth0ProxyUrl = envVar.AUTH0_PROXY_URL;
+const auth0ProxyUrl = `${envVar.BASE_API_URL}/auth0`;
 
 const RoleContainer = styled.section`
   margin-left: 18em;

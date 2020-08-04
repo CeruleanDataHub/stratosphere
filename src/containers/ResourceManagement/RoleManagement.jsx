@@ -16,7 +16,7 @@ const RoleManagementContainer = styled.section`
   background-color: #ffffff;
 `;
 
-const AUTH0_PROXY_URL = envVar.AUTH0_PROXY_URL;
+const AUTH0_PROXY_URL = `${envVar.BASE_API_URL}/auth0`;
 
 const RoleManagement = () => {
   const {getTokenSilently} = useAuth0();

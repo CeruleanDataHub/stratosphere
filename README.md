@@ -34,7 +34,6 @@ Following environment variables are supported:
 ```
   NODE_ENV: <Node environment (development or production)>
   BASE_API_URL: <URL endpoint for db api>
-  AUTH0_PROXY_URL: <URL endpoint for Auth0 proxy>
   AUTH0_DOMAIN: <URL endpoint of Auth0 domain>
   AUTH0_CLIENT_ID: <Client ID for Auth0>
   AUTH0_AUDIENCE: <API identifier in Auth0>
