@@ -11,7 +11,6 @@ import {
   Button,
   Typography,
   Input,
-  Select,
   DataTable,
   useOutsideClick,
   Popover,
@@ -96,7 +95,7 @@ const ManageUsers = () => {
   const envVar = env();
   const auth0ProxyUrl = envVar.AUTH0_PROXY_URL;
 
-  const UserDataCell = ({id}) => {
+  const UserDataCell = () => {
     const moreRef = useRef(null);
     const popoverRef = useRef(null);
     const [popoverOpen, setPopoverOpen] = useState(false);
@@ -117,15 +116,15 @@ const ManageUsers = () => {
           containerRef={moreRef}
           popoverRef={popoverRef}
         >
-          <PopoverOption onClick={() => setProfileModalOpenTab('roles')}>
+          <PopoverOption onClick={() => setProfileModalOpenTab('Roles')}>
             <Icon name="chef-hat"></Icon>
             <PopoverText>Assign Roles</PopoverText>
           </PopoverOption>
-          <PopoverOption onClick={() => setProfileModalOpenTab('groups')}>
+          <PopoverOption onClick={() => setProfileModalOpenTab('Groups')}>
             <Icon name="network"></Icon>
             <PopoverText>Assign Groups</PopoverText>
           </PopoverOption>
-          <PopoverOption onClick={() => setProfileModalOpenTab('hierarchies')}>
+          <PopoverOption onClick={() => setProfileModalOpenTab('Hierarchies')}>
             <Icon name="vector"></Icon>
             <PopoverText>Assign Hierarchies</PopoverText>
           </PopoverOption>
@@ -236,9 +235,7 @@ const ManageUsers = () => {
           />
         </Cell>
       </Typography>
-      {profileModalOpenTab !== '' && (
-        <ProfileModal isOpen tab={profileModalOpenTab} />
-      )}
+      <ProfileModal isOpen={profileModalOpenTab !== ''} profileModalOpenTab={profileModalOpenTab} setProfileModalOpenTab={setProfileModalOpenTab} />
     </ManageUsersContainer>
   );
 };
