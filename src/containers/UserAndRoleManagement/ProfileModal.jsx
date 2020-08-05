@@ -1,17 +1,17 @@
-import React, {useState, useRef} from 'react';
-import styled from 'styled-components';
 import {
-  Grid,
-  Cell,
-  Icon,
   Button,
-  Typography,
-  Tab,
-  Dropdown,
+  Cell,
   DataTable,
-  useOutsideClick,
+  Dropdown,
+  Grid,
+  Icon,
+  Select,
+  Tab,
+  Typography,
 } from '@ceruleandatahub/react-components';
-
+import PropTypes from 'prop-types';
+import React, {useState} from 'react';
+import styled from 'styled-components';
 import Modal from 'styled-react-modal';
 
 const StyledModal = Modal.styled`
@@ -29,6 +29,9 @@ const ModalDataTableToolCell = () => (
     <Icon name="trash" />
   </Button>
 );
+
+// eslint-disable-next-line react/prop-types
+const cell = ({id}) => <ModalDataTableToolCell id={id} />;
 
 const GridContentRight = styled.div`
   grid-column-end: none;
@@ -55,26 +58,77 @@ const manageUsersModalData = {
       id: 2,
       name: '',
       selector: 'actions',
-      // eslint-disable-next-line react/prop-types
-      cell: ({id}) => <ModalDataTableToolCell id={id} />,
+      cell,
     },
   ],
 };
+
+const manageGroupsModalData = {
+  data: [
+    {id: 1, name: 'Hacklab'},
+    {id: 2, name: 'Team Cerulean'},
+    {id: 3, name: 'Houston Inc.'},
+  ],
+  columns: [
+    {id: 1, name: 'Name', selector: 'name'},
+    {
+      id: 2,
+      name: '',
+      selector: 'actions',
+      cell,
+    },
+  ],
+};
+
+const manageHierarchiesModalData = {
+  data: [
+    {id: 1, name: 'Houston Inc.'},
+    {
+      id: 2,
+      name:
+        'Haaga-Helia / Faculty of Business Administration / IoT Course Spring 2021',
+    },
+    {id: 3, name: 'University of Delft'},
+  ],
+  columns: [
+    {id: 1, name: 'Name', selector: 'name'},
+    {
+      id: 2,
+      name: '',
+      selector: 'actions',
+      cell,
+    },
+  ],
+};
+
+const hierarchiesSelectOptions = [
+  {
+    group: 'University of Trento',
+    children: [
+      {id: 1, value: 'Faculty of Business Administration'},
+      {id: 2, value: 'Faculty of Artificial Intelligence'},
+      {id: 3, value: 'Faculty of IoT'},
+    ],
+  },
+  {
+    group: 'University of Helsinki',
+    children: [
+      {id: 4, value: 'Faculty of B.A'},
+      {id: 5, value: 'Faculty of AI'},
+      {id: 6, value: 'IoT faculty'},
+    ],
+  },
+];
 
 export const ProfileModal = ({
   isOpen,
   profileModalOpenTab,
   setProfileModalOpenTab,
 }) => {
-  //   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [modalDropdownOpen, setModalDropdownOpen] = useState(false);
-  //   const [searchDropdownOpen, setSearchDropdownOpen] = useState(false);
-  //   const [menuOpen, setMenuOpen] = useState(false);
-  const [popoverOpen, setPopoverOpen] = useState(false);
-
-  //   const containerRef = useRef(null);
-  const popoverRef = useRef(null);
-  useOutsideClick(popoverRef, () => setPopoverOpen(false));
+  const [hierarchiesSelectedOption, setHierarchiesSelectedOption] = useState(
+    hierarchiesSelectOptions[0],
+  );
 
   const renderRolesTabContent = () => (
     <>
@@ -109,8 +163,64 @@ export const ProfileModal = ({
     </>
   );
 
-  const renderGroupsTabContent = () => <div>groups</div>;
-  const renderHierarchiesTabContent = () => <div>hierarchies</div>;
+  const renderGroupsTabContent = () => (
+    <>
+      <Grid columns="6fr 1fr">
+        <Cell>
+          <Dropdown
+            label="Groups"
+            onClick={() => setModalDropdownOpen(!modalDropdownOpen)}
+            isOpen={modalDropdownOpen}
+          >
+            <ul>
+              <li>Team Konecranes</li>
+              <li>Team Igniter</li>
+              <li>Team Elisa</li>
+              <li>Team Telia</li>
+            </ul>
+          </Dropdown>
+        </Cell>
+        <Cell>
+          <Button>Add role</Button>
+        </Cell>
+      </Grid>
+
+      <DataTable
+        columns={manageGroupsModalData.columns}
+        data={manageGroupsModalData.data}
+      />
+
+      <div>
+        <a href="/manage">Manage groups</a>
+      </div>
+    </>
+  );
+
+  const renderHierarchiesTabContent = () => (
+    <>
+      <Grid columns="6fr 1fr">
+        <Cell>
+          <Select
+            items={hierarchiesSelectOptions}
+            selectedOption={hierarchiesSelectedOption}
+            onChange={e => setHierarchiesSelectedOption(e.target.value)}
+          />
+        </Cell>
+        <Cell>
+          <Button>Add role</Button>
+        </Cell>
+      </Grid>
+
+      <DataTable
+        columns={manageHierarchiesModalData.columns}
+        data={manageHierarchiesModalData.data}
+      />
+
+      <div>
+        <a href="/manage">Manage hierarchies</a>
+      </div>
+    </>
+  );
 
   const renderCurrentTab = () => {
     switch (profileModalOpenTab) {
@@ -185,4 +295,10 @@ export const ProfileModal = ({
       </Typography>
     </StyledModal>
   );
+};
+
+ProfileModal.propTypes = {
+  isOpen: PropTypes.bool,
+  profileModalOpenTab: PropTypes.string,
+  setProfileModalOpenTab: PropTypes.func,
 };
