@@ -7,7 +7,7 @@ import {Card} from '@ceruleandatahub/react-components';
 import {useAuth0} from '../../auth0-spa.jsx';
 import env from '../../config';
 
-import './RoleManagement.css';
+import './ResourceRoleManagement.css';
 
 const envVar = env();
 
@@ -18,7 +18,7 @@ const RoleManagementContainer = styled.section`
 
 const AUTH0_PROXY_URL = `${envVar.BASE_API_URL}/auth0`;
 
-const RoleManagement = () => {
+const ResourceRoleManagement = () => {
   const {getTokenSilently} = useAuth0();
   const [roles, setRoles] = useState([]);
 
@@ -74,4 +74,4 @@ const RoleManagement = () => {
   );
 };
 
-export default RoleManagement;
+export default ResourceRoleManagement;
