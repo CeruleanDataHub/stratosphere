@@ -16,6 +16,7 @@ import UserManagement from './containers/UserManagement/UserManagement.jsx';
 import User from './containers/UserManagement/User.jsx';
 import UsersAndRoles from './containers/UserAndRoleManagement/UsersAndRoles.jsx';
 import ManageUsers from './containers/UserAndRoleManagement/ManageUsers.jsx';
+import ManageRoles from './containers/UserAndRoleManagement/ManageRoles.jsx';
 
 import ResourceRoleManagement from './containers/ResourceRoleManagement/ResourceRoleManagement.jsx';
 import Role from './containers/ResourceRoleManagement/Role.jsx';
@@ -95,6 +96,7 @@ ReactDOM.render(
                 />
                 <Route path={'/manage-users'} component={ManageUsers} />
 
+                <Route path={'/manage-roles'} component={ManageRoles} />
                 <Route path="/" />
               </Switch>
             </Application>
