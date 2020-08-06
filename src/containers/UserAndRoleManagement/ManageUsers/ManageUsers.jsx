@@ -1,23 +1,21 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import Axios from 'axios';
-import {useAuth0} from '../../auth0-spa.jsx';
-import env from '../../config';
-import PropTypes from 'prop-types';
+import {useAuth0} from '../../../auth0-spa.jsx';
+import env from '../../../config';
 
 import {
-  Grid,
-  Cell,
-  Icon,
   Button,
-  Typography,
-  Input,
+  Cell,
   DataTable,
-  useOutsideClick,
-  Popover,
+  Grid,
+  Icon,
+  Input,
+  Typography,
 } from '@ceruleandatahub/react-components';
 
-import {ProfileModal} from './ProfileModal.jsx';
+import {UserModal} from './UserModal.jsx';
+import ActionsCell from '../ActionsCell/ActionsCell.jsx';
 
 import './ManageUsers.css';
 
@@ -49,64 +47,11 @@ const SearchButton = styled(ButtonWithIcon)`
   width: 100%;
 `;
 
-const BorderlessButton = styled.span`
-  border: 0px;
-  transform: rotate(90deg);
-`;
-
-const PopoverOption = styled.div`
-  display: flex;
-  padding: 0.2em;
-  min-width: 150px;
-  cursor: pointer;
-`;
-
-const PopoverText = styled.div`
-  text-align: left;
-  margin-left: 10px;
-`;
-
-const UserDataCell = ({setProfileModalOpenTab}) => {
-  const moreRef = useRef(null);
-  const popoverRef = useRef(null);
-  const [popoverOpen, setPopoverOpen] = useState(false);
-
-  useOutsideClick(popoverRef, () => setPopoverOpen(false));
-
-  return (
-    <>
-      <Button
-        onClick={() => setPopoverOpen(!popoverOpen)}
-        ref={moreRef}
-        as={BorderlessButton}
-      >
-        <Icon name="more-alt" />
-      </Button>
-      <Popover
-        isOpen={popoverOpen}
-        containerRef={moreRef}
-        popoverRef={popoverRef}
-      >
-        <PopoverOption onClick={() => setProfileModalOpenTab('Roles')}>
-          <Icon name="chef-hat" />
-          <PopoverText>Assign Roles</PopoverText>
-        </PopoverOption>
-        <PopoverOption onClick={() => setProfileModalOpenTab('Groups')}>
-          <Icon name="network" />
-          <PopoverText>Assign Groups</PopoverText>
-        </PopoverOption>
-        <PopoverOption onClick={() => setProfileModalOpenTab('Hierarchies')}>
-          <Icon name="vector" />
-          <PopoverText>Assign Hierarchies</PopoverText>
-        </PopoverOption>
-      </Popover>
-    </>
-  );
-};
-
-UserDataCell.propTypes = {
-  setProfileModalOpenTab: PropTypes.func.isRequired,
-};
+const actionsData = [
+  {icon: 'chef-hat', text: 'Assign Roles', modalToOpen: 'Roles'},
+  {icon: 'network', text: 'Assign Groups', modalToOpen: 'Groups'},
+  {icon: 'vector', text: 'Assign Hierarchies', modalToOpen: 'Hierarchies'},
+];
 
 const ManageUsers = () => {
   const {getTokenSilently} = useAuth0();
@@ -118,13 +63,12 @@ const ManageUsers = () => {
 
   const auth0ProxyUrl = `${envVar.BASE_API_URL}/auth0`;
 
-  const cell = () => {
-    return <UserDataCell setProfileModalOpenTab={setProfileModalOpenTab} />;
-  };
-
-  cell.propTypes = {
-    setProfileModalOpenTab: PropTypes.func.isRequired,
-  };
+  const cell = () => (
+    <ActionsCell
+      setModalOpenTab={setProfileModalOpenTab}
+      actionsData={actionsData}
+    />
+  );
 
   const defaultUserData = {
     data: [],
@@ -245,7 +189,7 @@ const ManageUsers = () => {
           />
         </Cell>
       </Typography>
-      <ProfileModal
+      <UserModal
         isOpen={profileModalOpenTab !== ''}
         profileModalOpenTab={profileModalOpenTab}
         setProfileModalOpenTab={setProfileModalOpenTab}

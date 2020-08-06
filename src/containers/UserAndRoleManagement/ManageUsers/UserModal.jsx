@@ -120,7 +120,7 @@ const hierarchiesSelectOptions = [
   },
 ];
 
-export const ProfileModal = ({
+export const UserModal = ({
   isOpen,
   profileModalOpenTab,
   setProfileModalOpenTab,
@@ -297,7 +297,7 @@ export const ProfileModal = ({
   );
 };
 
-ProfileModal.propTypes = {
+UserModal.propTypes = {
   isOpen: PropTypes.bool,
   profileModalOpenTab: PropTypes.string,
   setProfileModalOpenTab: PropTypes.func,

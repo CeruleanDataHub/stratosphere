@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Button,
   Cell,
@@ -6,12 +6,10 @@ import {
   Grid,
   Icon,
   Input,
-  Popover,
   Typography,
-  useOutsideClick,
 } from '@ceruleandatahub/react-components';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
+import ActionsCell from '../ActionsCell/ActionsCell.jsx';
 
 const IconMarginRight = styled.div`
   margin-right: 0.5rem;
@@ -37,67 +35,18 @@ const SearchButton = styled(ButtonWithIcon)`
   width: 100%;
 `;
 
-const PopoverOption = styled.div`
-  display: flex;
-  padding: 0.2em;
-  min-width: 150px;
-  cursor: pointer;
-`;
+const actionsData = [
+  {icon: 'chef-hat', text: 'Assign Permissions', modalToOpen: 'Permissions'},
+];
 
-const PopoverText = styled.div`
-  text-align: left;
-  margin-left: 10px;
-`;
-
-const BorderlessButton = styled.span`
-  border: 0px;
-  transform: rotate(90deg);
-`;
-
-const UserDataCell = ({setRoleModalOpenTab}) => {
-  const moreRef = useRef(null);
-  const popoverRef = useRef(null);
-  const [popoverOpen, setPopoverOpen] = useState(false);
-
-  useOutsideClick(popoverRef, () => setPopoverOpen(false));
-
-  return (
-    <>
-      <Button
-        onClick={() => setPopoverOpen(!popoverOpen)}
-        ref={moreRef}
-        as={BorderlessButton}
-      >
-        <Icon name="more-alt" />
-      </Button>
-
-      <Popover
-        isOpen={popoverOpen}
-        containerRef={moreRef}
-        popoverRef={popoverRef}
-      >
-        <PopoverOption onClick={() => setRoleModalOpenTab('Permissions')}>
-          <Icon name="chef-hat" />
-          <PopoverText>Assign Permissions</PopoverText>
-        </PopoverOption>
-      </Popover>
-    </>
-  );
-};
-
-UserDataCell.propTypes = {
-  setRoleModalOpenTab: PropTypes.func.isRequired,
-};
+const setModalOpenTab = () => {};
 
 const ManageRoles = () => {
-  const cell = ({setRoleModalOpenTab}) => (
-    <UserDataCell setRoleModalOpenTab={setRoleModalOpenTab} />
+  const cell = () => (
+    <ActionsCell setModalOpenTab={setModalOpenTab} actionsData={actionsData} />
   );
-  cell.propTypes = {
-    setRoleModalOpenTab: PropTypes.func.isRequired,
-  };
 
-  const defaultRoleData = {
+  const defaultRolesData = {
     data: [],
     columns: [
       {id: 1, name: 'Name', selector: 'name'},
@@ -116,11 +65,11 @@ const ManageRoles = () => {
     ],
   };
 
-  const [roleData, setRoleData] = useState(defaultRoleData);
+  const [roleData, setRoleData] = useState(defaultRolesData);
   const [filterText, setFilterText] = useState('');
 
   useEffect(() => {
-    setRoleData(defaultRoleData);
+    setRoleData(defaultRolesData);
   }, []);
 
   return (
