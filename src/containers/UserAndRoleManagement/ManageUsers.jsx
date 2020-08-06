@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Axios from 'axios';
 import {useAuth0} from '../../auth0-spa.jsx';
 import env from '../../config';
+import PropTypes from 'prop-types';
 
 import {
   Grid,
@@ -48,7 +49,7 @@ const SearchButton = styled(ButtonWithIcon)`
   width: 100%;
 `;
 
-const BorderLessButton = styled.span`
+const BorderlessButton = styled.span`
   border: 0px;
   transform: rotate(90deg);
 `;
@@ -65,7 +66,66 @@ const PopoverText = styled.div`
   margin-left: 10px;
 `;
 
+const UserDataCell = ({setProfileModalOpenTab}) => {
+  const moreRef = useRef(null);
+  const popoverRef = useRef(null);
+  const [popoverOpen, setPopoverOpen] = useState(false);
+
+  useOutsideClick(popoverRef, () => setPopoverOpen(false));
+
+  return (
+    <>
+      <Button
+        onClick={() => setPopoverOpen(!popoverOpen)}
+        ref={moreRef}
+        as={BorderlessButton}
+      >
+        <Icon name="more-alt" />
+      </Button>
+      <Popover
+        isOpen={popoverOpen}
+        containerRef={moreRef}
+        popoverRef={popoverRef}
+      >
+        <PopoverOption onClick={() => setProfileModalOpenTab('Roles')}>
+          <Icon name="chef-hat" />
+          <PopoverText>Assign Roles</PopoverText>
+        </PopoverOption>
+        <PopoverOption onClick={() => setProfileModalOpenTab('Groups')}>
+          <Icon name="network" />
+          <PopoverText>Assign Groups</PopoverText>
+        </PopoverOption>
+        <PopoverOption onClick={() => setProfileModalOpenTab('Hierarchies')}>
+          <Icon name="vector" />
+          <PopoverText>Assign Hierarchies</PopoverText>
+        </PopoverOption>
+      </Popover>
+    </>
+  );
+};
+
+UserDataCell.propTypes = {
+  setProfileModalOpenTab: PropTypes.func.isRequired,
+};
+
 const ManageUsers = () => {
+  const {getTokenSilently} = useAuth0();
+
+  const [profileModalOpenTab, setProfileModalOpenTab] = useState('');
+
+  const [filterText, setFilterText] = useState('');
+  const envVar = env();
+
+  const auth0ProxyUrl = `${envVar.BASE_API_URL}/auth0`;
+
+  const cell = () => {
+    return <UserDataCell setProfileModalOpenTab={setProfileModalOpenTab} />;
+  };
+
+  cell.propTypes = {
+    setProfileModalOpenTab: PropTypes.func.isRequired,
+  };
+
   const defaultUserData = {
     data: [],
     columns: [
@@ -80,58 +140,12 @@ const ManageUsers = () => {
         id: 4,
         name: '',
         selector: 'actions',
-        // eslint-disable-next-line react/prop-types
-        cell: ({id}) => <UserDataCell id={id} />,
+        cell,
       },
     ],
   };
 
-  const {getTokenSilently} = useAuth0();
-  const [profileModalOpenTab, setProfileModalOpenTab] = useState('');
-
   const [userData, setUserData] = useState(defaultUserData);
-  const [filterText, setFilterText] = useState('');
-
-  const envVar = env();
-  const auth0ProxyUrl = `${envVar.BASE_API_URL}/auth0`;
-
-  const UserDataCell = () => {
-    const moreRef = useRef(null);
-    const popoverRef = useRef(null);
-    const [popoverOpen, setPopoverOpen] = useState(false);
-
-    useOutsideClick(popoverRef, () => setPopoverOpen(false));
-
-    return (
-      <>
-        <Button
-          onClick={() => setPopoverOpen(!popoverOpen)}
-          ref={moreRef}
-          as={BorderLessButton}
-        >
-          <Icon name="more-alt" />
-        </Button>
-        <Popover
-          isOpen={popoverOpen}
-          containerRef={moreRef}
-          popoverRef={popoverRef}
-        >
-          <PopoverOption onClick={() => setProfileModalOpenTab('Roles')}>
-            <Icon name="chef-hat"></Icon>
-            <PopoverText>Assign Roles</PopoverText>
-          </PopoverOption>
-          <PopoverOption onClick={() => setProfileModalOpenTab('Groups')}>
-            <Icon name="network"></Icon>
-            <PopoverText>Assign Groups</PopoverText>
-          </PopoverOption>
-          <PopoverOption onClick={() => setProfileModalOpenTab('Hierarchies')}>
-            <Icon name="vector"></Icon>
-            <PopoverText>Assign Hierarchies</PopoverText>
-          </PopoverOption>
-        </Popover>
-      </>
-    );
-  };
 
   useEffect(() => {
     async function fetchData() {
@@ -176,10 +190,6 @@ const ManageUsers = () => {
       });
   };
 
-  const handleSearchTextChange = ev => {
-    setFilterText(ev.target.value);
-  };
-
   return (
     <ManageUsersContainer>
       <Typography fontFamily="openSans">
@@ -211,8 +221,8 @@ const ManageUsers = () => {
                   type="search"
                   placeholder="Search"
                   value={filterText}
-                  onChange={ev => {
-                    handleSearchTextChange(ev);
+                  onChange={event => {
+                    setFilterText(event);
                   }}
                 />
               </Cell>
