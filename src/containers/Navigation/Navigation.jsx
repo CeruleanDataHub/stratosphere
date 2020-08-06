@@ -162,7 +162,7 @@ const Navigation = () => {
               data-cy="navigation-login-button-e2e-test"
               onClick={handleLoginClick}
             >
-              <Icon className="enter"></Icon>
+              <Icon name="enter" as={CustomIcon}></Icon>
               <MenuItemText menuOpen={menuOpen}>Login</MenuItemText>
             </div>
           </MenuItem>

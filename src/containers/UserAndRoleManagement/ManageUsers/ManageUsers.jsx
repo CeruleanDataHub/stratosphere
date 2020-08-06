@@ -3,9 +3,9 @@ import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 
 import {useAuth0} from '../../../auth0-spa.jsx';
-import ActionsCell from '../ActionsCell/ActionsCell.jsx';
 import ManagementHeader from '../ManagementHeader/ManagementHeader.jsx';
 import SearchBar from '../SearchBar/SearchBar.jsx';
+import {UserEditCell} from '../ActionsCell/ActionsCell.jsx';
 import getUsers from './getUsers/getUsers';
 import {UserModal} from './UserModal.jsx';
 
@@ -14,12 +14,6 @@ const ManageUsersContainer = styled.section`
   background-color: #ffffff;
 `;
 
-const actionsData = [
-  {icon: 'chef-hat', text: 'Assign Roles', modalToOpen: 'Roles'},
-  {icon: 'network', text: 'Assign Groups', modalToOpen: 'Groups'},
-  {icon: 'vector', text: 'Assign Hierarchies', modalToOpen: 'Hierarchies'},
-];
-
 const ManageUsers = () => {
   const {getTokenSilently} = useAuth0();
 
@@ -27,39 +21,40 @@ const ManageUsers = () => {
   const [filterText, setFilterText] = useState('');
   const [activeUser, setActiveUser] = useState({});
 
-  const cell = user => {
-    user.id = user.id.toString();
+  const defaultUserColumns = [
+    {id: 1, name: 'Name', selector: 'name', grow: 4},
+    {id: 2, name: 'Logins', selector: 'logins', grow: 2},
+    {
+      id: 3,
+      name: 'Last login',
+      selector: 'lastLogin',
+      grow: 3,
+    },
+    {
+      id: 4,
+      name: 'Status',
+      selector: 'blocked',
+      // eslint-disable-next-line react/display-name
+      cell: u => <div>{u.blocked ? 'Blocked' : 'Active'}</div>,
+      grow: 1,
+    },
+    {
+      id: 5,
+      name: '',
+      selector: 'actions',
+      grow: 1,
+      // eslint-disable-next-line react/display-name
+      cell: u => (
+        <UserEditCell
+          user={u}
+          setActiveUser={setActiveUser}
+          setProfileModalOpenTab={setProfileModalOpenTab}
+        />
+      ),
+    },
+  ];
 
-    return (
-      <ActionsCell
-        setModalOpenTab={setProfileModalOpenTab}
-        actionsData={actionsData}
-        setActive={setActiveUser}
-        active={user}
-      />
-    );
-  };
-
-  const defaultUserData = {
-    data: [],
-    columns: [
-      {id: 1, name: 'Name', selector: 'name'},
-      {id: 2, name: 'Logins', selector: 'logins'},
-      {
-        id: 3,
-        name: 'Last login',
-        selector: 'lastLogin',
-      },
-      {
-        id: 4,
-        name: '',
-        selector: 'actions',
-        cell,
-      },
-    ],
-  };
-
-  const [userData, setUserData] = useState(defaultUserData);
+  const [userData, setUserData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,10 +62,7 @@ const ManageUsers = () => {
 
       const users = await getUsers(token);
 
-      setUserData({
-        ...userData,
-        data: users,
-      });
+      setUserData(users);
     };
 
     fetchData();
@@ -90,21 +82,24 @@ const ManageUsers = () => {
         />
 
         <DataTable
-          columns={userData.columns}
-          data={userData.data.filter(
+          columns={defaultUserColumns}
+          data={userData.filter(
             user =>
               user.name.toLowerCase().includes(filterText.toLowerCase()) ||
               user.email.toLowerCase().includes(filterText.toLowerCase()),
           )}
         />
       </Typography>
-
-      <UserModal
-        isOpen={profileModalOpenTab !== ''}
-        profileModalOpenTab={profileModalOpenTab}
-        setProfileModalOpenTab={setProfileModalOpenTab}
-        activeUser={activeUser}
-      />
+      {profileModalOpenTab !== '' && (
+        <UserModal
+          isOpen={profileModalOpenTab !== ''}
+          profileModalOpenTab={profileModalOpenTab}
+          setProfileModalOpenTab={setProfileModalOpenTab}
+          user={activeUser}
+          userData={userData}
+          setUserData={setUserData}
+        />
+      )}
     </ManageUsersContainer>
   );
 };
