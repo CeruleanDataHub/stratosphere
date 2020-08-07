@@ -8,7 +8,6 @@ import {
   DataTable,
   Grid,
   Icon,
-  Input,
   Typography,
 } from '@ceruleandatahub/react-components';
 
@@ -17,6 +16,7 @@ import ActionsCell from '../ActionsCell/ActionsCell.jsx';
 
 import './ManageUsers.css';
 import getUsers from './getUsers/getUsers';
+import SearchBar from '../SearchBar/SearchBar.jsx';
 
 const ManageUsersContainer = styled.section`
   margin: 0 8em 2em 18em;
@@ -40,10 +40,6 @@ const ButtonWithIcon = styled.button`
   span {
     margin-right: 0.4rem;
   }
-`;
-
-const SearchButton = styled(ButtonWithIcon)`
-  width: 100%;
 `;
 
 const actionsData = [
@@ -131,33 +127,12 @@ const ManageUsers = () => {
               </Button>
             </Cell>
           </Grid>
-          <form
-            onSubmit={event => {
-              event.preventDefault();
-              console.log('submit');
-            }}
-            className="searchUser"
-          >
-            <Grid columns="4fr 1fr">
-              <Cell>
-                <Input
-                  type="search"
-                  placeholder="Search"
-                  value={filterText}
-                  onChange={event => {
-                    setFilterText(event);
-                  }}
-                />
-              </Cell>
 
-              <Cell>
-                <Button type="submit" as={SearchButton}>
-                  <Icon name="search" />
-                  Search
-                </Button>
-              </Cell>
-            </Grid>
-          </form>
+          <SearchBar
+            onChange={event => setFilterText(event.target.value)}
+            value={filterText}
+          />
+
           <DataTable
             columns={userData.columns}
             data={userData.data.filter(
