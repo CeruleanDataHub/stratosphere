@@ -105,7 +105,12 @@ const ManageRoles = () => {
         onChange={event => setFilterText(event.target.value)}
       />
 
-      <DataTable columns={roleData.columns} data={roleData.data} />
+      <DataTable
+        columns={roleData.columns}
+        data={roleData.data.filter(role =>
+          role.name.toLowerCase().includes(filterText.toLowerCase()),
+        )}
+      />
     </ManageRolesContainer>
   );
 };
