@@ -88,21 +88,10 @@ const ManageUsers = () => {
       const token = await getTokenSilently();
 
       const users = await getUsers(token);
-      const usersInfo = users.map(
-        ({name, email, logins_count, last_login}, idx) => {
-          return {
-            id: idx,
-            name,
-            email: email || '',
-            logins: logins_count,
-            lastLogin: last_login,
-          };
-        },
-      );
 
       setUserData({
         ...userData,
-        data: usersInfo,
+        data: users,
       });
     };
 
