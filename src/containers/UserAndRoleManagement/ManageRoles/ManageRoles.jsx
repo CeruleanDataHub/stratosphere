@@ -10,6 +10,8 @@ import {
 } from '@ceruleandatahub/react-components';
 import styled from 'styled-components';
 import ActionsCell from '../ActionsCell/ActionsCell.jsx';
+import getAllRoles from './getRoles/getRoles';
+import {useAuth0} from '../../../auth0-spa.jsx';
 
 const IconMarginRight = styled.div`
   margin-right: 0.5rem;
@@ -65,11 +67,23 @@ const ManageRoles = () => {
     ],
   };
 
+  const {getTokenSilently} = useAuth0();
   const [roleData, setRoleData] = useState(defaultRolesData);
   const [filterText, setFilterText] = useState('');
 
   useEffect(() => {
-    setRoleData(defaultRolesData);
+    const getRoles = async () => {
+      const token = await getTokenSilently();
+
+      const roles = await getAllRoles(token);
+
+      setRoleData({
+        ...roleData,
+        data: roles,
+      });
+    };
+
+    getRoles();
   }, []);
 
   return (
@@ -115,14 +129,7 @@ const ManageRoles = () => {
         </Grid>
       </form>
 
-      <DataTable
-        columns={roleData.columns}
-        data={roleData.data.filter(
-          user =>
-            user.name.toLowerCase().includes(filterText.toLowerCase()) ||
-            user.email.toLowerCase().includes(filterText.toLowerCase()),
-        )}
-      />
+      <DataTable columns={roleData.columns} data={roleData.data} />
     </ManageRolesContainer>
   );
 };
