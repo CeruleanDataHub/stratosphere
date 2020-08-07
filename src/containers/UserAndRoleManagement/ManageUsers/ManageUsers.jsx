@@ -1,8 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
-import Axios from 'axios';
 import {useAuth0} from '../../../auth0-spa.jsx';
-import env from '../../../config';
 
 import {
   Button,
@@ -18,6 +16,7 @@ import {UserModal} from './UserModal.jsx';
 import ActionsCell from '../ActionsCell/ActionsCell.jsx';
 
 import './ManageUsers.css';
+import getUsers from './getUsers/getUsers';
 
 const ManageUsersContainer = styled.section`
   margin: 0 8em 2em 18em;
@@ -59,9 +58,6 @@ const ManageUsers = () => {
   const [profileModalOpenTab, setProfileModalOpenTab] = useState('');
 
   const [filterText, setFilterText] = useState('');
-  const envVar = env();
-
-  const auth0ProxyUrl = `${envVar.BASE_API_URL}/auth0`;
 
   const cell = () => (
     <ActionsCell
@@ -92,47 +88,30 @@ const ManageUsers = () => {
   const [userData, setUserData] = useState(defaultUserData);
 
   useEffect(() => {
-    async function fetchData() {
-      const users = await getUsers();
-      const usersInfo = users.map((user, idx) => {
-        return {
-          id: idx,
-          name: user.name,
-          email: user.email || '',
-          logins: user.logins_count,
-          lastLogin: user.last_login,
-        };
-      });
+    const fetchData = async () => {
+      const token = await getTokenSilently();
+
+      const users = await getUsers(token);
+      const usersInfo = users.map(
+        ({name, email, logins_count, last_login}, idx) => {
+          return {
+            id: idx,
+            name,
+            email: email || '',
+            logins: logins_count,
+            lastLogin: last_login,
+          };
+        },
+      );
+
       setUserData({
         ...userData,
         data: usersInfo,
       });
-    }
+    };
+
     fetchData();
   }, []);
-
-  const getUsers = async () => {
-    const token = await getTokenSilently();
-    return Axios.get(`${auth0ProxyUrl}/users`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then(res => {
-        if (res.data.status === 404) {
-          console.log('Error fetching users');
-        } else {
-          const users = res.data.map(user => {
-            user.roles = [];
-            return user;
-          });
-          return users;
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  };
 
   return (
     <ManageUsersContainer>
