@@ -3,7 +3,7 @@ import {DataTable, Typography} from '@ceruleandatahub/react-components';
 import styled from 'styled-components';
 
 import {useAuth0} from '../../../auth0-spa.jsx';
-import getAllRolesWithPermissions from './getRoles/getRoles';
+import getAllRolesWithPermissionsAndUsers from './getRoles/getRoles';
 
 import ActionsCell from '../ActionsCell/ActionsCell.jsx';
 import SearchBar from '../SearchBar/SearchBar.jsx';
@@ -57,11 +57,12 @@ const ManageRoles = () => {
     const getRoles = async () => {
       const token = await getTokenSilently();
 
-      const roles = await getAllRolesWithPermissions(token);
+      const roles = await getAllRolesWithPermissionsAndUsers(token);
 
       const newRoles = roles.map(role => ({
         ...role,
         permissions: role.permissions.length,
+        users: role.users.length,
       }));
 
       console.log(newRoles);

@@ -4,13 +4,18 @@ import Axios from 'axios';
 const envVar = env();
 const AUTH0_PROXY_URL = `${envVar.BASE_API_URL}/auth0`;
 
-const getAllRolesWithPermissions = async token => {
+const getAllRolesWithPermissionsAndUsers = async token => {
   const roles = await getAllRoles(token);
   const permissions = await getPermissionsFor(roles)(token);
-  const rolesWithPermissions = injectRolesWithPermissions(roles, permissions);
+  const users = await getUsersFor(roles)(token);
+  const rolesWithPermissionsAndUsers = injectRolesWithPermissionsAndUsers(
+    roles,
+    permissions,
+    users,
+  );
 
   try {
-    return rolesWithPermissions;
+    return rolesWithPermissionsAndUsers;
   } catch (error) {
     console.error(error);
   }
@@ -33,13 +38,46 @@ const getPermissionsFor = response => token =>
       }),
   );
 
-const injectRolesWithPermissions = async (roles, permissions) => {
-  const resolvedPermissions = await Promise.all(permissions);
+const getUsersFor = response => token =>
+  response.data.map(
+    async ({id}) =>
+      await Axios.get(`${AUTH0_PROXY_URL}/roles/${id}/users`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+  );
 
-  return resolvedPermissions.map(({data}, index) => ({
-    ...roles.data[index],
-    permissions: data,
+const injectRolesWithPermissionsAndUsers = async (
+  roles,
+  permissions,
+  users,
+) => {
+  const resolvedPermissions = await Promise.all(permissions);
+  const resolvedUsers = await Promise.all(users);
+
+  const rolesWithPermissions = injectRolesWithPermissions(
+    roles,
+    resolvedPermissions,
+  );
+
+  return injectRolesAndPermissionsWithUsers(
+    rolesWithPermissions,
+    resolvedUsers,
+  );
+};
+
+const injectRolesAndPermissionsWithUsers = (users, rolesWithPermissions) => {
+  users.map(({data}, index) => ({
+    ...rolesWithPermissions[index],
+    users: data,
   }));
 };
 
-export default getAllRolesWithPermissions;
+const injectRolesWithPermissions = (roles, resolvedPermissions) =>
+  resolvedPermissions.map(({data}, index) => ({
+    ...roles.data[index],
+    permissions: data,
+  }));
+
+export default getAllRolesWithPermissionsAndUsers;
