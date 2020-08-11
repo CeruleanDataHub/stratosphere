@@ -12,7 +12,8 @@
     "check-format": "npm run prettier -- --list-different",
     "validate": "npm run check-format && npm run lint && npm run build",
     "dev": "NODE_ENV=development webpack-dev-server --config webpack/dev.config.js",
-    "build": "NODE_ENV=production webpack --config webpack/prod.config.js"
+    "build": "NODE_ENV=production webpack --config webpack/prod.config.js",
+    "link-dependencies": "./npm-scripts/link-redux-and-components.sh"
   },
   "repository": {
     "type": "git",
