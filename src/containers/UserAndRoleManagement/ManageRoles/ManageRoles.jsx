@@ -65,8 +65,6 @@ const ManageRoles = () => {
         users: role.users.length,
       }));
 
-      console.log(newRoles);
-
       setRoleData({
         ...roleData,
         data: newRoles,

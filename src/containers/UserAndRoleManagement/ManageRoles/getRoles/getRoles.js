@@ -62,17 +62,16 @@ const injectRolesWithPermissionsAndUsers = async (
   );
 
   return injectRolesAndPermissionsWithUsers(
-    rolesWithPermissions,
     resolvedUsers,
+    rolesWithPermissions,
   );
 };
 
-const injectRolesAndPermissionsWithUsers = (users, rolesWithPermissions) => {
+const injectRolesAndPermissionsWithUsers = (users, rolesWithPermissions) =>
   users.map(({data}, index) => ({
     ...rolesWithPermissions[index],
     users: data,
   }));
-};
 
 const injectRolesWithPermissions = (roles, resolvedPermissions) =>
   resolvedPermissions.map(({data}, index) => ({
