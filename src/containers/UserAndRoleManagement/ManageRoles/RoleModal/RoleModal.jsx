@@ -3,7 +3,7 @@ import Modal from 'styled-react-modal';
 import PropTypes from 'prop-types';
 import ModalHeader from './ModalHeader/ModalHeader.jsx';
 import styled from 'styled-components';
-import {Tab} from '@ceruleandatahub/react-components';
+import ModalTabs from './ModalTabs/ModalTabs.jsx';
 
 const StyledModal = Modal.styled`
     display: flex;
@@ -15,14 +15,11 @@ const StyledModal = Modal.styled`
     border: 1px solid red;
 `;
 
-const TabsContainer = styled.div`
-  display: flex;
-  border-bottom: 1px solid black;
-`;
-
 const TabContent = styled.div`
   margin: 10px;
 `;
+
+const roleModalTabsData = ['Permissions', 'Settings'];
 
 const RoleModal = ({isOpen, roleModalOpenTab, setRoleModalOpenTab, name}) => (
   <StyledModal
@@ -31,19 +28,11 @@ const RoleModal = ({isOpen, roleModalOpenTab, setRoleModalOpenTab, name}) => (
   >
     <ModalHeader closeModal={() => setRoleModalOpenTab('')} name={name} />
 
-    <TabsContainer>
-      <Tab
-        text="Permissions"
-        active={roleModalOpenTab === 'Permissions'}
-        onClick={() => setRoleModalOpenTab('Permissions')}
-      />
-
-      <Tab
-        text="Settings"
-        active={roleModalOpenTab === 'Settings'}
-        onClick={() => setRoleModalOpenTab('Settings')}
-      />
-    </TabsContainer>
+    <ModalTabs
+      roleModalOpenTab={roleModalOpenTab}
+      setRoleModalOpenTab={setRoleModalOpenTab}
+      tabs={roleModalTabsData}
+    />
 
     <TabContent>
       {roleModalOpenTab === 'Permissions' ? (
