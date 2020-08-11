@@ -236,6 +236,8 @@ export const UserModal = ({
     }
   };
 
+  console.log(activeUser);
+
   return (
     <StyledModal
       isOpen={isOpen}
@@ -269,7 +271,7 @@ export const UserModal = ({
             <Icon name="user" as={BiggerIcon} />
           </Cell>
           <Cell>
-            <p>Name: {activeUser}</p>
+            <p>Name: {activeUser.name}</p>
             <p>Email: User@example.com</p>
           </Cell>
         </Grid>
@@ -300,7 +302,14 @@ export const UserModal = ({
 
 UserModal.propTypes = {
   isOpen: PropTypes.bool,
-  activeUser: PropTypes.string.isRequired,
+  activeUser: PropTypes.shape({
+    email: PropTypes.string,
+    id: PropTypes.string,
+    lastLogin: PropTypes.string,
+    logins: PropTypes.number,
+    name: PropTypes.string,
+    roles: PropTypes.array,
+  }).isRequired,
   profileModalOpenTab: PropTypes.string,
   setProfileModalOpenTab: PropTypes.func,
 };

@@ -1,15 +1,13 @@
+import {DataTable, Typography} from '@ceruleandatahub/react-components';
 import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 
 import {useAuth0} from '../../../auth0-spa.jsx';
-import getUsers from './getUsers/getUsers';
-
-import {DataTable, Typography} from '@ceruleandatahub/react-components';
-
-import {UserModal} from './UserModal.jsx';
 import ActionsCell from '../ActionsCell/ActionsCell.jsx';
-import SearchBar from '../SearchBar/SearchBar.jsx';
 import ManagementHeader from '../ManagementHeader/ManagementHeader.jsx';
+import SearchBar from '../SearchBar/SearchBar.jsx';
+import getUsers from './getUsers/getUsers';
+import {UserModal} from './UserModal.jsx';
 
 const ManageUsersContainer = styled.section`
   margin: 0 8em 2em 18em;
@@ -27,7 +25,7 @@ const ManageUsers = () => {
 
   const [profileModalOpenTab, setProfileModalOpenTab] = useState('');
   const [filterText, setFilterText] = useState('');
-  const [activeUser, setActiveUser] = useState('');
+  const [activeUser, setActiveUser] = useState({});
 
   const cell = user => {
     user.id = user.id.toString();
