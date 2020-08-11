@@ -27,11 +27,14 @@ const ManageUsers = () => {
 
   const [profileModalOpenTab, setProfileModalOpenTab] = useState('');
   const [filterText, setFilterText] = useState('');
+  const [activeUser, setActiveUser] = useState('');
 
-  const cell = () => (
+  const cell = user => (
     <ActionsCell
       setModalOpenTab={setProfileModalOpenTab}
       actionsData={actionsData}
+      setActive={setActiveUser}
+      active={user.name}
     />
   );
 
@@ -98,6 +101,7 @@ const ManageUsers = () => {
         isOpen={profileModalOpenTab !== ''}
         profileModalOpenTab={profileModalOpenTab}
         setProfileModalOpenTab={setProfileModalOpenTab}
+        activeUser={activeUser}
       />
     </ManageUsersContainer>
   );

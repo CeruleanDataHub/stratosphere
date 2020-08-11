@@ -124,6 +124,7 @@ export const UserModal = ({
   isOpen,
   profileModalOpenTab,
   setProfileModalOpenTab,
+  activeUser,
 }) => {
   const [modalDropdownOpen, setModalDropdownOpen] = useState(false);
   const [hierarchiesSelectedOption, setHierarchiesSelectedOption] = useState(
@@ -268,7 +269,7 @@ export const UserModal = ({
             <Icon name="user" as={BiggerIcon} />
           </Cell>
           <Cell>
-            <p>Name: User Name</p>
+            <p>Name: {activeUser}</p>
             <p>Email: User@example.com</p>
           </Cell>
         </Grid>
@@ -299,6 +300,7 @@ export const UserModal = ({
 
 UserModal.propTypes = {
   isOpen: PropTypes.bool,
+  activeUser: PropTypes.string.isRequired,
   profileModalOpenTab: PropTypes.string,
   setProfileModalOpenTab: PropTypes.func,
 };

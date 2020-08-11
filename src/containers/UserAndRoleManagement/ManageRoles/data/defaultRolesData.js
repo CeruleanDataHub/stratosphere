@@ -5,7 +5,7 @@ const actionsData = [
   {icon: 'chef-hat', text: 'Assign Permissions', modalToOpen: 'Permissions'},
 ];
 
-const defaultRolesData = ({setRoleModalOpenTab}) => {
+const defaultRolesData = ({setRoleModalOpenTab, setActiveRole}) => {
   return {
     data: [],
     columns: [
@@ -28,11 +28,13 @@ const defaultRolesData = ({setRoleModalOpenTab}) => {
         id: 4,
         name: '',
         selector: 'actions',
-        cell: function cell() {
+        cell: function cell(role) {
           return (
             <ActionsCell
               setModalOpenTab={setRoleModalOpenTab}
+              setActive={setActiveRole}
               actionsData={actionsData}
+              active={role.name}
             />
           );
         },

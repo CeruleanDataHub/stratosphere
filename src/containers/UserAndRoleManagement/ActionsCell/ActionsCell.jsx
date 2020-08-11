@@ -14,22 +14,24 @@ const BorderlessButton = styled.span`
   transform: rotate(90deg);
 `;
 
-const ActionsCell = ({setModalOpenTab, actionsData}) => {
+const ActionsCell = ({setModalOpenTab, actionsData, setActive, active}) => {
   const moreRef = useRef(null);
   const popoverRef = useRef(null);
   const [popoverOpen, setPopoverOpen] = useState(false);
+
+  const handleOnClick = () => {
+    setPopoverOpen(!popoverOpen);
+    setActive(active);
+  };
 
   useOutsideClick(popoverRef, () => setPopoverOpen(false));
 
   return (
     <>
-      <Button
-        onClick={() => setPopoverOpen(!popoverOpen)}
-        ref={moreRef}
-        as={BorderlessButton}
-      >
+      <Button onClick={handleOnClick} ref={moreRef} as={BorderlessButton}>
         <Icon name="more-alt" />
       </Button>
+
       <Popover
         isOpen={popoverOpen}
         containerRef={moreRef}
@@ -50,6 +52,8 @@ const ActionsCell = ({setModalOpenTab, actionsData}) => {
 
 ActionsCell.propTypes = {
   setModalOpenTab: PropTypes.func.isRequired,
+  setActive: PropTypes.func.isRequired,
+  active: PropTypes.string.isRequired,
   actionsData: PropTypes.arrayOf(
     PropTypes.shape({
       icon: PropTypes.string.isRequired,

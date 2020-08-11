@@ -21,8 +21,9 @@ const ManageRoles = () => {
 
   const [roleModalOpenTab, setRoleModalOpenTab] = useState('');
   const [filterText, setFilterText] = useState('');
+  const [activeRole, setActiveRole] = useState('');
   const [roleData, setRoleData] = useState(
-    defaultRolesData({setRoleModalOpenTab}),
+    defaultRolesData({setRoleModalOpenTab, setActiveRole, activeRole}),
   );
 
   useEffect(() => {
@@ -70,6 +71,7 @@ const ManageRoles = () => {
           isOpen={roleModalOpenTab !== ''}
           roleModalOpenTab={roleModalOpenTab}
           setRoleModalOpenTab={setRoleModalOpenTab}
+          name={activeRole}
         />
       </Typography>
     </ManageRolesContainer>

@@ -13,20 +13,19 @@ const StyledModal = Modal.styled`
     border: 1px solid red;
 `;
 
-const RoleModal = ({isOpen, roleModalOpenTab, setRoleModalOpenTab}) => {
-  return (
-    <StyledModal
-      isOpen={isOpen}
-      onBackgroundClick={() => setRoleModalOpenTab('')}
-    >
-      {roleModalOpenTab}
-      <ModalHeader closeModal={() => setRoleModalOpenTab('')} />
-    </StyledModal>
-  );
-};
+const RoleModal = ({isOpen, roleModalOpenTab, setRoleModalOpenTab, name}) => (
+  <StyledModal
+    isOpen={isOpen}
+    onBackgroundClick={() => setRoleModalOpenTab('')}
+  >
+    <ModalHeader closeModal={() => setRoleModalOpenTab('')} name={name} />
+    {roleModalOpenTab}
+  </StyledModal>
+);
 
 RoleModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
+  name: PropTypes.string.isRequired,
   roleModalOpenTab: PropTypes.string.isRequired,
   setRoleModalOpenTab: PropTypes.func.isRequired,
 };
