@@ -53,7 +53,21 @@ const ActionsCell = ({setModalOpenTab, actionsData, setActive, active}) => {
 ActionsCell.propTypes = {
   setModalOpenTab: PropTypes.func.isRequired,
   setActive: PropTypes.func.isRequired,
-  active: PropTypes.string.isRequired,
+  active: PropTypes.shape({
+    id: PropTypes.string,
+    name: PropTypes.string,
+    description: PropTypes.string,
+    permissions: PropTypes.number,
+    permissionsForModal: PropTypes.arrayOf(
+      PropTypes.shape({
+        description: PropTypes.string,
+        permission_name: PropTypes.string,
+        resource_server_identifier: PropTypes.string,
+        resource_server_name: PropTypes.string,
+      }),
+    ),
+    users: PropTypes.number,
+  }).isRequired,
   actionsData: PropTypes.arrayOf(
     PropTypes.shape({
       icon: PropTypes.string.isRequired,

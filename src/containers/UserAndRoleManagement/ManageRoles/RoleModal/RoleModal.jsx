@@ -21,12 +21,20 @@ const TabContent = styled.div`
 
 const roleModalTabsData = ['Permissions', 'Settings'];
 
-const RoleModal = ({isOpen, roleModalOpenTab, setRoleModalOpenTab, name}) => (
+const RoleModal = ({
+  isOpen,
+  roleModalOpenTab,
+  setRoleModalOpenTab,
+  activeRole,
+}) => (
   <StyledModal
     isOpen={isOpen}
     onBackgroundClick={() => setRoleModalOpenTab('')}
   >
-    <ModalHeader closeModal={() => setRoleModalOpenTab('')} name={name} />
+    <ModalHeader
+      closeModal={() => setRoleModalOpenTab('')}
+      name={activeRole.name}
+    />
 
     <ModalTabs
       roleModalOpenTab={roleModalOpenTab}
@@ -36,7 +44,11 @@ const RoleModal = ({isOpen, roleModalOpenTab, setRoleModalOpenTab, name}) => (
 
     <TabContent>
       {roleModalOpenTab === 'Permissions' ? (
-        <div>Permissions</div>
+        <ul>
+          {activeRole.permissionsForModal.map(({permission_name}, key) => (
+            <li key={key}>{permission_name}</li>
+          ))}
+        </ul>
       ) : (
         <div>Settings</div>
       )}
@@ -46,7 +58,21 @@ const RoleModal = ({isOpen, roleModalOpenTab, setRoleModalOpenTab, name}) => (
 
 RoleModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
-  name: PropTypes.string.isRequired,
+  activeRole: PropTypes.shape({
+    id: PropTypes.string,
+    name: PropTypes.string,
+    description: PropTypes.string,
+    permissions: PropTypes.number,
+    permissionsForModal: PropTypes.arrayOf(
+      PropTypes.shape({
+        description: PropTypes.string,
+        permission_name: PropTypes.string,
+        resource_server_identifier: PropTypes.string,
+        resource_server_name: PropTypes.string,
+      }),
+    ),
+    users: PropTypes.number,
+  }).isRequired,
   roleModalOpenTab: PropTypes.string.isRequired,
   setRoleModalOpenTab: PropTypes.func.isRequired,
 };

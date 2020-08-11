@@ -14,7 +14,7 @@ const ModalTabs = ({roleModalOpenTab, setRoleModalOpenTab, tabs}) => (
       <Tab
         text={tab}
         active={roleModalOpenTab === tab}
-        onClick={setRoleModalOpenTab}
+        onClick={() => setRoleModalOpenTab(tab)}
         key={key}
       />
     ))}

@@ -29,14 +29,18 @@ const ManageUsers = () => {
   const [filterText, setFilterText] = useState('');
   const [activeUser, setActiveUser] = useState('');
 
-  const cell = user => (
-    <ActionsCell
-      setModalOpenTab={setProfileModalOpenTab}
-      actionsData={actionsData}
-      setActive={setActiveUser}
-      active={user.name}
-    />
-  );
+  const cell = user => {
+    user.id = user.id.toString();
+
+    return (
+      <ActionsCell
+        setModalOpenTab={setProfileModalOpenTab}
+        actionsData={actionsData}
+        setActive={setActiveUser}
+        active={user}
+      />
+    );
+  };
 
   const defaultUserData = {
     data: [],

@@ -34,7 +34,7 @@ const defaultRolesData = ({setRoleModalOpenTab, setActiveRole}) => {
               setModalOpenTab={setRoleModalOpenTab}
               setActive={setActiveRole}
               actionsData={actionsData}
-              active={role.name}
+              active={role}
             />
           );
         },

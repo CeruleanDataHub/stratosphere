@@ -21,7 +21,7 @@ const ManageRoles = () => {
 
   const [roleModalOpenTab, setRoleModalOpenTab] = useState('');
   const [filterText, setFilterText] = useState('');
-  const [activeRole, setActiveRole] = useState('');
+  const [activeRole, setActiveRole] = useState({name: ''});
   const [roleData, setRoleData] = useState(
     defaultRolesData({setRoleModalOpenTab, setActiveRole, activeRole}),
   );
@@ -35,6 +35,7 @@ const ManageRoles = () => {
       const newRoles = roles.map(role => ({
         ...role,
         permissions: role.permissions.length,
+        permissionsForModal: role.permissions,
         users: role.users.length,
       }));
 
@@ -71,7 +72,7 @@ const ManageRoles = () => {
           isOpen={roleModalOpenTab !== ''}
           roleModalOpenTab={roleModalOpenTab}
           setRoleModalOpenTab={setRoleModalOpenTab}
-          name={activeRole}
+          activeRole={activeRole}
         />
       </Typography>
     </ManageRolesContainer>
