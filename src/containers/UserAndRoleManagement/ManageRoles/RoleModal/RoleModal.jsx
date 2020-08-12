@@ -1,9 +1,12 @@
-import React from 'react';
-import Modal from 'styled-react-modal';
 import PropTypes from 'prop-types';
-import ModalHeader from './ModalHeader/ModalHeader.jsx';
+import React from 'react';
 import styled from 'styled-components';
+import Modal from 'styled-react-modal';
+
+import ModalHeader from './ModalHeader/ModalHeader.jsx';
 import ModalTabs from './ModalTabs/ModalTabs.jsx';
+import PermissionsView from './Views/PermissionsView.jsx';
+import SettingsView from './Views/SettingsView.jsx';
 
 const StyledModal = Modal.styled`
     display: flex;
@@ -44,13 +47,9 @@ const RoleModal = ({
 
     <TabContent>
       {roleModalOpenTab === 'Permissions' ? (
-        <ul>
-          {activeRole.permissionsForModal.map(({permission_name}, key) => (
-            <li key={key}>{permission_name}</li>
-          ))}
-        </ul>
+        <PermissionsView permissions={activeRole.permissionsForModal} />
       ) : (
-        <div>Settings</div>
+        <SettingsView />
       )}
     </TabContent>
   </StyledModal>
