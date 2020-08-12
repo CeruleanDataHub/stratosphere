@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import logo from '../../assets/images/Denim_Logo_Color.png';
+
+import logo from '../../assets/images/cerulean-logo.png';
 
 const TopHeader = styled.header`
   color: #ffffff;
