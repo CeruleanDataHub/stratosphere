@@ -1,10 +1,11 @@
-import React, {useState} from 'react';
+import './Navigation.css';
+
+import {Icon, useOutsideClick} from '@ceruleandatahub/react-components';
+import React, {useRef, useState} from 'react';
 import {Link} from 'react-router-dom';
 import styled from 'styled-components';
-import {Icon} from '@ceruleandatahub/react-components';
 
 import {useAuth0} from '../../auth0-spa.jsx';
-import './Navigation.css';
 
 const NavBar = styled.nav`
   position: fixed;
@@ -68,6 +69,10 @@ const Navigation = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const {logout, isAuthenticated, loginWithRedirect} = useAuth0();
 
+  const menuRef = useRef(null);
+
+  useOutsideClick(menuRef, () => setMenuOpen(false));
+
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
@@ -81,7 +86,7 @@ const Navigation = () => {
   };
 
   return (
-    <NavBar id="left-navigation" menuOpen={menuOpen}>
+    <NavBar id="left-navigation" menuOpen={menuOpen} ref={menuRef}>
       <MenuOpen onClick={toggleMenu}>
         <Icon name={menuOpen ? 'close' : 'menu'} as={CustomIcon}></Icon>
       </MenuOpen>
