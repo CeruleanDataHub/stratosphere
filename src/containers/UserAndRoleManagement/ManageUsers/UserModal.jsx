@@ -236,8 +236,6 @@ export const UserModal = ({
     }
   };
 
-  console.log(activeUser);
-
   return (
     <StyledModal
       isOpen={isOpen}
