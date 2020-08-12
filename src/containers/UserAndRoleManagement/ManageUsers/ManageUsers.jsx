@@ -43,12 +43,13 @@ const ManageUsers = () => {
   const defaultUserData = {
     data: [],
     columns: [
-      {id: 1, name: 'Name', selector: 'name'},
-      {id: 2, name: 'Logins', selector: 'logins'},
+      {id: 1, name: 'Name', selector: 'name', sortable: true},
+      {id: 2, name: 'Logins', selector: 'logins', sortable: true},
       {
         id: 3,
         name: 'Last login',
         selector: 'lastLogin',
+        sortable: true,
       },
       {
         id: 4,

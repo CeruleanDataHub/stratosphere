@@ -1,5 +1,6 @@
-import ActionsCell from '../../ActionsCell/ActionsCell.jsx';
 import React from 'react';
+
+import ActionsCell from '../../ActionsCell/ActionsCell.jsx';
 
 const actionsData = [
   {icon: 'chef-hat', text: 'Assign Permissions', modalToOpen: 'Permissions'},
@@ -13,16 +14,19 @@ const defaultRolesData = ({setRoleModalOpenTab, setActiveRole}) => {
         id: 1,
         name: 'Name',
         selector: 'name',
+        sortable: true,
       },
       {
         id: 2,
         name: 'Users',
         selector: 'users',
+        sortable: true,
       },
       {
         id: 3,
         name: 'Permissions',
         selector: 'permissions',
+        sortable: true,
       },
       {
         id: 4,
