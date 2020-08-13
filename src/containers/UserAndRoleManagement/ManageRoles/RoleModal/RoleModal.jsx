@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import Modal from 'styled-react-modal';
 
@@ -7,6 +7,8 @@ import ModalHeader from './ModalHeader/ModalHeader.jsx';
 import ModalTabs from './ModalTabs/ModalTabs.jsx';
 import PermissionsView from './Views/PermissionsView.jsx';
 import SettingsView from './Views/SettingsView.jsx';
+import getAllPermissions from '../getPermissions/getPermissions';
+import {useAuth0} from '../../../../auth0-spa.jsx';
 
 const StyledModal = Modal.styled`
     display: flex;
@@ -29,31 +31,56 @@ const RoleModal = ({
   roleModalOpenTab,
   setRoleModalOpenTab,
   activeRole,
-}) => (
-  <StyledModal
-    isOpen={isOpen}
-    onBackgroundClick={() => setRoleModalOpenTab('')}
-  >
-    <ModalHeader
-      closeModal={() => setRoleModalOpenTab('')}
-      name={activeRole.name}
-    />
+}) => {
+  const {getTokenSilently} = useAuth0();
 
-    <ModalTabs
-      roleModalOpenTab={roleModalOpenTab}
-      setRoleModalOpenTab={setRoleModalOpenTab}
-      tabs={roleModalTabsData}
-    />
+  const [allPermissions, setAllPermissions] = useState([]);
 
-    <TabContent>
-      {roleModalOpenTab === 'Permissions' ? (
-        <PermissionsView permissions={activeRole.permissionsForModal} />
-      ) : (
-        <SettingsView />
-      )}
-    </TabContent>
-  </StyledModal>
-);
+  useEffect(() => {
+    const getPermissions = async () => {
+      const token = await getTokenSilently();
+
+      const response = await getAllPermissions(token);
+
+      const permissions = response.data.scopes.map(
+        permission => permission.value,
+      );
+
+      setAllPermissions(permissions);
+    };
+
+    getPermissions();
+  }, []);
+
+  return (
+    <StyledModal
+      isOpen={isOpen}
+      onBackgroundClick={() => setRoleModalOpenTab('')}
+    >
+      <ModalHeader
+        closeModal={() => setRoleModalOpenTab('')}
+        name={activeRole.name}
+      />
+
+      <ModalTabs
+        roleModalOpenTab={roleModalOpenTab}
+        setRoleModalOpenTab={setRoleModalOpenTab}
+        tabs={roleModalTabsData}
+      />
+
+      <TabContent>
+        {roleModalOpenTab === 'Permissions' ? (
+          <PermissionsView
+            permissionsForRole={activeRole.permissionsForModal}
+            allPermissions={allPermissions}
+          />
+        ) : (
+          <SettingsView />
+        )}
+      </TabContent>
+    </StyledModal>
+  );
+};
 
 RoleModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,

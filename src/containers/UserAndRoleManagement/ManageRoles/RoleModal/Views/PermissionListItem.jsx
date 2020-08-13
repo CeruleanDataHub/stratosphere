@@ -1,27 +1,18 @@
 import {Checkbox} from '@ceruleandatahub/react-components';
 import PropTypes from 'prop-types';
-import React, {useState} from 'react';
-import styled from 'styled-components';
+import React from 'react';
 
-const ListItem = styled.li`
-  display: flex;
-  align-items: center;
-  line-height: 1.75;
-`;
-
-const PermissionListItem = ({enabled, name}) => {
-  const [isChecked, setIsChecked] = useState(enabled);
-
+const PermissionListItem = ({isChecked, name}) => {
   return (
-    <ListItem>
-      <Checkbox checked={isChecked} onChange={() => setIsChecked(!isChecked)} />{' '}
+    <>
+      <Checkbox checked={isChecked} onChange={() => console.log('change')} />{' '}
       {name}
-    </ListItem>
+    </>
   );
 };
 
 PermissionListItem.propTypes = {
-  enabled: PropTypes.bool.isRequired,
+  isChecked: PropTypes.bool.isRequired,
   name: PropTypes.string.isRequired,
 };
 
