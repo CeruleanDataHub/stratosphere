@@ -5,7 +5,7 @@ import Modal from 'styled-react-modal';
 
 import ModalHeader from './ModalHeader/ModalHeader.jsx';
 import ModalTabs from './ModalTabs/ModalTabs.jsx';
-import PermissionsView from './Views/PermissionsView.jsx';
+import PermissionsView from './Views/PermissionsView/PermissionsView.jsx';
 import SettingsView from './Views/SettingsView.jsx';
 import getAllPermissions from '../getPermissions/getPermissions';
 import {useAuth0} from '../../../../auth0-spa.jsx';
@@ -31,6 +31,8 @@ const RoleModal = ({
   roleModalOpenTab,
   setRoleModalOpenTab,
   activeRole,
+  setRoleData,
+  roleData,
 }) => {
   const {getTokenSilently} = useAuth0();
 
@@ -71,8 +73,11 @@ const RoleModal = ({
       <TabContent>
         {roleModalOpenTab === 'Permissions' ? (
           <PermissionsView
+            activeRoleID={activeRole.id}
             permissionsForRole={activeRole.permissionsForModal}
             allPermissions={allPermissions}
+            setRoleData={setRoleData}
+            roleData={roleData}
           />
         ) : (
           <SettingsView />
@@ -101,6 +106,8 @@ RoleModal.propTypes = {
   }).isRequired,
   roleModalOpenTab: PropTypes.string.isRequired,
   setRoleModalOpenTab: PropTypes.func.isRequired,
+  setRoleData: PropTypes.func.isRequired,
+  roleData: PropTypes.shape({}).isRequired,
 };
 
 export default RoleModal;

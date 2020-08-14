@@ -30,15 +30,14 @@ const ManageRoles = () => {
 
       const roles = await getAllRolesWithPermissionsAndUsers(token);
 
-      const newRoles = roles.map(role => ({
-        ...role,
-        permissions: role.permissions.length,
-        permissionsForModal: role.permissions.map(permission => ({
-          ...permission,
-          enabled: true,
-        })),
-        users: role.users.length,
-      }));
+      const newRoles = roles.map(role => {
+        return {
+          ...role,
+          permissions: role.permissions.length,
+          permissionsForModal: role.permissions,
+          users: role.users.length,
+        };
+      });
 
       setRoleData({
         ...roleData,
@@ -74,6 +73,8 @@ const ManageRoles = () => {
           roleModalOpenTab={roleModalOpenTab}
           setRoleModalOpenTab={setRoleModalOpenTab}
           activeRole={activeRole}
+          setRoleData={setRoleData}
+          roleData={roleData}
         />
       </Typography>
     </ManageRolesContainer>
