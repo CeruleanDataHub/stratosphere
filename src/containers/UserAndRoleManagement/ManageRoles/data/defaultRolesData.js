@@ -17,18 +17,6 @@ const defaultRolesData = ({setRoleModalOpenTab, setActiveRole}) => {
         sortable: true,
       },
       {
-        id: 2,
-        name: 'Users',
-        selector: 'users',
-        sortable: true,
-      },
-      {
-        id: 3,
-        name: 'Permissions',
-        selector: 'permissions',
-        sortable: true,
-      },
-      {
         id: 4,
         name: '',
         selector: 'actions',
