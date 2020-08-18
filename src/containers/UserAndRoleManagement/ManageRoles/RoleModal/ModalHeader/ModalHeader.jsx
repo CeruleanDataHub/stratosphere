@@ -22,11 +22,11 @@ const GridContentCenter = styled.div`
   place-self: center;
 `;
 
-const ModalHeader = ({closeModal, name}) => (
+const ModalHeader = ({title, closeModal, name, icon}) => (
   <Grid columns="1fr 11fr">
     <Cell as={GridContentCenter}>
       <Typography color="black" size="large">
-        Role
+        {title}
       </Typography>
     </Cell>
 
@@ -38,19 +38,25 @@ const ModalHeader = ({closeModal, name}) => (
       </Button>
     </Cell>
 
-    <Cell as={GridContentCenter}>
-      <Icon name="user" as={BiggerIcon} />
-    </Cell>
+    {icon && (
+      <Cell as={GridContentCenter}>
+        <Icon name={icon} as={BiggerIcon} />
+      </Cell>
+    )}
 
-    <Cell>
-      <p>Name: {name}</p>
-    </Cell>
+    {name && (
+      <Cell>
+        <p>Name: {name}</p>
+      </Cell>
+    )}
   </Grid>
 );
 
 ModalHeader.propTypes = {
   closeModal: PropTypes.func.isRequired,
-  name: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  name: PropTypes.string,
+  icon: PropTypes.string,
 };
 
 export default ModalHeader;

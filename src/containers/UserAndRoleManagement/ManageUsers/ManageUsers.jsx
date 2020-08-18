@@ -74,6 +74,7 @@ const ManageUsers = () => {
         <ManagementHeader
           createItemButtonText="Invite User"
           backButtonText="Manage Users"
+          buttonAction={() => console.log('placeholder')}
         />
 
         <SearchBar

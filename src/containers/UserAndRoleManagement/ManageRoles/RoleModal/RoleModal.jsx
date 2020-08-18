@@ -61,7 +61,9 @@ const RoleModal = ({
     >
       <ModalHeader
         closeModal={() => setRoleModalOpenTab('')}
+        title="Role"
         name={activeRole.name}
+        icon="user"
       />
 
       <ModalTabs

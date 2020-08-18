@@ -24,7 +24,11 @@ const ButtonWithIcon = styled.button`
   }
 `;
 
-const ManagementHeader = ({backButtonText, createItemButtonText}) => (
+const ManagementHeader = ({
+  backButtonText,
+  createItemButtonText,
+  buttonAction,
+}) => (
   <div>
     <Grid>
       <Cell>
@@ -35,7 +39,7 @@ const ManagementHeader = ({backButtonText, createItemButtonText}) => (
       </Cell>
 
       <Cell as={GridContentRight}>
-        <Button as={ButtonWithIcon}>
+        <Button as={ButtonWithIcon} onClick={buttonAction}>
           <Icon name="plus" />
           {createItemButtonText}
         </Button>
@@ -47,6 +51,7 @@ const ManagementHeader = ({backButtonText, createItemButtonText}) => (
 ManagementHeader.propTypes = {
   backButtonText: PropTypes.string.isRequired,
   createItemButtonText: PropTypes.string.isRequired,
+  buttonAction: PropTypes.func.isRequired,
 };
 
 export default ManagementHeader;

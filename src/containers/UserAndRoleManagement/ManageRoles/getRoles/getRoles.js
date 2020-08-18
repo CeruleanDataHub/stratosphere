@@ -8,6 +8,7 @@ const getAllRolesWithPermissionsAndUsers = async token => {
   const roles = await getAllRoles(token);
   const permissions = await getPermissionsFor(roles)(token);
   const users = await getUsersFor(roles)(token);
+
   const rolesWithPermissionsAndUsers = injectRolesWithPermissionsAndUsers(
     roles,
     permissions,

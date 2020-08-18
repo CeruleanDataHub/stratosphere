@@ -8,6 +8,7 @@ import SearchBar from '../SearchBar/SearchBar.jsx';
 import defaultRolesData from './data/defaultRolesData';
 import getAllRolesWithPermissionsAndUsers from './getRoles/getRoles';
 import RoleModal from './RoleModal/RoleModal.jsx';
+import CreateNewRoleModal from './CreateNewRoleModal/CreateNewRoleModal.jsx';
 
 const ManageRolesContainer = styled.section`
   margin: 0 8em 2em 18em;
@@ -23,6 +24,11 @@ const ManageRoles = () => {
   const [roleData, setRoleData] = useState(
     defaultRolesData({setRoleModalOpenTab, setActiveRole, activeRole}),
   );
+  const [createNewRoleModalIsOpen, setCreateNewRoleModalIsOpen] = useState(
+    false,
+  );
+  const [newRoleName, setNewRoleName] = useState('');
+  const [newRoleDescription, setNewRoleDescription] = useState('');
 
   useEffect(() => {
     const getRoles = async () => {
@@ -54,6 +60,7 @@ const ManageRoles = () => {
         <ManagementHeader
           createItemButtonText="Create Role"
           backButtonText="Manage Roles"
+          buttonAction={() => setCreateNewRoleModalIsOpen(true)}
         />
 
         <SearchBar
@@ -75,6 +82,15 @@ const ManageRoles = () => {
           activeRole={activeRole}
           setRoleData={setRoleData}
           roleData={roleData}
+        />
+
+        <CreateNewRoleModal
+          closeModal={() => setCreateNewRoleModalIsOpen(false)}
+          isOpen={createNewRoleModalIsOpen}
+          newRoleName={newRoleName}
+          setNewRoleName={setNewRoleName}
+          newRoleDescription={newRoleDescription}
+          setNewRoleDescription={setNewRoleDescription}
         />
       </Typography>
     </ManageRolesContainer>
