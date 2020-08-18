@@ -14,6 +14,12 @@ const BorderlessButton = styled.span`
   transform: rotate(90deg);
 `;
 
+const ActionCellContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+`;
+
 const ActionsCell = ({
   setModalOpenTab,
   actionsData,
@@ -34,7 +40,7 @@ const ActionsCell = ({
   useOutsideClick(popoverRef, () => setPopoverOpen(false));
 
   return (
-    <>
+    <ActionCellContainer>
       <Button onClick={handleOnClick} ref={moreRef} as={BorderlessButton}>
         <Icon name="more-alt" />
       </Button>
@@ -53,7 +59,7 @@ const ActionsCell = ({
           />
         ))}
       </Popover>
-    </>
+    </ActionCellContainer>
   );
 };
 
