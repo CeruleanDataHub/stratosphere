@@ -1,0 +1,17 @@
+.searchUser {
+  margin: 50px 0;
+}
+
+.userSearchFilter {
+  padding: 10px;
+  list-style-type: none;
+}
+
+.userSearchProperty {
+  padding: 2px 0;
+  cursor: pointer;
+}
+
+.rdt_Pagination {
+  padding-bottom: 130px;
+}

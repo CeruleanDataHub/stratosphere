@@ -77,4 +77,45 @@ ActionsCell.propTypes = {
   ),
 };
 
+const Borderless = styled.span`
+  border: 0px;
+`;
+
+export const UserEditCell = ({setProfileModalOpenTab, setActiveUser, user}) => {
+  return (
+    <>
+      <Button
+        onClick={() => {
+          setActiveUser(user);
+          setProfileModalOpenTab('Roles');
+        }}
+        as={Borderless}
+      >
+        <Icon name="pencil" />
+      </Button>
+    </>
+  );
+};
+
+UserEditCell.propTypes = {
+  setProfileModalOpenTab: PropTypes.func.isRequired,
+  setActiveUser: PropTypes.func.isRequired,
+  user: PropTypes.shape({
+    id: PropTypes.number,
+    userId: PropTypes.string,
+    name: PropTypes.string,
+    description: PropTypes.string,
+    permissions: PropTypes.number,
+    permissionsForModal: PropTypes.arrayOf(
+      PropTypes.shape({
+        description: PropTypes.string,
+        permission_name: PropTypes.string,
+        resource_server_identifier: PropTypes.string,
+        resource_server_name: PropTypes.string,
+      }),
+    ),
+    users: PropTypes.number,
+  }).isRequired,
+};
+
 export default ActionsCell;
