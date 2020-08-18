@@ -32,6 +32,12 @@ const defaultRolesData = ({
         sortable: true,
       },
       {
+        id: 2,
+        name: 'Description',
+        selector: 'description',
+        sortable: true,
+      },
+      {
         id: 4,
         name: '',
         selector: 'actions',
