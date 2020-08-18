@@ -14,7 +14,13 @@ const BorderlessButton = styled.span`
   transform: rotate(90deg);
 `;
 
-const ActionsCell = ({setModalOpenTab, actionsData, setActive, active}) => {
+const ActionsCell = ({
+  setModalOpenTab,
+  actionsData,
+  setActive,
+  active,
+  fetchForEntity,
+}) => {
   const moreRef = useRef(null);
   const popoverRef = useRef(null);
   const [popoverOpen, setPopoverOpen] = useState(false);
@@ -22,6 +28,7 @@ const ActionsCell = ({setModalOpenTab, actionsData, setActive, active}) => {
   const handleOnClick = () => {
     setPopoverOpen(!popoverOpen);
     setActive(active);
+    fetchForEntity(active);
   };
 
   useOutsideClick(popoverRef, () => setPopoverOpen(false));
@@ -57,16 +64,6 @@ ActionsCell.propTypes = {
     id: PropTypes.string,
     name: PropTypes.string,
     description: PropTypes.string,
-    permissions: PropTypes.number,
-    permissionsForModal: PropTypes.arrayOf(
-      PropTypes.shape({
-        description: PropTypes.string,
-        permission_name: PropTypes.string,
-        resource_server_identifier: PropTypes.string,
-        resource_server_name: PropTypes.string,
-      }),
-    ),
-    users: PropTypes.number,
   }).isRequired,
   actionsData: PropTypes.arrayOf(
     PropTypes.shape({
@@ -75,6 +72,7 @@ ActionsCell.propTypes = {
       text: PropTypes.string.isRequired,
     }),
   ),
+  fetchForEntity: PropTypes.func,
 };
 
 const Borderless = styled.span`

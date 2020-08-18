@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, {useState} from 'react';
 import {DataTable} from '@ceruleandatahub/react-components';
-import {find, get, filter} from 'lodash';
+import {filter} from 'lodash';
 
 import permissionViewColumns from './permissionViewColumns';
 import SearchBar from '../../../../SearchBar/SearchBar.jsx';
@@ -17,8 +17,6 @@ const PermissionsView = ({
   activeRoleID,
   permissionsForRole,
   allPermissions,
-  setRoleData,
-  roleData,
 }) => {
   const [filterValue, setFilterValue] = useState('');
   const {getTokenSilently} = useAuth0();
@@ -31,85 +29,22 @@ const PermissionsView = ({
 
     if (permissionExists(permission)) {
       try {
-        await deletePermissionInRole(token, id, body);
-
-        const activeRole = findActiveRole(roleData, activeRoleID);
-
-        const permissionToBeModified = getPermissionToBeModified(
-          roleData,
-          activeRoleID,
+        const filteredPermissions = filterPermissions(
+          permissionList,
           permission,
         );
 
-        const allPermissionsForActiveRole = getAllPermissionsForActiveRole(
-          activeRole,
-        );
-
-        const filteredPermissions = filterPermissions(
-          allPermissionsForActiveRole,
-          permissionToBeModified,
-        );
-
-        const newActiveRole = populateNewActiveRole(
-          activeRole,
-          filteredPermissions,
-        );
-
-        const oldActiveRoleFilteredFromRoleData = filterOldActiveRoleFromRoleData(
-          roleData,
-          activeRoleID,
-        );
-
-        const newRoleData = populateNewRoleData(
-          roleData,
-          newActiveRole,
-          oldActiveRoleFilteredFromRoleData,
-        );
-
-        setRoleData(newRoleData);
         setPermissionList(filteredPermissions);
+
+        await deletePermissionInRole(token, id, body);
       } catch (error) {
         console.error(error);
       }
     } else {
       try {
+        setPermissionList([...permissionList, {permission_name: permission}]);
+
         await updatePermissionsInRole(token, id, body);
-
-        const activeRole = findActiveRole(roleData, activeRoleID);
-
-        const permissionToBeModified = getPermissionToBeModified(
-          roleData,
-          activeRoleID,
-          permission,
-        );
-
-        const allPermissionsForActiveRole = getAllPermissionsForActiveRole(
-          activeRole,
-        );
-
-        const permissionsWithNewPermission = populatePermissionsWithNewPermission(
-          permissionToBeModified,
-          allPermissionsForActiveRole,
-        );
-
-        const newActiveRole = populateNewActiveRole(
-          activeRole,
-          permissionsWithNewPermission,
-        );
-
-        const oldActiveRoleFilteredFromRoleData = filterOldActiveRoleFromRoleData(
-          roleData,
-          activeRoleID,
-        );
-
-        const newRoleData = populateNewRoleData(
-          roleData,
-          newActiveRole,
-          oldActiveRoleFilteredFromRoleData,
-        );
-
-        setRoleData(newRoleData);
-        setPermissionList(permissionsWithNewPermission);
       } catch (error) {
         console.error(error);
       }
@@ -146,62 +81,11 @@ const PermissionsView = ({
   );
 };
 
-const populatePermissionsWithNewPermission = (
-  permissionToBeModified,
-  allPermissionsForActiveRole,
-) => [
-  ...allPermissionsForActiveRole,
-  {permission_name: permissionToBeModified},
-];
-
-const populateNewActiveRole = (activeRole, newPermissions) => ({
-  ...activeRole,
-  permissions: newPermissions.length,
-  permissionsForModal: newPermissions,
-});
-
-const populateNewRoleData = (
-  roleData,
-  newActiveRole,
-  oldActiveRoleFilteredFromRoleData,
-) => ({
-  ...roleData,
-  data: [...oldActiveRoleFilteredFromRoleData, newActiveRole],
-});
-
-const filterPermissions = (
-  allPermissionsForActiveRole,
-  permissionToBeModified,
-) =>
+const filterPermissions = (permissionsForRole, permissionToBeModified) =>
   filter(
-    allPermissionsForActiveRole,
-    permission =>
-      permission.permission_name !== permissionToBeModified.permission_name,
+    permissionsForRole,
+    permission => permission.permission_name !== permissionToBeModified,
   );
-
-const filterOldActiveRoleFromRoleData = (roleData, activeRoleID) =>
-  filter(roleData.data, role => role.id !== activeRoleID);
-
-const getAllPermissionsForActiveRole = activeRole =>
-  get(activeRole, 'permissionsForModal');
-
-const findActiveRole = (roleData, activeRoleID) =>
-  find(roleData.data, ['id', activeRoleID]);
-
-const getPermissionToBeModified = (roleData, activeRoleID, permission) => {
-  const activeRole = findActiveRole(roleData, activeRoleID);
-
-  const allPermissionsForActiveRole = getAllPermissionsForActiveRole(
-    activeRole,
-  );
-
-  const findExistingPermission = find(allPermissionsForActiveRole, [
-    'permission_name',
-    permission,
-  ]);
-
-  return findExistingPermission || permission;
-};
 
 PermissionsView.propTypes = {
   activeRoleID: PropTypes.string.isRequired,
@@ -214,10 +98,7 @@ PermissionsView.propTypes = {
     }),
   ),
   allPermissions: PropTypes.arrayOf(PropTypes.string).isRequired,
-  setRoleData: PropTypes.func.isRequired,
-  roleData: PropTypes.shape({
-    data: PropTypes.array.isRequired,
-  }),
+  fetchForEntity: PropTypes.func,
 };
 
 export default PermissionsView;

@@ -31,8 +31,7 @@ const RoleModal = ({
   roleModalOpenTab,
   setRoleModalOpenTab,
   activeRole,
-  setRoleData,
-  roleData,
+  permissionsForRole,
 }) => {
   const {getTokenSilently} = useAuth0();
 
@@ -76,10 +75,8 @@ const RoleModal = ({
         {roleModalOpenTab === 'Permissions' ? (
           <PermissionsView
             activeRoleID={activeRole.id}
-            permissionsForRole={activeRole.permissionsForModal}
+            permissionsForRole={permissionsForRole}
             allPermissions={allPermissions}
-            setRoleData={setRoleData}
-            roleData={roleData}
           />
         ) : (
           <SettingsView />
@@ -94,22 +91,10 @@ RoleModal.propTypes = {
   activeRole: PropTypes.shape({
     id: PropTypes.string,
     name: PropTypes.string,
-    description: PropTypes.string,
-    permissions: PropTypes.number,
-    permissionsForModal: PropTypes.arrayOf(
-      PropTypes.shape({
-        description: PropTypes.string,
-        permission_name: PropTypes.string,
-        resource_server_identifier: PropTypes.string,
-        resource_server_name: PropTypes.string,
-      }),
-    ),
-    users: PropTypes.number,
   }).isRequired,
   roleModalOpenTab: PropTypes.string.isRequired,
   setRoleModalOpenTab: PropTypes.func.isRequired,
-  setRoleData: PropTypes.func.isRequired,
-  roleData: PropTypes.shape({}).isRequired,
+  permissionsForRole: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default RoleModal;

@@ -6,7 +6,7 @@ import {useAuth0} from '../../../auth0-spa.jsx';
 import ManagementHeader from '../ManagementHeader/ManagementHeader.jsx';
 import SearchBar from '../SearchBar/SearchBar.jsx';
 import defaultRolesData from './data/defaultRolesData';
-import getAllRolesWithPermissionsAndUsers from './getRoles/getRoles';
+import getAllRoles from './getRoles/getRoles';
 import RoleModal from './RoleModal/RoleModal.jsx';
 import CreateNewRoleModal from './CreateNewRoleModal/CreateNewRoleModal.jsx';
 
@@ -21,8 +21,14 @@ const ManageRoles = () => {
   const [roleModalOpenTab, setRoleModalOpenTab] = useState('');
   const [filterText, setFilterText] = useState('');
   const [activeRole, setActiveRole] = useState({name: ''});
+  const [permissionsForRole, setPermissionsForRole] = useState([]);
   const [roleData, setRoleData] = useState(
-    defaultRolesData({setRoleModalOpenTab, setActiveRole, activeRole}),
+    defaultRolesData({
+      setRoleModalOpenTab,
+      setActiveRole,
+      activeRole,
+      setPermissionsForRole,
+    }),
   );
   const [createNewRoleModalIsOpen, setCreateNewRoleModalIsOpen] = useState(
     false,
@@ -34,20 +40,11 @@ const ManageRoles = () => {
     const getRoles = async () => {
       const token = await getTokenSilently();
 
-      const roles = await getAllRolesWithPermissionsAndUsers(token);
-
-      const newRoles = roles.map(role => {
-        return {
-          ...role,
-          permissions: role.permissions.length,
-          permissionsForModal: role.permissions,
-          users: role.users.length,
-        };
-      });
+      const roles = await getAllRoles(token);
 
       setRoleData({
         ...roleData,
-        data: newRoles,
+        data: roles.data,
       });
     };
 
@@ -82,6 +79,7 @@ const ManageRoles = () => {
           activeRole={activeRole}
           setRoleData={setRoleData}
           roleData={roleData}
+          permissionsForRole={permissionsForRole}
         />
 
         <CreateNewRoleModal
