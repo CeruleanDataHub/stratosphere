@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import ModalHeader from '../RoleModal/ModalHeader/ModalHeader.jsx';
 import {Button, Input} from '@ceruleandatahub/react-components';
 
@@ -36,6 +36,12 @@ const NewRoleFormButton = styled.button`
   align-self: center;
 `;
 
+const ErrorMessage = styled.div`
+  align-self: center;
+  color: red;
+  padding: 1em 0 0 0;
+`;
+
 const CreateNewRoleModal = ({
   isOpen,
   closeModal,
@@ -46,7 +52,9 @@ const CreateNewRoleModal = ({
 }) => {
   const {getTokenSilently} = useAuth0();
 
-  const handleSubmit = event => {
+  const [fetchErrorMessage, setFetchErrorMessage] = useState('');
+
+  const handleSubmit = async event => {
     event.preventDefault();
 
     const postNewRole = async () => {
@@ -57,14 +65,18 @@ const CreateNewRoleModal = ({
         description: newRoleDescription,
       };
 
-      await postRole(token, newRole);
+      return await postRole(token, newRole);
     };
 
-    postNewRole();
+    const response = await postNewRole();
+
+    response.status !== 200
+      ? setFetchErrorMessage(response.data.message)
+      : closeModal();
   };
 
   return (
-    <NewRoleModal isOpen={isOpen}>
+    <NewRoleModal onBackgroundClick={closeModal} isOpen={isOpen}>
       <ModalHeader title="New Role" closeModal={closeModal} />
 
       <NewRoleForm onSubmit={event => handleSubmit(event)}>
@@ -87,6 +99,8 @@ const CreateNewRoleModal = ({
         <Button as={NewRoleFormButton} type="submit">
           Create new role
         </Button>
+
+        <ErrorMessage>{fetchErrorMessage && fetchErrorMessage}</ErrorMessage>
       </NewRoleForm>
     </NewRoleModal>
   );

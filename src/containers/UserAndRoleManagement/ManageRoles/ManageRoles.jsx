@@ -49,7 +49,13 @@ const ManageRoles = () => {
     };
 
     getRoles();
-  }, []);
+  }, [createNewRoleModalIsOpen]);
+
+  const handleCreateNewRoleModalClose = () => {
+    setCreateNewRoleModalIsOpen(false);
+    setNewRoleDescription('');
+    setNewRoleName('');
+  };
 
   return (
     <ManageRolesContainer>
@@ -83,7 +89,7 @@ const ManageRoles = () => {
         />
 
         <CreateNewRoleModal
-          closeModal={() => setCreateNewRoleModalIsOpen(false)}
+          closeModal={() => handleCreateNewRoleModalClose()}
           isOpen={createNewRoleModalIsOpen}
           newRoleName={newRoleName}
           setNewRoleName={setNewRoleName}
