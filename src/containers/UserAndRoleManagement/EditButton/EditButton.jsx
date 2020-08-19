@@ -7,15 +7,8 @@ const BorderlessButton = styled.span`
   border: 0px;
 `;
 
-const EditButton = ({
-  setActive,
-  active,
-  setEditModalIsOpen,
-  fetchForEntity,
-}) => {
+const EditButton = ({setActive, active, setEditModalIsOpen}) => {
   const handleOnClick = async () => {
-    fetchForEntity && (await fetchForEntity(active));
-
     setActive(active);
 
     setEditModalIsOpen(true);
@@ -32,7 +25,6 @@ EditButton.propTypes = {
   setActive: PropTypes.func.isRequired,
   active: PropTypes.shape({}).isRequired,
   setEditModalIsOpen: PropTypes.func.isRequired,
-  fetchForEntity: PropTypes.func,
 };
 
 export default EditButton;

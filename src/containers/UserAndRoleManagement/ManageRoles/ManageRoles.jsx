@@ -78,13 +78,14 @@ const ManageRoles = () => {
           )}
         />
 
-        <RoleModal
-          isOpen={editModalIsOpen}
-          setEditModalIsOpen={setEditModalIsOpen}
-          activeRole={activeRole}
-          permissionsForRole={permissionsForRole}
-        />
-
+        {editModalIsOpen && (
+          <RoleModal
+            isOpen={editModalIsOpen}
+            setEditModalIsOpen={setEditModalIsOpen}
+            activeRole={activeRole}
+            permissionsForRole={permissionsForRole}
+          />
+        )}
         <CreateNewRoleModal
           closeModal={() => handleCreateNewRoleModalClose()}
           isOpen={createNewRoleModalIsOpen}

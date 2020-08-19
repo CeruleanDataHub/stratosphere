@@ -9,6 +9,7 @@ import PermissionsView from './Views/PermissionsView/PermissionsView.jsx';
 import SettingsView from './Views/SettingsView.jsx';
 import getAllPermissions from '../getPermissions/getPermissions';
 import {useAuth0} from '../../../../auth0-spa.jsx';
+import getPermissionsForRole from '../getPermissions/getPermissionsForRole.js';
 
 const StyledModal = Modal.styled`
     display: flex;
@@ -26,14 +27,10 @@ const TabContent = styled.div`
 
 const roleModalTabsData = ['Permissions', 'Settings'];
 
-const RoleModal = ({
-  isOpen,
-  setEditModalIsOpen,
-  activeRole,
-  permissionsForRole,
-}) => {
+const RoleModal = ({isOpen, setEditModalIsOpen, activeRole}) => {
   const {getTokenSilently} = useAuth0();
 
+  const [permissionsForRole, setPermissionsForRole] = useState([]);
   const [allPermissions, setAllPermissions] = useState([]);
   const [activeTab, setActiveTab] = useState('Permissions');
 
@@ -50,6 +47,14 @@ const RoleModal = ({
       setAllPermissions(permissions);
     };
 
+    const getPermissionsForActiveRole = async () => {
+      const token = await getTokenSilently();
+
+      const permissionsForRole = await getPermissionsForRole(activeRole, token);
+      setPermissionsForRole(permissionsForRole.data);
+    };
+
+    getPermissionsForActiveRole();
     getPermissions();
   }, []);
 
@@ -71,17 +76,19 @@ const RoleModal = ({
         tabs={roleModalTabsData}
       />
 
-      <TabContent>
-        {isOpen && activeTab === 'Permissions' ? (
-          <PermissionsView
-            activeRoleID={activeRole.id}
-            permissionsForRole={permissionsForRole}
-            allPermissions={allPermissions}
-          />
-        ) : (
-          <SettingsView />
-        )}
-      </TabContent>
+      {isOpen && permissionsForRole.length !== 0 && (
+        <TabContent>
+          {activeTab === 'Permissions' ? (
+            <PermissionsView
+              activeRoleID={activeRole.id}
+              permissionsForRole={permissionsForRole}
+              allPermissions={allPermissions}
+            />
+          ) : (
+            <SettingsView />
+          )}
+        </TabContent>
+      )}
     </StyledModal>
   );
 };
