@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useContext} from 'react';
 import PropTypes from 'prop-types';
 import createAuth0Client from '@auth0/auth0-spa-js';
-import {setToken} from './store.jsx';
+import {setToken, setIdToken} from './store.jsx';
 
 const DEFAULT_REDIRECT_CALLBACK = () =>
   window.history.replaceState({}, document.title, window.location.pathname);
@@ -44,6 +44,9 @@ export const Auth0Provider = ({
 
         const token = await auth0FromHook.getTokenSilently();
         setToken(token);
+
+        const idToken = await auth0FromHook.getIdTokenClaims();
+        setIdToken(idToken.__raw);
       }
 
       setLoading(false);

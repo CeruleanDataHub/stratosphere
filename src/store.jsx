@@ -24,6 +24,10 @@ const setToken = token => {
   sessionProvider.setToken(token);
 };
 
+const setIdToken = idToken => {
+  sessionProvider.setIdToken(idToken);
+};
+
 const store = configureStore({
   reducer: {
     devices: devicesReducer,
@@ -35,4 +39,4 @@ const store = configureStore({
   ],
 });
 
-export {store, setToken};
+export {store, setToken, setIdToken};
