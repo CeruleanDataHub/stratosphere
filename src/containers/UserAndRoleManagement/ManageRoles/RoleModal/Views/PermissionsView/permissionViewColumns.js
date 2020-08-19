@@ -6,8 +6,6 @@ const permissionViewColumns = (
   permissionExists,
   handleRolePermissionChange,
   activeRoleID,
-  setRoleData,
-  roleData,
 ) => [
   {
     id: '1',
@@ -35,8 +33,6 @@ const permissionViewColumns = (
               permissionToBeModified,
             )
           }
-          setRoleData={setRoleData}
-          roleData={roleData}
         />
       );
     },
