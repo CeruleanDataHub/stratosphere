@@ -94,7 +94,7 @@ RoleModal.propTypes = {
   }).isRequired,
   roleModalOpenTab: PropTypes.string.isRequired,
   setRoleModalOpenTab: PropTypes.func.isRequired,
-  permissionsForRole: PropTypes.arrayOf(PropTypes.string).isRequired,
+  permissionsForRole: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 };
 
 export default RoleModal;
