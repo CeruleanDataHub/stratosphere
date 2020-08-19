@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 import {
   Button,
   Cell,
@@ -11,6 +12,7 @@ import PropTypes from 'prop-types';
 
 const IconMarginRight = styled.div`
   margin-right: 0.5rem;
+  cursor: pointer;
 `;
 
 const GridContentRight = styled.div`
@@ -32,8 +34,10 @@ const ManagementHeader = ({
   <div>
     <Grid>
       <Cell>
-        <Typography color="black" size="large">
-          <Icon name="arrow-left-circle" as={IconMarginRight} />
+        <Typography size="large" color="black">
+          <Link to="/users-and-roles" style={{color: 'black'}}>
+            <Icon name="arrow-left-circle" as={IconMarginRight} />
+          </Link>
           {backButtonText}
         </Typography>
       </Cell>
