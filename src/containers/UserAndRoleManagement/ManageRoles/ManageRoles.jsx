@@ -18,23 +18,25 @@ const ManageRolesContainer = styled.section`
 const ManageRoles = () => {
   const {getTokenSilently} = useAuth0();
 
-  const [roleModalOpenTab, setRoleModalOpenTab] = useState('');
+  const [activeTab, setActiveTab] = useState('');
   const [filterText, setFilterText] = useState('');
   const [activeRole, setActiveRole] = useState({name: ''});
   const [permissionsForRole, setPermissionsForRole] = useState([]);
-  const [roleData, setRoleData] = useState(
-    defaultRolesData({
-      setRoleModalOpenTab,
-      setActiveRole,
-      activeRole,
-      setPermissionsForRole,
-    }),
-  );
   const [createNewRoleModalIsOpen, setCreateNewRoleModalIsOpen] = useState(
     false,
   );
   const [newRoleName, setNewRoleName] = useState('');
   const [newRoleDescription, setNewRoleDescription] = useState('');
+  const [editModalIsOpen, setEditModalIsOpen] = useState(false);
+  const [roleData, setRoleData] = useState(
+    defaultRolesData({
+      setActiveTab,
+      setActiveRole,
+      activeRole,
+      setPermissionsForRole,
+      setEditModalIsOpen,
+    }),
+  );
 
   useEffect(() => {
     const getRoles = async () => {
@@ -79,9 +81,10 @@ const ManageRoles = () => {
         />
 
         <RoleModal
-          isOpen={roleModalOpenTab !== ''}
-          roleModalOpenTab={roleModalOpenTab}
-          setRoleModalOpenTab={setRoleModalOpenTab}
+          isOpen={editModalIsOpen}
+          setEditModalIsOpen={setEditModalIsOpen}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
           activeRole={activeRole}
           setRoleData={setRoleData}
           roleData={roleData}

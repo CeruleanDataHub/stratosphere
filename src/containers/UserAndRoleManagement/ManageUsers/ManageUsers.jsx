@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import {useAuth0} from '../../../auth0-spa.jsx';
 import ManagementHeader from '../ManagementHeader/ManagementHeader.jsx';
 import SearchBar from '../SearchBar/SearchBar.jsx';
-import {UserEditCell} from '../ActionsCell/ActionsCell.jsx';
+import EditButton from '../EditButton/EditButton.jsx';
 import getUsers from './getUsers/getUsers';
 import {UserModal} from './UserModal.jsx';
 
@@ -17,7 +17,7 @@ const ManageUsersContainer = styled.section`
 const ManageUsers = () => {
   const {getTokenSilently} = useAuth0();
 
-  const [profileModalOpenTab, setProfileModalOpenTab] = useState('');
+  const [editProfileModalIsOpen, setEditProfileModalIsOpen] = useState(false);
   const [filterText, setFilterText] = useState('');
   const [activeUser, setActiveUser] = useState({});
 
@@ -34,8 +34,9 @@ const ManageUsers = () => {
       id: 4,
       name: 'Status',
       selector: 'blocked',
-      // eslint-disable-next-line react/display-name
-      cell: u => <div>{u.blocked ? 'Blocked' : 'Active'}</div>,
+      cell: function cell(user) {
+        return <div>{user.blocked ? 'Blocked' : 'Active'}</div>;
+      },
       grow: 1,
     },
     {
@@ -43,14 +44,17 @@ const ManageUsers = () => {
       name: '',
       selector: 'actions',
       grow: 1,
-      // eslint-disable-next-line react/display-name
-      cell: u => (
-        <UserEditCell
-          user={u}
-          setActiveUser={setActiveUser}
-          setProfileModalOpenTab={setProfileModalOpenTab}
-        />
-      ),
+      cell: function cell(user) {
+        user.id = user.userId;
+
+        return (
+          <EditButton
+            active={user}
+            setActive={setActiveUser}
+            setEditModalIsOpen={setEditProfileModalIsOpen}
+          />
+        );
+      },
     },
   ];
 
@@ -91,11 +95,12 @@ const ManageUsers = () => {
           )}
         />
       </Typography>
-      {profileModalOpenTab !== '' && (
+
+      {editProfileModalIsOpen && (
         <UserModal
-          isOpen={profileModalOpenTab !== ''}
-          profileModalOpenTab={profileModalOpenTab}
-          setProfileModalOpenTab={setProfileModalOpenTab}
+          isOpen={editProfileModalIsOpen}
+          editProfileModalIsOpen={editProfileModalIsOpen}
+          setEditProfileModalIsOpen={setEditProfileModalIsOpen}
           user={activeUser}
           userData={userData}
           setUserData={setUserData}

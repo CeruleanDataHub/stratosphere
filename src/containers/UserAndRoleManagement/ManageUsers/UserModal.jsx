@@ -69,8 +69,7 @@ const auth0ProxyUrl = `${envVar.BASE_API_URL}/auth0`;
 
 export const UserModal = ({
   isOpen,
-  profileModalOpenTab,
-  setProfileModalOpenTab,
+  setEditProfileModalIsOpen,
   user,
   userData,
   setUserData,
@@ -81,6 +80,7 @@ export const UserModal = ({
   const [selectedRoleToAdd, setSelectedRoleToAdd] = useState();
   const [isBlockUserModalOpen, setIsBlockUserModalOpen] = useState(false);
   const [isDeleteUserModalOpen, setIsDeleteUserModalOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('Roles');
 
   const manageUsersModalDataColumns = [
     {id: 1, name: 'Name', selector: 'name'},
@@ -204,7 +204,7 @@ export const UserModal = ({
   );
 
   const renderCurrentTab = () => {
-    switch (profileModalOpenTab) {
+    switch (activeTab) {
       case 'Roles':
         return renderRolesTabContent(getAvailableRoles());
 
@@ -212,7 +212,7 @@ export const UserModal = ({
         return <HierarchyTab user={user} />;
 
       default:
-        return <div></div>;
+        return <div />;
     }
   };
 
@@ -226,7 +226,7 @@ export const UserModal = ({
       const filteredUsers = [...userData].filter(u => u.userId !== user.userId);
       setUserData(filteredUsers);
       setIsBlockUserModalOpen(false);
-      setProfileModalOpenTab('');
+      setEditProfileModalIsOpen(false);
     });
   };
 
@@ -256,7 +256,7 @@ export const UserModal = ({
     <StyledModal
       isOpen={isOpen}
       onBackgroundClick={() => {
-        setProfileModalOpenTab('');
+        setEditProfileModalIsOpen(false);
       }}
     >
       <Typography fontFamily="openSans">
@@ -270,7 +270,7 @@ export const UserModal = ({
             <Button
               color="transparent"
               onClick={() => {
-                setProfileModalOpenTab('');
+                setEditProfileModalIsOpen(false);
               }}
             >
               <Typography color="black">
@@ -317,13 +317,13 @@ export const UserModal = ({
         <TabsContainer>
           <Tab
             text="Roles"
-            active={profileModalOpenTab === 'Roles'}
-            onClick={() => setProfileModalOpenTab('Roles')}
+            active={activeTab === 'Roles'}
+            onClick={() => setActiveTab('Roles')}
           />
           <Tab
             text="Hierarchies"
-            active={profileModalOpenTab === 'Hierarchies'}
-            onClick={() => setProfileModalOpenTab('Hierarchies')}
+            active={activeTab === 'Hierarchies'}
+            onClick={() => setActiveTab('Hierarchies')}
           />
         </TabsContainer>
         {renderCurrentTab()}
@@ -358,7 +358,7 @@ UserModal.propTypes = {
   isOpen: PropTypes.bool,
   user: PropTypes.shape({
     email: PropTypes.string,
-    id: PropTypes.number,
+    id: PropTypes.string,
     userId: PropTypes.string,
     lastLogin: PropTypes.string,
     logins: PropTypes.number,
@@ -366,8 +366,8 @@ UserModal.propTypes = {
     roles: PropTypes.array,
     blocked: PropTypes.bool,
   }).isRequired,
-  profileModalOpenTab: PropTypes.string,
-  setProfileModalOpenTab: PropTypes.func,
+  editProfileModalIsOpen: PropTypes.bool,
+  setEditProfileModalIsOpen: PropTypes.func,
   userData: PropTypes.array,
   setUserData: PropTypes.func,
 };

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import ActionsCell from '../../ActionsCell/ActionsCell.jsx';
+import EditButton from '../../EditButton/EditButton.jsx';
 import {useAuth0} from '../../../../auth0-spa.jsx';
 import getPermissionsForRole from '../getPermissions/getPermissionsForRole.js';
 
@@ -9,7 +9,7 @@ const actionsData = [
 ];
 
 const defaultRolesData = ({
-  setRoleModalOpenTab,
+  setEditModalIsOpen,
   setActiveRole,
   setPermissionsForRole,
 }) => {
@@ -41,10 +41,11 @@ const defaultRolesData = ({
         id: 4,
         name: '',
         selector: 'actions',
+        grow: 0,
         cell: function cell(role) {
           return (
-            <ActionsCell
-              setModalOpenTab={setRoleModalOpenTab}
+            <EditButton
+              setEditModalIsOpen={setEditModalIsOpen}
               setActive={setActiveRole}
               actionsData={actionsData}
               active={role}

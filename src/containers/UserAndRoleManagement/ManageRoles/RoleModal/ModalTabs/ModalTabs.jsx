@@ -8,13 +8,13 @@ const TabsContainer = styled.div`
   border-bottom: 1px solid black;
 `;
 
-const ModalTabs = ({roleModalOpenTab, setRoleModalOpenTab, tabs}) => (
+const ModalTabs = ({activeTab, setActiveTab, tabs}) => (
   <TabsContainer>
     {tabs.map((tab, key) => (
       <Tab
         text={tab}
-        active={roleModalOpenTab === tab}
-        onClick={() => setRoleModalOpenTab(tab)}
+        active={activeTab === tab}
+        onClick={() => setActiveTab(tab)}
         key={key}
       />
     ))}
@@ -22,8 +22,8 @@ const ModalTabs = ({roleModalOpenTab, setRoleModalOpenTab, tabs}) => (
 );
 
 ModalTabs.propTypes = {
-  roleModalOpenTab: PropTypes.string.isRequired,
-  setRoleModalOpenTab: PropTypes.func.isRequired,
+  activeTab: PropTypes.string.isRequired,
+  setActiveTab: PropTypes.func.isRequired,
   tabs: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 

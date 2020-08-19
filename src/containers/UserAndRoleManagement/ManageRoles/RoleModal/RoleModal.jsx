@@ -28,14 +28,14 @@ const roleModalTabsData = ['Permissions', 'Settings'];
 
 const RoleModal = ({
   isOpen,
-  roleModalOpenTab,
-  setRoleModalOpenTab,
+  setEditModalIsOpen,
   activeRole,
   permissionsForRole,
 }) => {
   const {getTokenSilently} = useAuth0();
 
   const [allPermissions, setAllPermissions] = useState([]);
+  const [activeTab, setActiveTab] = useState('Permissions');
 
   useEffect(() => {
     const getPermissions = async () => {
@@ -56,23 +56,23 @@ const RoleModal = ({
   return (
     <StyledModal
       isOpen={isOpen}
-      onBackgroundClick={() => setRoleModalOpenTab('')}
+      onBackgroundClick={() => setEditModalIsOpen(false)}
     >
       <ModalHeader
-        closeModal={() => setRoleModalOpenTab('')}
+        closeModal={() => setEditModalIsOpen(false)}
         title="Role"
         name={activeRole.name}
         icon="user"
       />
 
       <ModalTabs
-        roleModalOpenTab={roleModalOpenTab}
-        setRoleModalOpenTab={setRoleModalOpenTab}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
         tabs={roleModalTabsData}
       />
 
       <TabContent>
-        {roleModalOpenTab === 'Permissions' ? (
+        {activeTab === 'Permissions' ? (
           <PermissionsView
             activeRoleID={activeRole.id}
             permissionsForRole={permissionsForRole}
@@ -92,8 +92,7 @@ RoleModal.propTypes = {
     id: PropTypes.string,
     name: PropTypes.string,
   }).isRequired,
-  roleModalOpenTab: PropTypes.string.isRequired,
-  setRoleModalOpenTab: PropTypes.func.isRequired,
+  setEditModalIsOpen: PropTypes.func.isRequired,
   permissionsForRole: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 };
 
