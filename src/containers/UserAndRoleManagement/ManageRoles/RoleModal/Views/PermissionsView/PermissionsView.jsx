@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React, {useState} from 'react';
 import {DataTable} from '@ceruleandatahub/react-components';
-import {filter} from 'lodash';
+import {filter, flow, map} from 'lodash';
 
 import permissionViewColumns from './permissionViewColumns';
 import SearchBar from '../../../../SearchBar/SearchBar.jsx';
@@ -51,9 +51,7 @@ const PermissionsView = ({
     }
   };
 
-  const permissionData = allPermissions
-    .map(permission => permission)
-    .filter(permission => permission.includes(filterValue));
+  const permissionData = filteredSearchResults(allPermissions, filterValue);
 
   const permissionNames = permissionList.map(
     ({permission_name}) => permission_name,
@@ -86,6 +84,12 @@ const filterPermissions = (permissionsForRole, permissionToBeModified) =>
     permissionsForRole,
     permission => permission.permission_name !== permissionToBeModified,
   );
+
+const searchFilterFor = filterValue => item =>
+  filter(item, permission => permission.includes(filterValue));
+
+const filteredSearchResults = (searchValue, filter) =>
+  flow([map, searchFilterFor(filter)])(searchValue);
 
 PermissionsView.propTypes = {
   activeRoleID: PropTypes.string.isRequired,
