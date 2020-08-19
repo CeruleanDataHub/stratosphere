@@ -72,7 +72,7 @@ const RoleModal = ({
       />
 
       <TabContent>
-        {activeTab === 'Permissions' ? (
+        {isOpen && activeTab === 'Permissions' ? (
           <PermissionsView
             activeRoleID={activeRole.id}
             permissionsForRole={permissionsForRole}
