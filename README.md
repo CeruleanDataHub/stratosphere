@@ -38,4 +38,5 @@ Following environment variables are supported:
   AUTH0_CLIENT_ID: <Client ID for Auth0>
   AUTH0_AUDIENCE: <API identifier in Auth0>
   AUTH0_TENANT: <'tenant:UUID' of the root hierarchy>
+  AUTH0_RESOURCE_SERVER_ID: <ID of the desired Resource Server in Auth0>
 ```
