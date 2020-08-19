@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import Modal from 'styled-react-modal';
+import {Icon} from '@ceruleandatahub/react-components';
 
 import ModalHeader from './ModalHeader/ModalHeader.jsx';
 import ModalTabs from './ModalTabs/ModalTabs.jsx';
@@ -12,17 +13,30 @@ import {useAuth0} from '../../../../auth0-spa.jsx';
 import getPermissionsForRole from '../getPermissions/getPermissionsForRole.js';
 
 const StyledModal = Modal.styled`
-    display: flex;
-    background-color: white;
-    flex-direction: column;
-    padding: 1rem;
-    box-shadow: 0 0 18px -3px rgba(27, 27, 27, 0.8);
-    width: 75%;
-    border: 1px solid red;
+  display: flex;
+  background-color: white;
+  flex-direction: column;
+  padding: 1rem;
+  box-shadow: 0 0 18px -3px rgba(27, 27, 27, 0.8);
+  width: 75%;
+  border: 1px solid red;
 `;
 
 const TabContent = styled.div`
   margin: 10px;
+`;
+
+const DeleteButton = styled.button`
+  width: 3rem;
+  align-self: flex-end;
+  color: red;
+  font-size: 30px;
+  border: 0;
+  background-color: unset;
+  padding: 0.5rem;
+  cursor: pointer;
+  margin-bottom: -1.4em;
+  z-index: 1;
 `;
 
 const roleModalTabsData = ['Permissions', 'Settings'];
@@ -69,6 +83,10 @@ const RoleModal = ({isOpen, setEditModalIsOpen, activeRole}) => {
         name={activeRole.name}
         icon="user"
       />
+
+      <DeleteButton title="Delete Role">
+        <Icon name="trash" />
+      </DeleteButton>
 
       <ModalTabs
         activeTab={activeTab}
