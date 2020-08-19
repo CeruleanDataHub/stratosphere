@@ -18,7 +18,6 @@ const ManageRolesContainer = styled.section`
 const ManageRoles = () => {
   const {getTokenSilently} = useAuth0();
 
-  const [activeTab, setActiveTab] = useState('');
   const [filterText, setFilterText] = useState('');
   const [activeRole, setActiveRole] = useState({name: ''});
   const [permissionsForRole, setPermissionsForRole] = useState([]);
@@ -30,7 +29,6 @@ const ManageRoles = () => {
   const [editModalIsOpen, setEditModalIsOpen] = useState(false);
   const [roleData, setRoleData] = useState(
     defaultRolesData({
-      setActiveTab,
       setActiveRole,
       activeRole,
       setPermissionsForRole,
@@ -83,11 +81,7 @@ const ManageRoles = () => {
         <RoleModal
           isOpen={editModalIsOpen}
           setEditModalIsOpen={setEditModalIsOpen}
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
           activeRole={activeRole}
-          setRoleData={setRoleData}
-          roleData={roleData}
           permissionsForRole={permissionsForRole}
         />
 

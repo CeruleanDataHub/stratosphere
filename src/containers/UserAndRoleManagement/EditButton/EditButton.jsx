@@ -13,12 +13,12 @@ const EditButton = ({
   setEditModalIsOpen,
   fetchForEntity,
 }) => {
-  const handleOnClick = () => {
+  const handleOnClick = async () => {
+    fetchForEntity && (await fetchForEntity(active));
+
     setActive(active);
 
     setEditModalIsOpen(true);
-
-    fetchForEntity && fetchForEntity(active);
   };
 
   return (
