@@ -1,12 +1,12 @@
-import React, {useState} from 'react';
-import ModalHeader from '../RoleModal/ModalHeader/ModalHeader.jsx';
+import {createRole} from '@ceruleandatahub/middleware-redux/redux/features/roles';
 import {Button, Input} from '@ceruleandatahub/react-components';
-
 import {PropTypes} from 'prop-types';
-import Modal from 'styled-react-modal';
+import React, {useState} from 'react';
+import {useDispatch} from 'react-redux';
 import styled from 'styled-components';
-import {useAuth0} from '../../../../auth0-spa.jsx';
-import postRole from '../getRoles/postRole.js';
+import Modal from 'styled-react-modal';
+
+import ModalHeader from '../RoleModal/ModalHeader/ModalHeader.jsx';
 
 const NewRoleModal = Modal.styled`
     display: flex;
@@ -42,6 +42,11 @@ const ErrorMessage = styled.div`
   padding: 1em 0 0 0;
 `;
 
+const createErrorMessage = {
+  ['Conflict']: 'Role with given name already exists',
+  ['Bad Request']: "Role name can't be empty",
+};
+
 const CreateNewRoleModal = ({
   isOpen,
   closeModal,
@@ -50,7 +55,7 @@ const CreateNewRoleModal = ({
   setNewRoleName,
   setNewRoleDescription,
 }) => {
-  const {getTokenSilently} = useAuth0();
+  const dispatch = useDispatch();
 
   const [fetchErrorMessage, setFetchErrorMessage] = useState('');
 
@@ -58,20 +63,18 @@ const CreateNewRoleModal = ({
     event.preventDefault();
 
     const postNewRole = async () => {
-      const token = await getTokenSilently();
-
       const newRole = {
         name: newRoleName,
         description: newRoleDescription,
       };
 
-      return await postRole(token, newRole);
+      return dispatch(createRole(newRole));
     };
 
     const response = await postNewRole();
 
-    response.status !== 200
-      ? setFetchErrorMessage(response.data.message)
+    response.payload.error
+      ? setFetchErrorMessage(createErrorMessage[response.payload.error])
       : closeModal();
   };
 
