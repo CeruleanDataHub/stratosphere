@@ -72,17 +72,39 @@ jobs:
       run: |
         docker buildx build --output "type=image,push=true" ${{ steps.prepare.outputs.buildx_args }}
     -
-      uses: azure/aks-set-context@v1
+      name: Azure Login
+      uses: azure/login@v1
       with:
         creds: ${{ secrets.CDH_GITHUB_ACTIONS_AZURE_CREDENTIALS }}
-        cluster-name: qa-cdh-kubernetes-alpha
-        resource-group: qa-cerulean-base
-      id: login
-      run: |
-        ls -la
     - 
-      uses: azure/k8s-deploy@v1
+      name: Azure CLI script
+      uses: azure/CLI@v1
+      id: azcli
       with:
-        namespace: development
-        manifests: |
-          kubernetes/stratosphere-deployment.yaml
+        azcliversion: 2.0.72
+        inlineScript: |
+          az aks get-credentials --resource-group qa-cerulean-base --name qa-cdh-kubernetes-alpha
+          KUBECONFIG=$(cat .kube/config | base64)
+          echo ::set-output name=kubeconfig::--platform ${KUBECONFIG}
+    - 
+      name: kubectl
+      uses: steebchen/kubectl@master
+      env:
+        KUBE_CONFIG_DATA: ${{ steps.azcli.outputs.kubeconfig }}
+        KUBECTL_VERSION: "1.15"
+      with:
+        args: '"rollout restart deployment/cerulean-admin-ui -n development"'
+    #   uses: azure/aks-set-context@v1
+    #   with:
+    #     creds: ${{ secrets.CDH_GITHUB_ACTIONS_AZURE_CREDENTIALS }}
+    #     cluster-name: qa-cdh-kubernetes-alpha
+    #     resource-group: qa-cerulean-base
+    #   id: login
+      
+    # - 
+    #   uses: azure/k8s-deploy@v1
+    #   with:
+    #     namespace: development
+    #     manifests: |
+    #       kubernetes/stratosphere-deployment.yaml
+az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
