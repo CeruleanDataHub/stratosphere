@@ -85,6 +85,8 @@ jobs:
         inlineScript: |
           az aks get-credentials --resource-group qa-cerulean-base --name qa-cdh-kubernetes-alpha
           KUBECONFIG=$(cat /root/.kube/config | base64)
+          echo KUBECONFIG
+          echo KUBECONFIG | base64 -d
           echo ::set-output name=kubeconfig::${KUBECONFIG}
     - 
       name: kubectl
