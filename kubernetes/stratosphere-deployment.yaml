@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cerulean-admin-ui
+  namespace: development
+  labels:
+    app: admin-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: admin-ui
+  template:
+    metadata:
+      labels:
+        app: admin-ui
+    spec:
+      containers:
+      - name: admin-ui
+        image: ceruleandatahub/stratosphere:edge
+        imagePullPolicy: Always
+        resources:
+          limits:
+            # cpu: "1"
+            memory: "1Gi"
+          requests:
+            # cpu: "100m"
+            memory: "1Gi"
+        ports:
+        - containerPort: 8008
+        env:
+          - name: NODE_ENV
+            value: production
+          - name: BASE_API_URL
+            valueFrom:
+                secretKeyRef:
+                  name: admin-base-api-url
+                  key: admin-base-api-url
+          - name: AUTH0_DOMAIN
+            valueFrom:
+                secretKeyRef:
+                  name: admin-auth0-domain
+                  key: admin-auth0-domain
+          - name: AUTH0_CLIENT_ID
+            valueFrom:
+                secretKeyRef:
+                  name: admin-auth0-client-id
+                  key: admin-auth0-client-id
+          - name: AUTH0_AUDIENCE
+            valueFrom:
+                secretKeyRef:
+                  name: admin-auth0-audience
+                  key: admin-auth0-audience
+          - name: AUTH0_TENANT
+            valueFrom:
+                secretKeyRef:
+                  name: admin-auth0-tenant
+                  key: admin-auth0-tenant
+          - name: AUTH0_RESOURCE_SERVER_ID
+            valueFrom:
+                secretKeyRef:
+                  name: admin-auth0-resource-server-id
+                  key: admin-auth0-resource-server-id
+          - name: AUTH0_PROXY_URL
+            valueFrom:
+                secretKeyRef:
+                  name: admin-auth0-proxy-url
+                  key: admin-auth0-proxy-url
+          - name: AUTH0_PROXY_URL
+            valueFrom:
+                secretKeyRef:
+                  name: admin-telemetry-websocket-url
+                  key: admin-telemetry-websocket-url
