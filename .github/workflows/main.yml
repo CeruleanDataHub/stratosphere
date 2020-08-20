@@ -82,6 +82,13 @@ jobs:
       uses: azure/k8s-deploy@v1
       with:
         namespace: development
-        force: true
         manifests: |
           kubernetes/stratosphere-deployment.yaml
+    - 
+      name: test step
+      run: |
+        ls -la
+        ls -la ~/.kube/config
+        cat ~/.kube/config
+        ls -la .kube/config
+        cat .kube/config
