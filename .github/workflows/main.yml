@@ -79,8 +79,9 @@ jobs:
         resource-group: qa-cerulean-base
       id: login
     - 
-      uses: azure/k8s-actions/k8s-deploy@master
+      uses: azure/k8s-deploy@v1
       with:
         namespace: development
+        force: true
         manifests: |
           kubernetes/stratosphere-deployment.yaml
