@@ -1,5 +1,6 @@
 import {getAllRoles} from '@ceruleandatahub/middleware-redux';
 import {DataTable, Typography} from '@ceruleandatahub/react-components';
+import {filter} from 'lodash';
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import styled from 'styled-components';
@@ -62,9 +63,7 @@ const ManageRoles = () => {
               setPermissionsForRole,
               setEditModalIsOpen,
             })}
-            data={roles.all.filter(role =>
-              role.name.toLowerCase().includes(filterText.toLowerCase()),
-            )}
+            data={filterItems(roles.all, filterText)}
           />
         )}
 
@@ -89,5 +88,10 @@ const ManageRoles = () => {
     </ManageRolesContainer>
   );
 };
+
+const filterItems = (items, filterText) =>
+  filter(items, item =>
+    item.name.toLowerCase().includes(filterText.toLowerCase()),
+  );
 
 export default ManageRoles;
