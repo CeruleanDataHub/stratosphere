@@ -45,8 +45,6 @@ const ManageUsers = () => {
       selector: 'actions',
       grow: 1,
       cell: function cell(user) {
-        user.id = user.userId;
-
         return (
           <EditButton
             active={user}

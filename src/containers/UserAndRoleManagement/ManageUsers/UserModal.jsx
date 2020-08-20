@@ -358,7 +358,6 @@ UserModal.propTypes = {
   isOpen: PropTypes.bool,
   user: PropTypes.shape({
     email: PropTypes.string,
-    id: PropTypes.string,
     userId: PropTypes.string,
     lastLogin: PropTypes.string,
     logins: PropTypes.number,
