@@ -72,11 +72,12 @@ jobs:
       run: |
         docker buildx build --output "type=image,push=true" ${{ steps.prepare.outputs.buildx_args }}
     -
-      uses: azure/k8s-actions/aks-set-context@master
+      uses: azure/aks-set-context@v1
       with:
         creds: ${{ secrets.CDH_GITHUB_ACTIONS_AZURE_CREDENTIALS }}
         cluster-name: qa-cdh-kubernetes-alpha
         resource-group: qa-cerulean-base
+      id: login
     - 
       uses: azure/k8s-actions/k8s-deploy@master
       with:
