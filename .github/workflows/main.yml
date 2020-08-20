@@ -76,23 +76,23 @@ jobs:
       uses: azure/login@v1
       with:
         creds: ${{ secrets.CDH_GITHUB_ACTIONS_AZURE_CREDENTIALS }}
-    - 
-      name: Azure CLI script
-      uses: azure/CLI@v1
-      id: azcli
-      with:
-        azcliversion: 2.0.72
-        inlineScript: |
-          az aks get-credentials --resource-group qa-cerulean-base --name qa-cdh-kubernetes-alpha
-          KUBECONFIG=$(cat /root/.kube/config | base64)
-          echo KUBECONFIG
-          echo KUBECONFIG | base64 -d
-          echo ::set-output name=kubeconfig::${KUBECONFIG}
+    # - 
+    #   name: Azure CLI script
+    #   uses: azure/CLI@v1
+    #   id: azcli
+    #   with:
+    #     azcliversion: 2.0.72
+    #     inlineScript: |
+    #       az aks get-credentials --resource-group qa-cerulean-base --name qa-cdh-kubernetes-alpha
+    #       KUBECONFIG=$(cat /root/.kube/config | base64)
+    #       echo KUBECONFIG
+    #       echo KUBECONFIG | base64 -d
+    #       echo ::set-output name=kubeconfig::${KUBECONFIG}
     - 
       name: kubectl
       uses: steebchen/kubectl@master
       env:
-        KUBE_CONFIG_DATA: ${{ steps.azcli.outputs.kubeconfig }}
+        KUBE_CONFIG_DATA: ${{ secrets.CDH_KUBECONFIG }}
         KUBECTL_VERSION: "1.15"
       with:
         args: '"rollout restart deployment/cerulean-admin-ui -n development"'
