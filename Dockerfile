@@ -4,7 +4,9 @@ COPY nginx/default.conf /etc/nginx/conf.d/default.conf
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
 WORKDIR /usr/share/nginx/html
-RUN apk add --no-cache gettext
+RUN apt update \
+    && apt install gettext -y \
+    && rm -rf /var/lib/apt/lists/*
 COPY nginx-entrypoint.sh /
 COPY dist ./
 
