@@ -74,7 +74,7 @@ jobs:
     -
       uses: azure/k8s-actions/aks-set-context@master
       with:
-        creds: '${{ secrets.CDH_GITHUB_ACTIONS_AZURE_CREDENTIALS }}'
+        creds: ${{ secrets.CDH_GITHUB_ACTIONS_AZURE_CREDENTIALS }}
         cluster-name: qa-cdh-kubernetes-alpha
         resource-group: qa-cerulean-base
     - 
