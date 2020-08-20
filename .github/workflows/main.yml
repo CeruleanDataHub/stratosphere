@@ -28,7 +28,7 @@ jobs:
         npm run build
     -
       name: Get version
-      id: version
+      id: prepare
       run: |
         DOCKER_IMAGE=ceruleandatahub/stratosphere
         # DOCKER_PLATFORMS=linux/amd64,linux/arm64
