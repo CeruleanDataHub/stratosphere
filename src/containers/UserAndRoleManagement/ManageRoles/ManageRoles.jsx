@@ -1,14 +1,14 @@
+import {getAllRoles} from '@ceruleandatahub/middleware-redux';
 import {DataTable, Typography} from '@ceruleandatahub/react-components';
 import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import styled from 'styled-components';
 
-import {useAuth0} from '../../../auth0-spa.jsx';
 import ManagementHeader from '../ManagementHeader/ManagementHeader.jsx';
 import SearchBar from '../SearchBar/SearchBar.jsx';
-import defaultRolesData from './data/defaultRolesData';
-import getAllRoles from './getRoles/getRoles';
-import RoleModal from './RoleModal/RoleModal.jsx';
 import CreateNewRoleModal from './CreateNewRoleModal/CreateNewRoleModal.jsx';
+import roleDataTableTemplate from './data/roleDataTableTemplate';
+import RoleModal from './RoleModal/RoleModal.jsx';
 
 const ManageRolesContainer = styled.section`
   margin: 0 8em 2em 18em;
@@ -16,7 +16,9 @@ const ManageRolesContainer = styled.section`
 `;
 
 const ManageRoles = () => {
-  const {getTokenSilently} = useAuth0();
+  const dispatch = useDispatch();
+
+  const roles = useSelector(({roles}) => roles);
 
   const [filterText, setFilterText] = useState('');
   const [activeRole, setActiveRole] = useState({name: ''});
@@ -27,28 +29,9 @@ const ManageRoles = () => {
   const [newRoleName, setNewRoleName] = useState('');
   const [newRoleDescription, setNewRoleDescription] = useState('');
   const [editModalIsOpen, setEditModalIsOpen] = useState(false);
-  const [roleData, setRoleData] = useState(
-    defaultRolesData({
-      setActiveRole,
-      activeRole,
-      setPermissionsForRole,
-      setEditModalIsOpen,
-    }),
-  );
 
   useEffect(() => {
-    const getRoles = async () => {
-      const token = await getTokenSilently();
-
-      const roles = await getAllRoles(token);
-
-      setRoleData({
-        ...roleData,
-        data: roles.data,
-      });
-    };
-
-    getRoles();
+    dispatch(getAllRoles());
   }, [createNewRoleModalIsOpen]);
 
   const handleCreateNewRoleModalClose = () => {
@@ -71,12 +54,19 @@ const ManageRoles = () => {
           onChange={event => setFilterText(event.target.value)}
         />
 
-        <DataTable
-          columns={roleData.columns}
-          data={roleData.data.filter(role =>
-            role.name.toLowerCase().includes(filterText.toLowerCase()),
-          )}
-        />
+        {roles.all && (
+          <DataTable
+            columns={roleDataTableTemplate({
+              setActiveRole,
+              activeRole,
+              setPermissionsForRole,
+              setEditModalIsOpen,
+            })}
+            data={roles.all.filter(role =>
+              role.name.toLowerCase().includes(filterText.toLowerCase()),
+            )}
+          />
+        )}
 
         {editModalIsOpen && (
           <RoleModal
@@ -86,6 +76,7 @@ const ManageRoles = () => {
             permissionsForRole={permissionsForRole}
           />
         )}
+
         <CreateNewRoleModal
           closeModal={() => handleCreateNewRoleModalClose()}
           isOpen={createNewRoleModalIsOpen}

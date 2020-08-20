@@ -1,19 +1,20 @@
-import Axios from 'axios';
-import React, {useState, useEffect} from 'react';
 import {getHierarchyTree} from '@ceruleandatahub/middleware-redux';
-import {useDispatch, useSelector} from 'react-redux';
-import styled from 'styled-components';
 import {
   Button,
   Cell,
+  DataTable,
   Grid,
   Icon,
-  DataTable,
   Select,
 } from '@ceruleandatahub/react-components';
+import Axios from 'axios';
+import PropTypes from 'prop-types';
+import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import styled from 'styled-components';
+
 import {useAuth0} from '../../auth0-spa.jsx';
 import env from '../../config';
-import PropTypes from 'prop-types';
 
 const StyledCell = styled(Cell)`
   width: 300px;
