@@ -78,17 +78,11 @@ jobs:
         cluster-name: qa-cdh-kubernetes-alpha
         resource-group: qa-cerulean-base
       id: login
+      run: |
+        ls -la
     - 
       uses: azure/k8s-deploy@v1
       with:
         namespace: development
         manifests: |
           kubernetes/stratosphere-deployment.yaml
-    - 
-      name: test step
-      run: |
-        ls -la
-        ls -la ~/.kube/config
-        cat ~/.kube/config
-        ls -la .kube/config
-        cat .kube/config
