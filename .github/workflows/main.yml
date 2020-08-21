@@ -83,4 +83,4 @@ jobs:
       if: always() && github.event_name != 'pull_request'
       run: |
         rm -f ${HOME}/.docker/config.json
-        rm -rf /root/.kube
+        sudo rm -rf /root/.kube
