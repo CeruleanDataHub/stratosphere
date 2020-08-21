@@ -1,16 +1,17 @@
+import {getPermissionsForRole} from '@ceruleandatahub/middleware-redux';
+import {Icon} from '@ceruleandatahub/react-components';
 import PropTypes from 'prop-types';
 import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import styled from 'styled-components';
 import Modal from 'styled-react-modal';
-import {Icon} from '@ceruleandatahub/react-components';
 
+import {useAuth0} from '../../../../auth0-spa.jsx';
+import getAllPermissions from '../getPermissions/getPermissions';
 import ModalHeader from './ModalHeader/ModalHeader.jsx';
 import ModalTabs from './ModalTabs/ModalTabs.jsx';
 import PermissionsView from './Views/PermissionsView/PermissionsView.jsx';
 import SettingsView from './Views/SettingsView.jsx';
-import getAllPermissions from '../getPermissions/getPermissions';
-import {useAuth0} from '../../../../auth0-spa.jsx';
-import getPermissionsForRole from '../getPermissions/getPermissionsForRole.js';
 
 const StyledModal = Modal.styled`
   display: flex;
@@ -44,7 +45,12 @@ const roleModalTabsData = ['Permissions', 'Settings'];
 const RoleModal = ({isOpen, setEditModalIsOpen, activeRole}) => {
   const {getTokenSilently} = useAuth0();
 
-  const [permissionsForRole, setPermissionsForRole] = useState([]);
+  const dispatch = useDispatch();
+
+  const permissionsForRole = useSelector(
+    ({roles: {permissionsForActiveRole}}) => permissionsForActiveRole,
+  );
+
   const [allPermissions, setAllPermissions] = useState([]);
   const [activeTab, setActiveTab] = useState('Permissions');
 
@@ -61,14 +67,8 @@ const RoleModal = ({isOpen, setEditModalIsOpen, activeRole}) => {
       setAllPermissions(permissions);
     };
 
-    const getPermissionsForActiveRole = async () => {
-      const token = await getTokenSilently();
+    dispatch(getPermissionsForRole(activeRole.id));
 
-      const permissionsForRole = await getPermissionsForRole(activeRole, token);
-      setPermissionsForRole(permissionsForRole.data);
-    };
-
-    getPermissionsForActiveRole();
     getPermissions();
   }, []);
 
@@ -94,7 +94,7 @@ const RoleModal = ({isOpen, setEditModalIsOpen, activeRole}) => {
         tabs={roleModalTabsData}
       />
 
-      {isOpen && permissionsForRole.length !== 0 && (
+      {isOpen && permissionsForRole && (
         <TabContent>
           {activeTab === 'Permissions' ? (
             <PermissionsView
