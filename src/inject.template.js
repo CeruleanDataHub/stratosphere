@@ -1,5 +1,7 @@
 window.injectedEnv = {
   NODE_ENV: '${NODE_ENV}',
+  API_ROOT: '${API_ROOT}',
+  API_VERSION: '${API_VERSION}',
   BASE_API_URL: '${BASE_API_URL}',
   AUTH0_DOMAIN: '${AUTH0_DOMAIN}',
   AUTH0_CLIENT_ID: '${AUTH0_CLIENT_ID}',
