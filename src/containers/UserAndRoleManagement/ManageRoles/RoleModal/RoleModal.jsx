@@ -2,7 +2,6 @@ import {
   getAllPermissions,
   getPermissionsForRole,
 } from '@ceruleandatahub/middleware-redux';
-import {Icon} from '@ceruleandatahub/react-components';
 import PropTypes from 'prop-types';
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
@@ -29,19 +28,6 @@ const StyledModal = Modal.styled`
 
 const TabContent = styled.div`
   margin: 10px;
-`;
-
-const DeleteButton = styled.button`
-  width: 3rem;
-  align-self: flex-end;
-  color: red;
-  font-size: 30px;
-  border: 0;
-  background-color: unset;
-  padding: 0.5rem;
-  cursor: pointer;
-  margin-bottom: -1.4em;
-  z-index: 1;
 `;
 
 const roleModalTabsData = ['Permissions', 'Settings'];
@@ -74,10 +60,6 @@ const RoleModal = ({isOpen, setEditModalIsOpen, activeRole}) => {
         name={activeRole.name}
         icon="user"
       />
-
-      <DeleteButton title="Delete Role">
-        <Icon name="trash" />
-      </DeleteButton>
 
       <ModalTabs
         activeTab={activeTab}

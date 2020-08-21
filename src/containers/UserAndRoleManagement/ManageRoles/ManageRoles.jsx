@@ -5,6 +5,7 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import styled from 'styled-components';
 
+import DeleteRoleModal from '../DeleteRoleModal/DeleteRoleModal.jsx';
 import ManagementHeader from '../ManagementHeader/ManagementHeader.jsx';
 import SearchBar from '../SearchBar/SearchBar.jsx';
 import CreateNewRoleModal from './CreateNewRoleModal/CreateNewRoleModal.jsx';
@@ -22,7 +23,7 @@ const ManageRoles = () => {
   const roles = useSelector(({roles}) => roles);
 
   const [filterText, setFilterText] = useState('');
-  const [activeRole, setActiveRole] = useState({name: ''});
+  const [activeRole, setActiveRole] = useState({name: '', id: ''});
   const [permissionsForRole, setPermissionsForRole] = useState([]);
   const [createNewRoleModalIsOpen, setCreateNewRoleModalIsOpen] = useState(
     false,
@@ -30,10 +31,11 @@ const ManageRoles = () => {
   const [newRoleName, setNewRoleName] = useState('');
   const [newRoleDescription, setNewRoleDescription] = useState('');
   const [editModalIsOpen, setEditModalIsOpen] = useState(false);
+  const [deleteConfirmIsOpen, setDeleteConfirmIsOpen] = useState(false);
 
   useEffect(() => {
     dispatch(getAllRoles());
-  }, [createNewRoleModalIsOpen]);
+  }, [createNewRoleModalIsOpen, deleteConfirmIsOpen]);
 
   const handleCreateNewRoleModalClose = () => {
     setCreateNewRoleModalIsOpen(false);
@@ -62,6 +64,7 @@ const ManageRoles = () => {
               activeRole,
               setPermissionsForRole,
               setEditModalIsOpen,
+              setDeleteConfirmIsOpen,
             })}
             data={filterItems(roles.all, filterText)}
           />
@@ -75,6 +78,19 @@ const ManageRoles = () => {
             permissionsForRole={permissionsForRole}
           />
         )}
+
+        <DeleteRoleModal
+          isOpen={deleteConfirmIsOpen}
+          closeModal={() => setDeleteConfirmIsOpen(false)}
+          handleCancel={() => setDeleteConfirmIsOpen(false)}
+          confirmText={
+            <>
+              Are you sure you want to delete <strong>{activeRole.name}</strong>{' '}
+              role?
+            </>
+          }
+          activeRoleID={activeRole.id}
+        />
 
         <CreateNewRoleModal
           closeModal={() => handleCreateNewRoleModalClose()}

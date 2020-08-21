@@ -1,12 +1,14 @@
 import React from 'react';
 
-import EditButton from '../../EditButton/EditButton.jsx';
+import CellControl from '../../CellControl/CellControl.jsx';
+import DeleteButton from '../../CellControl/ControlButton/DeleteButton/DeleteButton.jsx';
+import EditButton from '../../CellControl/ControlButton/EditButton/EditButton.jsx';
 
-const actionsData = [
-  {icon: 'chef-hat', text: 'Assign Permissions', modalToOpen: 'Permissions'},
-];
-
-const roleDataTableTemplate = ({setEditModalIsOpen, setActiveRole}) => [
+const roleDataTableTemplate = ({
+  setEditModalIsOpen,
+  setActiveRole,
+  setDeleteConfirmIsOpen,
+}) => [
   {
     id: 1,
     name: 'Name',
@@ -26,12 +28,19 @@ const roleDataTableTemplate = ({setEditModalIsOpen, setActiveRole}) => [
     grow: 0,
     cell: function cell(role) {
       return (
-        <EditButton
-          setEditModalIsOpen={setEditModalIsOpen}
-          setActive={setActiveRole}
-          actionsData={actionsData}
-          active={role}
-        />
+        <CellControl>
+          <EditButton
+            setEditModalIsOpen={setEditModalIsOpen}
+            setActive={setActiveRole}
+            active={role}
+          />
+
+          <DeleteButton
+            setDeleteConfirmIsOpen={setDeleteConfirmIsOpen}
+            setActive={setActiveRole}
+            active={role}
+          />
+        </CellControl>
       );
     },
   },
