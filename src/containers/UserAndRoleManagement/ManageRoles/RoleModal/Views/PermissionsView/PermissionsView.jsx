@@ -1,15 +1,16 @@
-import PropTypes from 'prop-types';
-import React, {useState} from 'react';
+import {
+  deletePermissionFromRole,
+  updatePermissionsForRole,
+} from '@ceruleandatahub/middleware-redux';
 import {DataTable} from '@ceruleandatahub/react-components';
 import {filter, flow, map} from 'lodash';
-
-import permissionViewColumns from './permissionViewColumns';
-import SearchBar from '../../../../SearchBar/SearchBar.jsx';
-import deletePermissionInRole from '../../../getRoles/deletePermissionsForRole';
-import {useAuth0} from '../../../../../../auth0-spa.jsx';
-import updatePermissionsInRole from '../../../getRoles/updatePermissionsInRole';
+import PropTypes from 'prop-types';
+import React, {useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 import env from '../../../../../../config';
+import SearchBar from '../../../../SearchBar/SearchBar.jsx';
+import permissionViewColumns from './permissionViewColumns';
 
 const {AUTH0_AUDIENCE} = env();
 
@@ -18,14 +19,19 @@ const PermissionsView = ({
   permissionsForRole,
   allPermissions,
 }) => {
+  const dispatch = useDispatch();
+
   const [filterValue, setFilterValue] = useState('');
-  const {getTokenSilently} = useAuth0();
+
   const [permissionList, setPermissionList] = useState(permissionsForRole);
 
   const permissionExists = permission => permissionNames.includes(permission);
 
   const handleRolePermissionChange = async (permission, id, body) => {
-    const token = await getTokenSilently();
+    const properties = {
+      id,
+      data: body,
+    };
 
     if (permissionExists(permission)) {
       try {
@@ -36,7 +42,7 @@ const PermissionsView = ({
 
         setPermissionList(filteredPermissions);
 
-        await deletePermissionInRole(token, id, body);
+        dispatch(deletePermissionFromRole(properties));
       } catch (error) {
         console.error(error);
       }
@@ -44,7 +50,7 @@ const PermissionsView = ({
       try {
         setPermissionList([...permissionList, {permission_name: permission}]);
 
-        await updatePermissionsInRole(token, id, body);
+        dispatch(updatePermissionsForRole(properties));
       } catch (error) {
         console.error(error);
       }
