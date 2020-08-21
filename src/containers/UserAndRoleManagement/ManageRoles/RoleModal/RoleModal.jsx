@@ -1,4 +1,7 @@
-import {getPermissionsForRole} from '@ceruleandatahub/middleware-redux';
+import {
+  getAllPermissions,
+  getPermissionsForRole,
+} from '@ceruleandatahub/middleware-redux';
 import {Icon} from '@ceruleandatahub/react-components';
 import PropTypes from 'prop-types';
 import React, {useEffect, useState} from 'react';
@@ -6,12 +9,13 @@ import {useDispatch, useSelector} from 'react-redux';
 import styled from 'styled-components';
 import Modal from 'styled-react-modal';
 
-import {useAuth0} from '../../../../auth0-spa.jsx';
-import getAllPermissions from '../getPermissions/getPermissions';
+import env from '../../../../config.js';
 import ModalHeader from './ModalHeader/ModalHeader.jsx';
 import ModalTabs from './ModalTabs/ModalTabs.jsx';
 import PermissionsView from './Views/PermissionsView/PermissionsView.jsx';
 import SettingsView from './Views/SettingsView.jsx';
+
+const {AUTH0_RESOURCE_SERVER_ID} = env();
 
 const StyledModal = Modal.styled`
   display: flex;
@@ -43,33 +47,20 @@ const DeleteButton = styled.button`
 const roleModalTabsData = ['Permissions', 'Settings'];
 
 const RoleModal = ({isOpen, setEditModalIsOpen, activeRole}) => {
-  const {getTokenSilently} = useAuth0();
-
   const dispatch = useDispatch();
 
   const permissionsForRole = useSelector(
     ({roles: {permissionsForActiveRole}}) => permissionsForActiveRole,
   );
 
-  const [allPermissions, setAllPermissions] = useState([]);
+  const allPermissions = useSelector(({permissions: {all}}) => all);
+
   const [activeTab, setActiveTab] = useState('Permissions');
 
   useEffect(() => {
-    const getPermissions = async () => {
-      const token = await getTokenSilently();
-
-      const response = await getAllPermissions(token);
-
-      const permissions = response.data.scopes.map(
-        permission => permission.value,
-      );
-
-      setAllPermissions(permissions);
-    };
+    dispatch(getAllPermissions(AUTH0_RESOURCE_SERVER_ID));
 
     dispatch(getPermissionsForRole(activeRole.id));
-
-    getPermissions();
   }, []);
 
   return (
@@ -94,13 +85,13 @@ const RoleModal = ({isOpen, setEditModalIsOpen, activeRole}) => {
         tabs={roleModalTabsData}
       />
 
-      {isOpen && permissionsForRole && (
+      {isOpen && permissionsForRole && allPermissions && (
         <TabContent>
           {activeTab === 'Permissions' ? (
             <PermissionsView
               activeRoleID={activeRole.id}
               permissionsForRole={permissionsForRole}
-              allPermissions={allPermissions}
+              allPermissions={allPermissions.map(one => one.value)}
             />
           ) : (
             <SettingsView />

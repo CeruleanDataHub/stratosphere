@@ -3,6 +3,7 @@ import denimMiddleware, {
   activityReducer,
   devicesReducer,
   hierarchyReducer,
+  permissionsReducer,
   rolesReducer,
 } from '@ceruleandatahub/middleware-redux';
 import {configureStore} from '@reduxjs/toolkit';
@@ -36,6 +37,7 @@ const store = configureStore({
     hierarchies: hierarchyReducer,
     userActivity: activityReducer,
     roles: rolesReducer,
+    permissions: permissionsReducer,
   },
   middleware: [
     ...denimMiddleware(settingsProvider, cacheProvider, sessionProvider),
