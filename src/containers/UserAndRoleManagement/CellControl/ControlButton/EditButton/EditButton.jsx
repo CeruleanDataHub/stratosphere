@@ -1,24 +1,16 @@
-import React from 'react';
-import {Button, Icon} from '@ceruleandatahub/react-components';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import React from 'react';
 
-const BorderlessButton = styled.span`
-  border: 0px;
-`;
+import ControlButton from '../ControlButton.jsx';
 
 const EditButton = ({setActive, active, setEditModalIsOpen}) => {
-  const handleOnClick = async () => {
+  const handleOnClick = () => {
     setActive(active);
 
     setEditModalIsOpen(true);
   };
 
-  return (
-    <Button onClick={handleOnClick} as={BorderlessButton}>
-      <Icon name="pencil" />
-    </Button>
-  );
+  return <ControlButton onClick={handleOnClick} icon="pencil" />;
 };
 
 EditButton.propTypes = {
