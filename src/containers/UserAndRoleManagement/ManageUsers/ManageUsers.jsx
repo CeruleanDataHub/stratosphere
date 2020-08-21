@@ -3,9 +3,9 @@ import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 
 import {useAuth0} from '../../../auth0-spa.jsx';
+import EditButton from '../CellControl/ControlButton/EditButton/EditButton.jsx';
 import ManagementHeader from '../ManagementHeader/ManagementHeader.jsx';
 import SearchBar from '../SearchBar/SearchBar.jsx';
-import EditButton from '../EditButton/EditButton.jsx';
 import getUsers from './getUsers/getUsers';
 import {UserModal} from './UserModal.jsx';
 
