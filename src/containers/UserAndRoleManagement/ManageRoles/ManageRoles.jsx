@@ -5,11 +5,11 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import styled from 'styled-components';
 
-import DeleteRoleModal from '../DeleteRoleModal/DeleteRoleModal.jsx';
 import ManagementHeader from '../ManagementHeader/ManagementHeader.jsx';
 import SearchBar from '../SearchBar/SearchBar.jsx';
 import CreateNewRoleModal from './CreateNewRoleModal/CreateNewRoleModal.jsx';
 import roleDataTableTemplate from './data/roleDataTableTemplate';
+import DeleteRoleModal from './DeleteRoleModal/DeleteRoleModal.jsx';
 import RoleModal from './RoleModal/RoleModal.jsx';
 
 const ManageRolesContainer = styled.section`
