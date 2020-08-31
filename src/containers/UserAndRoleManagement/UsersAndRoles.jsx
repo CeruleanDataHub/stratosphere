@@ -124,11 +124,11 @@ const UsersAndRoles = () => {
             <Card title="Manage Roles" icon="rocket" />
           </Link>
         </Cell>
-        <Cell>
+        {/* <Cell>
           <Link to="/manage-groups">
             <Card title="Manage Groups" icon="users" />
           </Link>
-        </Cell>
+        </Cell> */}
       </Grid>
     </UsersAndRolesContainer>
   );
