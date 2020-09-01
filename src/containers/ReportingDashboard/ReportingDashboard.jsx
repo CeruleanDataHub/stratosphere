@@ -24,6 +24,11 @@ const KPICardContainer = styled.section`
 const ReportingDashboard = () => {
   const numberOfDaysInLastMonth = moment().subtract(1, 'month').daysInMonth();
   const numberOfDaysInCurrentMonth = moment().daysInMonth();
+  const currentMonthName = moment().startOf('month').format('MMMM');
+  const lastMonthName = moment()
+    .subtract(1, 'month')
+    .startOf('month')
+    .format('MMMM');
 
   const previousMonthSeries = [
     {name: 'Devices', data: []},
@@ -208,10 +213,10 @@ const ReportingDashboard = () => {
     <ReportingDashboardContainer>
       <Grid>
         <Cell>
-          <div style={{textAlign: 'center'}}>June</div>
+          <div style={{textAlign: 'center'}}>{lastMonthName}</div>
         </Cell>
         <Cell>
-          <div style={{textAlign: 'center'}}>July forecast</div>
+          <div style={{textAlign: 'center'}}>{currentMonthName} forecast</div>
         </Cell>
       </Grid>
       {renderKPIRow(activeDevicesUsersGrowth())}
