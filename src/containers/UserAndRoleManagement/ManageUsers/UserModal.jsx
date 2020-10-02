@@ -201,7 +201,7 @@ export const UserModal = ({isOpen, setEditProfileModalIsOpen, user}) => {
 
     try {
       await handleBlock();
-      setIsUserBlocked(!user.blocked);
+      setIsUserBlocked(!isUserBlocked);
       setIsBlockUserModalOpen(false);
     } catch (error) {
       console.error(error);
