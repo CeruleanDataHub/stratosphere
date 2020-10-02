@@ -20,7 +20,7 @@ const ManageRolesContainer = styled.section`
 const ManageRoles = () => {
   const dispatch = useDispatch();
 
-  const roles = useSelector(({roles}) => roles);
+  const {allRoles} = useSelector(({roles}) => roles);
 
   const [filterText, setFilterText] = useState('');
   const [activeRole, setActiveRole] = useState({name: '', id: ''});
@@ -57,7 +57,7 @@ const ManageRoles = () => {
           onChange={event => setFilterText(event.target.value)}
         />
 
-        {roles.all && (
+        {allRoles && (
           <DataTable
             columns={roleDataTableTemplate({
               setActiveRole,
@@ -66,7 +66,7 @@ const ManageRoles = () => {
               setEditModalIsOpen,
               setDeleteConfirmIsOpen,
             })}
-            data={filterItems(roles.all, filterText)}
+            data={filterItems(allRoles, filterText)}
           />
         )}
 
