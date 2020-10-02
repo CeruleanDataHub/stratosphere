@@ -1,12 +1,13 @@
+import {getUsers} from '@ceruleandatahub/middleware-redux';
 import {DataTable, Typography} from '@ceruleandatahub/react-components';
+import {filter} from 'lodash';
 import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import styled from 'styled-components';
 
-import {useAuth0} from '../../../auth0-spa.jsx';
 import EditButton from '../CellControl/ControlButton/EditButton/EditButton.jsx';
 import ManagementHeader from '../ManagementHeader/ManagementHeader.jsx';
 import SearchBar from '../SearchBar/SearchBar.jsx';
-import getUsers from './getUsers/getUsers';
 import {UserModal} from './UserModal.jsx';
 
 const ManageUsersContainer = styled.section`
@@ -15,7 +16,9 @@ const ManageUsersContainer = styled.section`
 `;
 
 const ManageUsers = () => {
-  const {getTokenSilently} = useAuth0();
+  const dispatch = useDispatch();
+
+  const {allUsers} = useSelector(({users}) => users);
 
   const [editProfileModalIsOpen, setEditProfileModalIsOpen] = useState(false);
   const [filterText, setFilterText] = useState('');
@@ -59,16 +62,8 @@ const ManageUsers = () => {
   const [userData, setUserData] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const token = await getTokenSilently();
-
-      const users = await getUsers(token);
-
-      setUserData(users);
-    };
-
-    fetchData();
-  }, []);
+    dispatch(getUsers());
+  }, [editProfileModalIsOpen]);
 
   return (
     <ManageUsersContainer>
@@ -86,11 +81,7 @@ const ManageUsers = () => {
 
         <DataTable
           columns={defaultUserColumns}
-          data={userData.filter(
-            user =>
-              user.name.toLowerCase().includes(filterText.toLowerCase()) ||
-              user.email.toLowerCase().includes(filterText.toLowerCase()),
-          )}
+          data={filterItems(allUsers, filterText)}
         />
       </Typography>
 
@@ -107,5 +98,10 @@ const ManageUsers = () => {
     </ManageUsersContainer>
   );
 };
+
+const filterItems = (items, filterText) =>
+  filter(items, item =>
+    item.name.toLowerCase().includes(filterText.toLowerCase()),
+  );
 
 export default ManageUsers;

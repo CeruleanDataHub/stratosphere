@@ -1,22 +1,28 @@
-import React, {useState, useEffect} from 'react';
-import PropTypes from 'prop-types';
-import Axios from 'axios';
-import styled from 'styled-components';
+import {
+  addRoleToUser,
+  deleteUser,
+  getAllRoles,
+  getRolesForUser,
+  removeRoleFromUser,
+  updateUserBlockStatus,
+} from '@ceruleandatahub/middleware-redux';
 import {
   Button,
   Cell,
+  DataTable,
   Grid,
   Icon,
-  Tab,
-  DataTable,
   Select,
+  Tab,
   Typography,
 } from '@ceruleandatahub/react-components';
+import PropTypes from 'prop-types';
+import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import styled from 'styled-components';
 import Modal from 'styled-react-modal';
-import {Confirm} from '../ConfirmUser.jsx';
-import {useAuth0} from '../../../auth0-spa.jsx';
 
-import env from '../../../config';
+import {Confirm} from '../ConfirmUser.jsx';
 import HierarchyTab from '../HierarchyTab.jsx';
 
 const StyledModal = Modal.styled`
@@ -64,23 +70,17 @@ const BlockDeleteText = styled.span`
   margin-left: 5px;
 `;
 
-const envVar = env();
-const auth0ProxyUrl = `${envVar.BASE_API_URL}/auth0`;
+export const UserModal = ({isOpen, setEditProfileModalIsOpen, user}) => {
+  const dispatch = useDispatch();
 
-export const UserModal = ({
-  isOpen,
-  setEditProfileModalIsOpen,
-  user,
-  userData,
-  setUserData,
-}) => {
-  const {getTokenSilently} = useAuth0();
-  const [roles, setRoles] = useState([]);
-  const [allRoles, setAllRoles] = useState([]);
+  const {allRoles} = useSelector(({roles}) => roles);
+  const {rolesForUser} = useSelector(({users}) => users);
+
   const [selectedRoleToAdd, setSelectedRoleToAdd] = useState();
   const [isBlockUserModalOpen, setIsBlockUserModalOpen] = useState(false);
   const [isDeleteUserModalOpen, setIsDeleteUserModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('Roles');
+  const [isUserBlocked, setIsUserBlocked] = useState(user.blocked);
 
   const manageUsersModalDataColumns = [
     {id: 1, name: 'Name', selector: 'name'},
@@ -94,55 +94,25 @@ export const UserModal = ({
     },
   ];
 
-  const getAllRoles = async () => {
-    const token = await getTokenSilently();
-    Axios.get(`${auth0ProxyUrl}/roles`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then(res => {
-        if (res.data.status === 404) {
-          console.log('Error fetching roles');
-        } else {
-          setAllRoles(res.data);
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  };
-
   const removeRoleFromTheUser = async roleId => {
-    const token = await getTokenSilently();
-    Axios.delete(`${auth0ProxyUrl}/users/${user.userId}/roles`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    const properties = {
+      id: user.userId,
       data: {roles: [roleId]},
-    }).then(() => {
-      setRoles(roles.filter(role => role.id !== roleId));
-    });
+    };
+
+    dispatch(removeRoleFromUser(properties));
   };
 
   const addRoleToTheUser = async () => {
     const selectedRole = allRoles.find(role => role.name === selectedRoleToAdd);
     if (!selectedRole) return;
 
-    const token = await getTokenSilently();
-    await Axios.post(
-      `${auth0ProxyUrl}/users/${user.userId}/roles`,
-      {roles: [selectedRole.id]},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    ).then(() => {
-      const rolesCopy = [...roles];
-      rolesCopy.push(selectedRole);
-      setRoles(rolesCopy);
-    });
+    const properties = {
+      id: user.userId,
+      roles: [selectedRole],
+    };
+
+    dispatch(addRoleToUser(properties));
   };
 
   // eslint-disable-next-line react/prop-types
@@ -152,30 +122,22 @@ export const UserModal = ({
     </Button>
   );
 
-  const populateRoles = async userId => {
-    const token = await getTokenSilently();
-    await Axios.get(`${auth0ProxyUrl}/users/${userId}/roles`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }).then(resp => {
-      setRoles(resp.data);
-    });
-  };
-
   useEffect(() => {
-    populateRoles(user.userId);
-    getAllRoles();
+    dispatch(getRolesForUser(user.userId));
+    dispatch(getAllRoles());
   }, []);
 
   const getAvailableRoles = () => {
     const defaultOption = {id: 'placeholder', value: 'Select role'};
-    return [
-      defaultOption,
-      ...allRoles
-        .filter(role => !roles.some(r => r.id === role.id))
-        .map(role => ({...role, value: role.name})),
-    ];
+    return (
+      allRoles &&
+      rolesForUser && [
+        defaultOption,
+        ...allRoles
+          .filter(role => !rolesForUser.some(r => r.id === role.id))
+          .map(role => ({...role, value: role.name})),
+      ]
+    );
   };
 
   const renderRolesTabContent = items => (
@@ -196,7 +158,7 @@ export const UserModal = ({
           </Button>
         </Cell>
       </Grid>
-      <DataTable columns={manageUsersModalDataColumns} data={roles} />
+      <DataTable columns={manageUsersModalDataColumns} data={rolesForUser} />
       <TextRightDiv>
         <a href="/manage">Manage Roles</a>
       </TextRightDiv>
@@ -216,40 +178,34 @@ export const UserModal = ({
     }
   };
 
-  const deleteUser = async () => {
-    const token = await getTokenSilently();
-    Axios.delete(`${auth0ProxyUrl}/users/${user.userId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }).then(() => {
-      const filteredUsers = [...userData].filter(u => u.userId !== user.userId);
-      setUserData(filteredUsers);
-      setIsBlockUserModalOpen(false);
+  const handleDeleteUser = async () => {
+    const handleDelete = async () => dispatch(deleteUser(user.userId));
+
+    try {
+      await handleDelete();
       setEditProfileModalIsOpen(false);
-    });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleUserBlock = async () => {
-    const token = await getTokenSilently();
-    const blockStatus = !user.blocked;
-    Axios.patch(
-      `${auth0ProxyUrl}/users/${user.userId}`,
-      {
-        blocked: blockStatus,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    ).then(() => {
-      const userDataCopy = [...userData];
-      const currUser = userDataCopy.find(u => u.userId === user.userId);
-      currUser.blocked = blockStatus;
-      setUserData(userDataCopy);
+    const blockStatus = !isUserBlocked;
+
+    const properties = {
+      id: user.userId,
+      blockStatus,
+    };
+
+    const handleBlock = async () => dispatch(updateUserBlockStatus(properties));
+
+    try {
+      await handleBlock();
+      setIsUserBlocked(!user.blocked);
       setIsBlockUserModalOpen(false);
-    });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -287,7 +243,7 @@ export const UserModal = ({
           <Cell>
             <p>Name: {user && user.name}</p>
             <p>Email: {user && user.email}</p>
-            <p>Status: {user && user.blocked ? 'Blocked' : 'Active'}</p>
+            <p>Status: {user && isUserBlocked ? 'Blocked' : 'Active'}</p>
           </Cell>
           <Cell>
             <p>
@@ -297,7 +253,7 @@ export const UserModal = ({
               >
                 <Icon name="ban" />
                 <BlockDeleteText>
-                  {user.blocked ? 'Unblock' : 'Block'}
+                  {isUserBlocked ? 'Unblock' : 'Block'}
                 </BlockDeleteText>
               </Button>
             </p>
@@ -333,9 +289,9 @@ export const UserModal = ({
           isOpen
           title={`Block ${user.name}`}
           content={`Are you sure you want to ${
-            user.blocked ? 'unblock' : 'block'
+            isUserBlocked ? 'unblock' : 'block'
           } this user?`}
-          confirmButtonText={`${user.blocked ? 'Unblock ' : 'Block'}`}
+          confirmButtonText={`${isUserBlocked ? 'Unblock ' : 'Block'}`}
           onConfirm={() => handleUserBlock()}
           onCancel={() => setIsBlockUserModalOpen(false)}
         />
@@ -347,7 +303,7 @@ export const UserModal = ({
           confirmButtonText={'Delete'}
           content={'Are you sure you want to DELETE this user?'}
           onCancel={() => setIsDeleteUserModalOpen(false)}
-          onConfirm={() => deleteUser()}
+          onConfirm={() => handleDeleteUser()}
         />
       )}
     </StyledModal>
@@ -367,6 +323,4 @@ UserModal.propTypes = {
   }).isRequired,
   editProfileModalIsOpen: PropTypes.bool,
   setEditProfileModalIsOpen: PropTypes.func,
-  userData: PropTypes.array,
-  setUserData: PropTypes.func,
 };
